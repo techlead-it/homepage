@@ -10,15 +10,8 @@ hero:
       link: /pages/about
     - theme: brand
       text: 会社説明
-      link: /pages/overview
-
-features:
-  - title: ビジョン
-    details: ギークなエンジニアの楽園になる
-  - title: ミッション
-    details: 技術力で顧客に安心と喜びを届ける
-  - title: バリュー
-    details:
-      - 妥協しない
-      - 顧客に寄り添う
+      link: /pages/introduction
+    - theme: brand
+      text: 採用
+      link: /pages/recruitment
 ---

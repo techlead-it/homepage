@@ -1,13 +1,13 @@
 {
 	"name": "@homepage/web",
 	"private": true,
-	"packageManager": "pnpm@10.21.0",
-	"version": "0.0.0",
+	"version": "0.0.1",
 	"type": "module",
 	"scripts": {
 		"dev": "vite",
 		"build": "tsgo -b && vite build",
 		"preview": "vite preview",
+		"typecheck": "tsgo --noEmit",
 		"format": "biome format --write .",
 		"format:check": "biome format .",
 		"lint": "biome lint --write .",

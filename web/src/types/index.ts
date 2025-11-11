@@ -1,4 +1,3 @@
-// 会社情報
 export interface CompanyInfo {
 	name: string;
 	ceo: string;
@@ -13,7 +12,6 @@ export interface CompanyInfo {
 	};
 }
 
-// サービス
 export interface Service {
 	id: string;
 	title: string;
@@ -22,7 +20,6 @@ export interface Service {
 	technologies?: string[];
 }
 
-// プロジェクト/実績
 export interface Project {
 	id: string;
 	title: string;
@@ -32,7 +29,6 @@ export interface Project {
 	period?: string;
 }
 
-// 強み
 export interface Strength {
 	id: string;
 	title: string;
@@ -40,7 +36,6 @@ export interface Strength {
 	icon?: string;
 }
 
-// 開発プロセスのステップ
 export interface ProcessStep {
 	id: string;
 	title: string;
@@ -48,7 +43,6 @@ export interface ProcessStep {
 	deliverables?: string[];
 }
 
-// 技術スタック
 export interface TechStack {
 	category: string;
 	items: TechItem[];
@@ -60,13 +54,11 @@ export interface TechItem {
 	proficiency: number;
 }
 
-// 取引先
 export interface Client {
 	name: string;
 	url: string;
 }
 
-// 企業理念
 export interface Philosophy {
 	mission: string;
 	vision: string;

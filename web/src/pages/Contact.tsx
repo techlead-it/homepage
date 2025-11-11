@@ -15,7 +15,6 @@ export default function Contact() {
 
 	// const handleSubmit = (e: FormEvent) => {
 	// 	e.preventDefault();
-	// 	// TODO: 実際のフォーム送信処理を実装
 	// 	alert(
 	// 		"お問い合わせフォームは現在準備中です。お急ぎの場合は直接メールにてご連絡ください。",
 	// 	);
@@ -32,7 +31,6 @@ export default function Contact() {
 
 	return (
 		<div>
-			{/* ページヘッダー */}
 			<Section background="gray">
 				<div className="text-center py-8">
 					<h1 className="text-4xl font-bold text-gray-900 mb-4">
@@ -42,7 +40,6 @@ export default function Contact() {
 				</div>
 			</Section>
 
-			{/* お問い合わせ方法 */}
 			<Section background="white">
 				<div className="max-w-3xl mx-auto">
 					<div className="text-center mb-8">
@@ -85,7 +82,6 @@ export default function Contact() {
 						</div>
 					</Card>
 
-					{/* フォームは一旦コメントアウト */}
 					{/* <Card>
 						<form onSubmit={handleSubmit} className="space-y-6">
 							<div>

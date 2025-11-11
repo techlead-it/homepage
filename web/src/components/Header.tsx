@@ -45,7 +45,7 @@ export default function Header() {
               to="/introduction"
               className="text-gray-700 hover:text-gray-900 px-3 py-2 text-sm font-medium"
             >
-              会社説明
+              企業理念
             </Link>
             <Link
               to="/contact"
@@ -97,7 +97,7 @@ export default function Header() {
               onClick={closeMobileMenu}
               className="block text-gray-700 hover:text-gray-900 hover:bg-gray-50 px-3 py-2 rounded-md text-base font-medium"
             >
-              会社説明
+              企業理念
             </Link>
             <Link
               to="/contact"

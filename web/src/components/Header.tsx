@@ -42,12 +42,6 @@ export default function Header() {
               会社説明
             </Link>
             <Link
-              to="/recruitment"
-              className="text-gray-700 hover:text-gray-900 px-3 py-2 text-sm font-medium"
-            >
-              採用情報
-            </Link>
-            <Link
               to="/contact"
               className="bg-blue-600 text-white hover:bg-blue-700 px-4 py-2 rounded-md text-sm font-medium"
             >
@@ -91,13 +85,6 @@ export default function Header() {
               className="block text-gray-700 hover:text-gray-900 hover:bg-gray-50 px-3 py-2 rounded-md text-base font-medium"
             >
               会社説明
-            </Link>
-            <Link
-              to="/recruitment"
-              onClick={closeMobileMenu}
-              className="block text-gray-700 hover:text-gray-900 hover:bg-gray-50 px-3 py-2 rounded-md text-base font-medium"
-            >
-              採用情報
             </Link>
             <Link
               to="/contact"

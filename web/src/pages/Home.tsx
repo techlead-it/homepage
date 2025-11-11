@@ -15,9 +15,8 @@ export default function Home() {
       <Section background="gray">
         <div className="text-center py-12">
           <h1 className="text-5xl font-bold text-gray-900 mb-6">
-            <h1 className="text-5xl font-bold text-gray-900 mb-6">
-              利益より誠実、声より本質
-            </h1>
+            利益より誠実、声より本質
+            <br />
             顧客の未来をともに作る
           </h1>
         </div>
@@ -296,9 +295,9 @@ export default function Home() {
                     </span>
                     {item.proficiency && (
                       <div className="flex gap-1">
-                        {[...Array(5)].map((v, i) => (
+                        {[...Array(5)].map((_, i) => (
                           <div
-                            key={v}
+                            key={`${item.name}-proficiency-${i}`}
                             className={`w-3 h-3 rounded-full ${
                               i < item.proficiency
                                 ? "bg-blue-600"

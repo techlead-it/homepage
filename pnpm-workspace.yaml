@@ -1,0 +1,6 @@
+onlyBuiltDependencies:
+  - "@swc/core"
+
+minimumReleaseAge: 1400 # 1 day
+
+trustPolicy: "no-downgrade"

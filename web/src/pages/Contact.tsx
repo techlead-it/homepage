@@ -1,33 +1,95 @@
-// import type { FormEvent } from "react";
-// import { useState } from "react";
-// import Button from "../components/ui/Button";
+import { contactSchema } from "@homepage/shared/schemas";
+import type {
+	ContactErrorResponse,
+	ContactFormData,
+} from "@homepage/shared/types";
+import { valibotResolver } from "@hookform/resolvers/valibot";
+import { useCallback, useState } from "react";
+import { useForm } from "react-hook-form";
+import { useNavigate } from "react-router-dom";
 import Card from "../components/ui/Card";
 import Section from "../components/ui/Section";
 
 export default function Contact() {
-	// const [formData, setFormData] = useState({
-	// 	name: "",
-	// 	email: "",
-	// 	company: "",
-	// 	subject: "",
-	// 	message: "",
-	// });
+	const navigate = useNavigate();
+	const [isSubmitting, setIsSubmitting] = useState(false);
+	const [submitError, setSubmitError] = useState<string | null>(null);
 
-	// const handleSubmit = (e: FormEvent) => {
-	// 	e.preventDefault();
-	// 	alert(
-	// 		"お問い合わせフォームは現在準備中です。お急ぎの場合は直接メールにてご連絡ください。",
-	// 	);
-	// };
+	const {
+		register,
+		handleSubmit,
+		setError,
+		formState: { errors },
+	} = useForm<ContactFormData>({
+		resolver: valibotResolver(contactSchema),
+		mode: "onBlur",
+	});
 
-	// const handleChange = (
-	// 	e: React.ChangeEvent<
-	// 		HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
-	// 	>,
-	// ) => {
-	// 	const { name, value } = e.target;
-	// 	setFormData((prev) => ({ ...prev, [name]: value }));
-	// };
+	const onSubmit = useCallback(
+		async (data: ContactFormData) => {
+			setIsSubmitting(true);
+			setSubmitError(null);
+
+			try {
+				const endpoint = import.meta.env.VITE_CONTACT_FORM_ENDPOINT;
+				if (!endpoint) {
+					throw new Error("Contact form endpoint is not configured");
+				}
+
+				const response = await fetch(endpoint, {
+					method: "POST",
+					headers: {
+						"Content-Type": "application/json",
+					},
+					body: JSON.stringify(data),
+				});
+
+				if (!response.ok) {
+					try {
+						const errorData = (await response.json()) as ContactErrorResponse;
+						if ("errors" in errorData) {
+							// Multiple field errors
+							let hasErrors = false;
+							for (const [field, message] of Object.entries(errorData.errors)) {
+								if (field in data) {
+									setError(field as keyof ContactFormData, {
+										type: "server",
+										message,
+									});
+									hasErrors = true;
+								}
+							}
+							if (hasErrors) {
+								return;
+							}
+						} else if ("error" in errorData) {
+							// Single error message
+							throw new Error(errorData.error);
+						}
+					} catch (error) {
+						// If error is already thrown from above, re-throw it
+						if (error instanceof Error) {
+							throw error;
+						}
+						// JSON parse error - use default message
+					}
+					throw new Error("送信に失敗しました");
+				}
+
+				navigate("/contact/thanks");
+			} catch (error) {
+				console.error("Form submission error:", error);
+				setSubmitError(
+					error instanceof Error
+						? error.message
+						: "送信中にエラーが発生しました。しばらく経ってから再度お試しください。",
+				);
+			} finally {
+				setIsSubmitting(false);
+			}
+		},
+		[navigate, setError],
+	);
 
 	return (
 		<div>
@@ -51,39 +113,13 @@ export default function Contact() {
 					</div>
 
 					<Card>
-						<div className="text-center space-y-8">
-							<div>
-								<h3 className="text-xl font-bold text-gray-900 mb-4">
-									メールでのお問い合わせ
-								</h3>
-								<p className="text-gray-600 mb-4">
-									以下のメールアドレスまでお気軽にご連絡ください。
-								</p>
-								<a
-									href="mailto:kanehira.sho@techlead-it.com"
-									className="text-2xl font-bold text-blue-600 hover:text-blue-700 transition-colors"
-								>
-									kanehira.sho@techlead-it.com
-								</a>
-							</div>
-
-							<div className="border-t border-gray-200 pt-8">
-								<h4 className="text-lg font-semibold text-gray-900 mb-4">
-									お問い合わせ内容について
-								</h4>
-								<div className="text-left max-w-xl mx-auto space-y-3 text-gray-600">
-									<p>• サービスに関するご質問</p>
-									<p>• お見積りのご依頼</p>
-									<p>• 開発のご相談</p>
-									<p>• 採用に関するお問い合わせ</p>
-									<p>• その他、お気軽にご相談ください</p>
+						<form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+							{submitError && (
+								<div className="p-4 bg-red-50 border border-red-200 rounded-md">
+									<p className="text-red-600 text-sm">{submitError}</p>
 								</div>
-							</div>
-						</div>
-					</Card>
+							)}
 
-					{/* <Card>
-						<form onSubmit={handleSubmit} className="space-y-6">
 							<div>
 								<label
 									htmlFor="name"
@@ -94,12 +130,16 @@ export default function Contact() {
 								<input
 									type="text"
 									id="name"
-									name="name"
-									required
-									value={formData.name}
-									onChange={handleChange}
-									className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+									{...register("name")}
+									className={`w-full px-4 py-2 border rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
+										errors.name ? "border-red-500" : "border-gray-300"
+									}`}
 								/>
+								{errors.name && (
+									<p className="mt-1 text-sm text-red-600">
+										{errors.name.message}
+									</p>
+								)}
 							</div>
 
 							<div>
@@ -112,12 +152,16 @@ export default function Contact() {
 								<input
 									type="email"
 									id="email"
-									name="email"
-									required
-									value={formData.email}
-									onChange={handleChange}
-									className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+									{...register("email")}
+									className={`w-full px-4 py-2 border rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
+										errors.email ? "border-red-500" : "border-gray-300"
+									}`}
 								/>
+								{errors.email && (
+									<p className="mt-1 text-sm text-red-600">
+										{errors.email.message}
+									</p>
+								)}
 							</div>
 
 							<div>
@@ -130,9 +174,7 @@ export default function Contact() {
 								<input
 									type="text"
 									id="company"
-									name="company"
-									value={formData.company}
-									onChange={handleChange}
+									{...register("company")}
 									className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
 								/>
 							</div>
@@ -146,18 +188,22 @@ export default function Contact() {
 								</label>
 								<select
 									id="subject"
-									name="subject"
-									required
-									value={formData.subject}
-									onChange={handleChange}
-									className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+									{...register("subject")}
+									className={`w-full px-4 py-2 border rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
+										errors.subject ? "border-red-500" : "border-gray-300"
+									}`}
 								>
 									<option value="">選択してください</option>
-									<option value="service">サービスについて</option>
-									<option value="estimate">お見積り依頼</option>
-									<option value="recruitment">採用について</option>
-									<option value="other">その他</option>
+									<option value="サービスについて">サービスについて</option>
+									<option value="お見積り依頼">お見積り依頼</option>
+									<option value="採用について">採用について</option>
+									<option value="その他">その他</option>
 								</select>
+								{errors.subject && (
+									<p className="mt-1 text-sm text-red-600">
+										{errors.subject.message}
+									</p>
+								)}
 							</div>
 
 							<div>
@@ -169,22 +215,34 @@ export default function Contact() {
 								</label>
 								<textarea
 									id="message"
-									name="message"
-									required
 									rows={6}
-									value={formData.message}
-									onChange={handleChange}
-									className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-5 00 focus:border-transparent"
+									{...register("message")}
+									className={`w-full px-4 py-2 border rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
+										errors.message ? "border-red-500" : "border-gray-300"
+									}`}
 								/>
+								{errors.message && (
+									<p className="mt-1 text-sm text-red-600">
+										{errors.message.message}
+									</p>
+								)}
 							</div>
 
 							<div className="text-center">
-								<Button type="submit" size="lg">
-									送信する
-								</Button>
+								<button
+									type="submit"
+									disabled={isSubmitting}
+									className={`px-8 py-3 font-semibold rounded-md transition-colors ${
+										isSubmitting
+											? "bg-gray-400 text-gray-200 cursor-not-allowed"
+											: "bg-blue-600 text-white hover:bg-blue-700"
+									}`}
+								>
+									{isSubmitting ? "送信中..." : "送信する"}
+								</button>
 							</div>
 						</form>
-					</Card> */}
+					</Card>
 				</div>
 			</Section>
 		</div>

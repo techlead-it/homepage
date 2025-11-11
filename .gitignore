@@ -15,6 +15,9 @@ dist-ssr
 # Vite
 .vite
 
+# TypeScript
+*.tsbuildinfo
+
 # Workspace outputs
 web/dist
 worker/dist

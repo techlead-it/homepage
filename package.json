@@ -10,7 +10,12 @@
     "build:web": "pnpm --filter web build",
     "build:worker": "pnpm --filter worker build",
     "preview": "pnpm --filter web preview",
+    "typecheck": "pnpm -r run typecheck",
+    "typecheck:web": "pnpm --filter web typecheck",
+    "typecheck:worker": "pnpm --filter worker typecheck",
     "check": "pnpm -r run check",
+    "check:web": "pnpm --filter web check",
+    "check:worker": "pnpm --filter worker check",
     "check:ci": "pnpm -r run check:ci",
     "deploy:worker": "pnpm --filter worker deploy"
   },
@@ -21,6 +26,13 @@
         "version": "^24.10.0",
         "onFail": "download"
       }
+    ]
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "esbuild",
+      "workerd",
+      "sharp"
     ]
   },
   "devDependencies": {}

@@ -37,6 +37,9 @@ jobs:
           fail_level: warning
           filter_mode: nofilter
           workdir: worker
+       
+      - name: TypeCheck
+        run: pnpm typecheck
 
   build:
     runs-on: ubuntu-slim
@@ -48,14 +51,8 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Type check worker
-        run: pnpm --filter worker run check
-
-      - name: Build worker
-        run: pnpm build:worker
-
-      - name: Build web
-        run: pnpm build:web
+      - name: Build
+        run: pnpm build
 
   pinact-check:
     runs-on: ubuntu-slim

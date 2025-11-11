@@ -61,7 +61,7 @@ importers:
         specifier: ^16.5.0
         version: 16.5.0
       node:
-        specifier: runtime:^24.4.0
+        specifier: runtime:^24.10.0
         version: runtime:24.11.0
       typescript-eslint:
         specifier: ^8.46.3

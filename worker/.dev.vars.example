@@ -3,3 +3,9 @@ RESEND_API_KEY=re_your_api_key_here
 
 # Email address to receive contact form submissions
 TO_EMAIL=info@techlead.jp
+
+# Allowed origin for CORS (local development frontend URL)
+ALLOWED_ORIGIN=http://localhost:5173
+
+# Worker environment (enables preview endpoint at /preview/contact)
+WORKER_ENV=development

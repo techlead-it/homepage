@@ -26,6 +26,8 @@ Cloudflare Worker for handling contact form submissions using Hono, Valibot, and
    ```env
    RESEND_API_KEY=re_your_actual_api_key
    TO_EMAIL=info@techlead.jp
+   ALLOWED_ORIGIN=http://localhost:5173
+   WORKER_ENV=development
    ```
 
 3. Run the development server:
@@ -124,10 +126,16 @@ Submit a contact form.
 
 ### Development (`.dev.vars`)
 
+These variables are **only loaded during `wrangler dev`** and are **not deployed**:
+
 - `RESEND_API_KEY`: Resend API key
 - `TO_EMAIL`: Email address to receive submissions
+- `ALLOWED_ORIGIN`: Frontend URL for CORS (e.g., http://localhost:5173)
+- `WORKER_ENV`: Set to "development" to enable /preview/contact endpoint
 
 ### Production (Cloudflare secrets)
+
+Set via `wrangler secret put` or GitHub Actions:
 
 - `RESEND_API_KEY`: Resend API key
 - `TO_EMAIL`: Email address to receive submissions

@@ -5,11 +5,8 @@ compatibility_date = "2025-01-11"
 [dev]
 port = 8787
 
-[vars]
-ALLOWED_ORIGIN = "http://localhost:5173"
-WORKER_ENV = "development"
-
-# Production secrets (set via: wrangler secret put SECRET_NAME)
+# Development environment variables are in .dev.vars (local only, not deployed)
+# Production secrets are set via wrangler secret or GitHub Actions:
 # - RESEND_API_KEY
 # - TO_EMAIL
-# - ALLOWED_ORIGIN (production URL)
+# - ALLOWED_ORIGIN

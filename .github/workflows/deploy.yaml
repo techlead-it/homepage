@@ -25,10 +25,15 @@ jobs:
         run: pnpm build:worker
 
       - name: Deploy worker
+        uses: cloudflare/wrangler-action@da0e0dfe58b7a431659754fdf3f186c529afbe65 # v3.14.1
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          workingDirectory: worker
+
+      - name: Get Deploy URL
         id: deploy
         run: |
-          cd worker
-          pnpx wrangler deploy
           WORKER_URL=$(pnpx wrangler deployments list --name homepage-contact-form --json 2>/dev/null | jq -r '.[0].url')
           if [ -z "$WORKER_URL" ] || [ "$WORKER_URL" = "null" ]; then
             echo "Error: Failed to get worker URL from deployment"

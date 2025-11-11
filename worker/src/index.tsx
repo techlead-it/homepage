@@ -1,9 +1,9 @@
+import { contactSchema } from "@homepage/shared/schemas";
 import { vValidator } from "@hono/valibot-validator";
 import { Hono } from "hono";
 import { cors } from "hono/cors";
 import { renderToStaticMarkup } from "react-dom/server";
 import { Resend } from "resend";
-import * as v from "valibot";
 import { ContactNotification } from "../emails/contact-notification";
 
 type Bindings = {
@@ -14,20 +14,6 @@ type Bindings = {
 };
 
 const app = new Hono<{ Bindings: Bindings }>();
-
-const contactSchema = v.object({
-	name: v.pipe(v.string(), v.minLength(1, "お名前を入力してください")),
-	email: v.pipe(v.string(), v.email("有効なメールアドレスを入力してください")),
-	company: v.optional(v.string()),
-	subject: v.pipe(
-		v.string(),
-		v.minLength(1, "お問い合わせ種別を選択してください"),
-	),
-	message: v.pipe(
-		v.string(),
-		v.minLength(10, "お問い合わせ内容は10文字以上で入力してください"),
-	),
-});
 
 app.use("/api/*", async (c, next) => {
 	const corsMiddleware = cors({
@@ -60,37 +46,56 @@ app.get("/preview/contact", (c) => {
 	return c.html(html);
 });
 
-app.post("/api/contact", vValidator("json", contactSchema), async (c) => {
-	try {
-		const formData = c.req.valid("json");
-
-		const resend = new Resend(c.env.RESEND_API_KEY);
-
-		const { data, error } = await resend.emails.send({
-			from: "onboarding@resend.dev",
-			to: c.env.TO_EMAIL,
-			subject: `【お問い合わせ】${formData.subject}`,
-			react: (
-				<ContactNotification
-					name={formData.name}
-					email={formData.email}
-					company={formData.company}
-					subject={formData.subject}
-					message={formData.message}
-				/>
-			),
-		});
-
-		if (error) {
-			console.error("Resend error:", error);
-			return c.json({ error: "Failed to send email" }, 500);
+app.post(
+	"/api/contact",
+	vValidator("json", contactSchema, (result, c) => {
+		if (!result.success) {
+			const errors: Record<string, string> = {};
+			for (const issue of result.issues) {
+				const path = issue.path
+					// biome-ignore lint/suspicious/noExplicitAny: Valibot path types are complex
+					?.map((p: any) => p.key)
+					.filter(Boolean)
+					.join(".");
+				if (path && issue.message) {
+					errors[path] = issue.message;
+				}
+			}
+			return c.json({ errors }, 400);
 		}
+	}),
+	async (c) => {
+		try {
+			const formData = c.req.valid("json");
 
-		return c.json({ success: true, messageId: data?.id }, 200);
-	} catch (error) {
-		console.error("Server error:", error);
-		return c.json({ error: "Internal server error" }, 500);
-	}
-});
+			const resend = new Resend(c.env.RESEND_API_KEY);
+
+			const { data, error } = await resend.emails.send({
+				from: "onboarding@resend.dev",
+				to: c.env.TO_EMAIL,
+				subject: `【お問い合わせ】${formData.subject}`,
+				react: (
+					<ContactNotification
+						name={formData.name}
+						email={formData.email}
+						company={formData.company}
+						subject={formData.subject}
+						message={formData.message}
+					/>
+				),
+			});
+
+			if (error) {
+				console.error("Resend error:", error);
+				return c.json({ error: "Failed to send email" }, 500);
+			}
+
+			return c.json({ success: true, messageId: data?.id }, 200);
+		} catch (error) {
+			console.error("Server error:", error);
+			return c.json({ error: "Internal server error" }, 500);
+		}
+	},
+);
 
 export default app;

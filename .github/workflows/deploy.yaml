@@ -39,13 +39,11 @@ jobs:
       - name: Install dependencies
         run: pnpm install
       - name: Build
-        run: pnpm run docs:build
-      - name: Copy CNAME
-        run: cp CNAME .vitepress/dist
+        run: pnpm run build
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v4
         with:
-          path: .vitepress/dist
+          path: dist
       - name: Deploy
         id: deployment
         uses: actions/deploy-pages@v4

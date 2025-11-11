@@ -7,6 +7,12 @@ settings:
 importers:
 
   .:
+    devDependencies:
+      node:
+        specifier: runtime:^24.10.0
+        version: runtime:24.11.0
+
+  web:
     dependencies:
       react:
         specifier: ^19.2.0
@@ -45,9 +51,6 @@ importers:
       '@vitejs/plugin-react':
         specifier: ^5.1.0
         version: 5.1.0(rolldown-vite@7.2.2(@types/node@24.10.0)(jiti@2.6.1))
-      node:
-        specifier: runtime:^24.10.0
-        version: runtime:24.11.0
       vite:
         specifier: npm:rolldown-vite@7.2.2
         version: rolldown-vite@7.2.2(@types/node@24.10.0)(jiti@2.6.1)

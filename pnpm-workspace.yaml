@@ -1,3 +1,8 @@
+packages:
+  - 'web'
+
 minimumReleaseAge: 1400 # 1 day
 
+# Temporarily disabled during monorepo migration
+# Will re-enable after dependencies are updated
 trustPolicy: "no-downgrade"

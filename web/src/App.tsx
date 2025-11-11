@@ -9,18 +9,18 @@ import Introduction from "./pages/Introduction";
 import Recruitment from "./pages/Recruitment";
 
 function App() {
-	return (
-		<Layout>
-			<Routes>
-				<Route path="/" element={<Home />} />
-				<Route path="/about" element={<About />} />
-				<Route path="/introduction" element={<Introduction />} />
-				<Route path="/recruitment" element={<Recruitment />} />
-				<Route path="/contact" element={<Contact />} />
-				<Route path="/contact/thanks" element={<ContactThanks />} />
-			</Routes>
-		</Layout>
-	);
+  return (
+    <Layout>
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/about" element={<About />} />
+        <Route path="/introduction" element={<Introduction />} />
+        <Route path="/recruitment" element={<Recruitment />} />
+        <Route path="/contact" element={<Contact />} />
+        <Route path="/contact/thanks" element={<ContactThanks />} />
+      </Routes>
+    </Layout>
+  );
 }
 
 export default App;

@@ -4,23 +4,23 @@ import Footer from "./Footer";
 import Header from "./Header";
 
 interface LayoutProps {
-	children: ReactNode;
+  children: ReactNode;
 }
 
 export default function Layout({ children }: LayoutProps) {
-	const { pathname } = useLocation();
-	const [current, setCurrent] = useState(pathname);
+  const { pathname } = useLocation();
+  const [current, setCurrent] = useState(pathname);
 
-	if (current !== pathname) {
-		window.scrollTo(0, 0);
-		setCurrent(pathname);
-	}
+  if (current !== pathname) {
+    window.scrollTo(0, 0);
+    setCurrent(pathname);
+  }
 
-	return (
-		<div className="flex flex-col min-h-screen">
-			<Header />
-			<main className="flex-grow pt-16">{children}</main>
-			<Footer />
-		</div>
-	);
+  return (
+    <div className="flex flex-col min-h-screen">
+      <Header />
+      <main className="flex-grow pt-16">{children}</main>
+      <Footer />
+    </div>
+  );
 }

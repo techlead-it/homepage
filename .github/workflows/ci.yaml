@@ -18,7 +18,7 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Run Biome with reviewdog
+      - name: Run Biome (web)
         uses: mongolyy/reviewdog-action-biome@dbe7192276cbc6cd32369a21f525ed02438c3e26 # v2.5.0
         with:
           github_token: ${{ secrets.github_token }}
@@ -26,6 +26,20 @@ jobs:
           level: warning
           fail_level: warning
           filter_mode: nofilter
+          workdir: web
+
+      - name: Run Biome (worker)
+        uses: mongolyy/reviewdog-action-biome@dbe7192276cbc6cd32369a21f525ed02438c3e26 # v2.5.0
+        with:
+          github_token: ${{ secrets.github_token }}
+          reporter: github-pr-review
+          level: warning
+          fail_level: warning
+          filter_mode: nofilter
+          workdir: worker
+       
+      - name: TypeCheck
+        run: pnpm typecheck
 
   build:
     runs-on: ubuntu-slim

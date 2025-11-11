@@ -1,3 +1,6 @@
-minimumReleaseAge: 1400 # 1 day
+packages:
+  - 'shared'
+  - 'web'
+  - 'worker'
 
-trustPolicy: "no-downgrade"
+minimumReleaseAge: 1400 # 1 day

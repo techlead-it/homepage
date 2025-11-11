@@ -4,33 +4,71 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-This is a corporate homepage for 株式会社テックリード (TechLead Inc.), built as a React SPA using Vite. The site is deployed to GitHub Pages at `/homepage/` base path.
+This is a corporate homepage for 株式会社テックリード (TechLead Inc.), structured as a **pnpm workspace monorepo** with three packages:
+
+- **web/**: React SPA for the homepage (deployed to GitHub Pages)
+- **worker/**: Cloudflare Worker for contact form API
+- **shared/**: Common types and validation schemas
+
+## Monorepo Structure
+
+```
+homepage/
+├── web/              # Frontend React application
+├── worker/           # Cloudflare Worker for API
+├── shared/           # Shared types and schemas
+├── pnpm-workspace.yaml
+└── package.json      # Root workspace configuration
+```
 
 ## Development Commands
 
 **Package Manager**: Use `pnpm` exclusively (not npm or yarn)
 
+### Root Level Commands
+
 ```bash
-# Development
-pnpm dev              # Start dev server at http://localhost:5173
+# Development (runs both web and worker dev servers in parallel)
+pnpm dev
+
+# Type checking
+pnpm typecheck              # All packages
+pnpm typecheck:web          # Web only
+pnpm typecheck:worker       # Worker only
+
+# Code quality
+pnpm check                  # All packages
+pnpm check:web              # Web only
+pnpm check:worker           # Worker only
 
 # Build
-pnpm build            # TypeScript check + production build to dist/
-
-# Code Quality
-pnpm check            # Run Biome formatting, linting, and import organization (with --write)
-pnpm check:ci         # Same as check but without modifications (for CI)
-pnpm format           # Format code with Biome
-pnpm format:check     # Check formatting without modifications
-pnpm lint             # Lint and auto-fix with Biome
-pnpm lint:check       # Lint without auto-fix
+pnpm build                  # Build worker, then web
+pnpm build:web              # Build web only
+pnpm build:worker           # Build worker only
 ```
 
-## Architecture
+### Package-Specific Commands
+
+```bash
+# Web (from web/ directory or use pnpm --filter web <command>)
+pnpm dev                    # Start dev server at http://localhost:5173
+pnpm build                  # TypeScript check + production build to dist/
+pnpm check                  # Run Biome formatting, linting
+pnpm typecheck              # Type check with tsgo
+
+# Worker (from worker/ directory or use pnpm --filter worker <command>)
+pnpm dev                    # Start worker dev server at http://localhost:8787
+pnpm deploy                 # Deploy to Cloudflare Workers
+pnpm build                  # Build with tsgo
+pnpm check                  # Run Biome formatting, linting
+pnpm typecheck              # Type check with tsgo
+```
+
+## Web Architecture
 
 ### Data-Driven Content Model
 
-All content is separated from presentation in `src/data/`:
+All content is separated from presentation in `web/src/data/`:
 - **company.ts**: Company info and client list
 - **philosophy.ts**: Mission, vision, values, identity
 - **projects.ts**: Project portfolio (real client work)
@@ -40,7 +78,7 @@ All content is separated from presentation in `src/data/`:
 - **strengths.ts**: Company strengths
 - **recruitment.ts**: Job positions
 
-Type definitions in `src/types/index.ts` ensure type safety across all data.
+Type definitions in `web/src/types/index.ts` ensure type safety across all data.
 
 ### Component Architecture
 
@@ -50,23 +88,24 @@ Type definitions in `src/types/index.ts` ensure type safety across all data.
 - Footer
 - Automatic scroll-to-top on route change
 
-**Page Components** (`src/pages/`):
+**Page Components** (`web/src/pages/`):
 - Each page uses `Section` components with alternating `background="white"` and `background="gray"`
 - All pages follow the pattern: Hero → Content Sections → CTA
 
-**Reusable UI Components** (`src/components/ui/`):
+**Reusable UI Components** (`web/src/components/ui/`):
 - `Section`: Content wrapper with configurable background
 - `Card`: Content card with optional hover effect
 - `Button`: Links styled as buttons (uses react-router-dom Link)
 
 ### Routing
 
-Client-side routing via react-router-dom with BrowserRouter. Routes defined in `App.tsx`:
+Client-side routing via react-router-dom with BrowserRouter. Routes defined in `web/src/App.tsx`:
 - `/` - Home
 - `/about` - Company info
 - `/introduction` - Company introduction
 - `/recruitment` - Job listings
-- `/contact` - Contact information
+- `/contact` - Contact form
+- `/contact/thanks` - Form submission success page
 
 ### Styling
 
@@ -77,7 +116,103 @@ Client-side routing via react-router-dom with BrowserRouter. Routes defined in `
 
 ### Base Path Configuration
 
-Production builds use `/homepage/` base path for GitHub Pages (configured in `vite.config.ts`). This is critical for proper asset loading in production.
+Production builds use `/homepage/` base path for GitHub Pages (configured in `web/vite.config.ts`). This is critical for proper asset loading in production.
+
+## Contact Form Implementation
+
+### Architecture
+
+The contact form uses a **client-server architecture** with validation at both ends:
+
+```
+Browser (React)
+    ↓ Form submission
+Cloudflare Worker (Hono API)
+    ↓ Validation + Email
+Resend API
+    ↓ Email delivery
+Recipient inbox
+```
+
+### Frontend (web/)
+
+**Technologies:**
+- react-hook-form: Form state management
+- Valibot: Schema validation via valibotResolver
+- @homepage/shared: Shared validation schema and types
+
+**Features:**
+- Real-time validation on blur (`mode: "onBlur"`)
+- Field-specific error messages
+- Multiple server error handling via `setError`
+- Loading state during submission
+- Success page navigation
+
+**Environment Variables:**
+- `VITE_CONTACT_FORM_ENDPOINT`: Worker API endpoint
+  - Development: `http://localhost:8787/api/contact`
+  - Production: Set by GitHub Actions during deployment
+
+### Backend (worker/)
+
+**Technologies:**
+- Hono: Ultra-fast web framework
+- Valibot: Request validation
+- Resend: Email delivery
+- React: JSX email templates
+
+**API Endpoints:**
+
+```typescript
+POST /api/contact
+- Validates form data with Valibot
+- Sends email via Resend
+- Returns: { success: true, messageId: string }
+- Errors: { errors: Record<string, string> } | { error: string }
+
+GET /preview/contact (development only)
+- Previews email template with sample data
+- Protected by WORKER_ENV check
+```
+
+**Environment Variables (Cloudflare Secrets):**
+- `RESEND_API_KEY`: Resend API key
+- `TO_EMAIL`: Recipient email address
+- `ALLOWED_ORIGIN`: CORS allowed origin
+- `WORKER_ENV`: Environment ("development" or "production")
+
+**Email Template:**
+- React JSX component (`worker/emails/contact-notification.tsx`)
+- Modern card design with FieldSection component
+- Rendered to HTML via `renderToStaticMarkup`
+
+### Shared Package (shared/)
+
+**Purpose:** Centralize validation logic and type definitions
+
+**Exports:**
+```typescript
+// Schemas
+export const contactSchema: v.ObjectSchema
+
+// Types
+export type ContactFormData
+export type ContactSuccessResponse
+export type ContactErrorResponse
+```
+
+**Validation Schema:**
+```typescript
+{
+  name: string (min 1 char)
+  email: string (min 1 char, valid email)
+  company?: string (optional)
+  subject: string (min 1 char)
+  message: string (min 10 chars)
+}
+```
+
+This ensures **consistent validation** between frontend and backend.
 
 ## Important Implementation Details
 
@@ -94,24 +229,37 @@ The tech stack displays proficiency using 1-5 dots. Definitions are shown in a l
 
 Projects use `category: string[]` (array) to support multiple categories like `["Webアプリ開発", "スマホアプリ開発"]`. Categories are displayed as colored badges.
 
-### Contact Form
-
-The contact form is currently **commented out** in `Contact.tsx`. Instead, the page displays the email address `info@techlead.jp` with a mailto link. The form code is preserved in comments for future implementation.
-
 ### Scroll Behavior
 
 The Layout component implements scroll-to-top on route change using `useState` to track pathname changes. This ensures users see the top of each new page.
 
 ## Deployment
 
-Deployment happens automatically via GitHub Actions on push to `main` branch:
-1. Checkout code
-2. Setup Node.js 19.3.0 and pnpm 8.6.0
-3. Install dependencies with pnpm
-4. Build with `pnpm run build`
-5. Deploy `dist/` directory to GitHub Pages
+### Automated Deployment via GitHub Actions
 
-The site is served from the `/homepage/` subdirectory on GitHub Pages.
+On push to `main` branch:
+
+1. **Worker Deployment** (`deploy-worker` job):
+   - Build worker with `pnpm build:worker`
+   - Deploy using `cloudflare/wrangler-action@v3.14.1`
+   - Retrieve deployment URL
+   - Pass URL to web deployment job
+
+2. **Web Deployment** (`deploy-web` job):
+   - Set `VITE_CONTACT_FORM_ENDPOINT` to worker URL
+   - Build web with `pnpm build:web`
+   - Deploy `web/dist/` to GitHub Pages
+
+### Manual Worker Deployment
+
+```bash
+cd worker
+pnpm deploy
+
+# Set secrets (first time only)
+pnpx wrangler secret put RESEND_API_KEY
+pnpx wrangler secret put TO_EMAIL
+```
 
 ## Code Style
 
@@ -120,3 +268,47 @@ The site is served from the `/homepage/` subdirectory on GitHub Pages.
 - **Imports**: Auto-organized by Biome
 - **TypeScript**: Strict mode enabled
 - Use Biome for all formatting and linting (not ESLint/Prettier)
+
+## Key Technologies
+
+### Frontend
+- React 19.2.0
+- TypeScript 5.9.3
+- Tailwind CSS v4
+- react-router-dom 7.9.5
+- react-hook-form 7.66.0
+- Valibot 1.1.0
+
+### Backend
+- Hono 4.10.4
+- Valibot 1.1.0
+- Resend 6.4.2
+- React (for JSX email templates)
+
+### Build Tools
+- Vite (web)
+- tsgo (TypeScript compilation)
+- Biome (formatting & linting)
+- pnpm (package manager)
+
+## Development Workflow
+
+1. **Start development servers:**
+   ```bash
+   pnpm dev  # Runs both web and worker in parallel
+   ```
+
+2. **Make changes** to web/, worker/, or shared/
+
+3. **Type check before commit:**
+   ```bash
+   pnpm typecheck
+   pnpm check
+   ```
+
+4. **Test contact form locally:**
+   - Frontend: http://localhost:5173/contact
+   - Worker API: http://localhost:8787/api/contact
+   - Email preview: http://localhost:8787/preview/contact
+
+5. **Commit and push** to trigger automatic deployment

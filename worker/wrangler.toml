@@ -1,0 +1,15 @@
+name = "homepage-contact-form"
+main = "src/index.tsx"
+compatibility_date = "2025-01-11"
+
+[dev]
+port = 8787
+
+[vars]
+ALLOWED_ORIGIN = "http://localhost:5173"
+WORKER_ENV = "development"
+
+# Production secrets (set via: wrangler secret put SECRET_NAME)
+# - RESEND_API_KEY
+# - TO_EMAIL
+# - ALLOWED_ORIGIN (production URL)

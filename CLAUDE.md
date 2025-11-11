@@ -1,0 +1,314 @@
+# CLAUDE.md
+
+This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+
+## Project Overview
+
+This is a corporate homepage for 株式会社テックリード (TechLead Inc.), structured as a **pnpm workspace monorepo** with three packages:
+
+- **web/**: React SPA for the homepage (deployed to GitHub Pages)
+- **worker/**: Cloudflare Worker for contact form API
+- **shared/**: Common types and validation schemas
+
+## Monorepo Structure
+
+```
+homepage/
+├── web/              # Frontend React application
+├── worker/           # Cloudflare Worker for API
+├── shared/           # Shared types and schemas
+├── pnpm-workspace.yaml
+└── package.json      # Root workspace configuration
+```
+
+## Development Commands
+
+**Package Manager**: Use `pnpm` exclusively (not npm or yarn)
+
+### Root Level Commands
+
+```bash
+# Development (runs both web and worker dev servers in parallel)
+pnpm dev
+
+# Type checking
+pnpm typecheck              # All packages
+pnpm typecheck:web          # Web only
+pnpm typecheck:worker       # Worker only
+
+# Code quality
+pnpm check                  # All packages
+pnpm check:web              # Web only
+pnpm check:worker           # Worker only
+
+# Build
+pnpm build                  # Build worker, then web
+pnpm build:web              # Build web only
+pnpm build:worker           # Build worker only
+```
+
+### Package-Specific Commands
+
+```bash
+# Web (from web/ directory or use pnpm --filter web <command>)
+pnpm dev                    # Start dev server at http://localhost:5173
+pnpm build                  # TypeScript check + production build to dist/
+pnpm check                  # Run Biome formatting, linting
+pnpm typecheck              # Type check with tsgo
+
+# Worker (from worker/ directory or use pnpm --filter worker <command>)
+pnpm dev                    # Start worker dev server at http://localhost:8787
+pnpm deploy                 # Deploy to Cloudflare Workers
+pnpm build                  # Build with tsgo
+pnpm check                  # Run Biome formatting, linting
+pnpm typecheck              # Type check with tsgo
+```
+
+## Web Architecture
+
+### Data-Driven Content Model
+
+All content is separated from presentation in `web/src/data/`:
+- **company.ts**: Company info and client list
+- **philosophy.ts**: Mission, vision, values, identity
+- **projects.ts**: Project portfolio (real client work)
+- **services.ts**: Service offerings
+- **techStack.ts**: Technologies with proficiency levels (1-5)
+- **processSteps.ts**: Agile development process
+- **strengths.ts**: Company strengths
+- **recruitment.ts**: Job positions
+
+Type definitions in `web/src/types/index.ts` ensure type safety across all data.
+
+### Component Architecture
+
+**Layout Pattern**: All pages wrapped in `Layout` component which provides:
+- Fixed header navigation
+- Main content area with top padding (pt-16) to account for fixed header
+- Footer
+- Automatic scroll-to-top on route change
+
+**Page Components** (`web/src/pages/`):
+- Each page uses `Section` components with alternating `background="white"` and `background="gray"`
+- All pages follow the pattern: Hero → Content Sections → CTA
+
+**Reusable UI Components** (`web/src/components/ui/`):
+- `Section`: Content wrapper with configurable background
+- `Card`: Content card with optional hover effect
+- `Button`: Links styled as buttons (uses react-router-dom Link)
+
+### Routing
+
+Client-side routing via react-router-dom with BrowserRouter. Routes defined in `web/src/App.tsx`:
+- `/` - Home
+- `/about` - Company info
+- `/introduction` - Company introduction
+- `/recruitment` - Job listings
+- `/contact` - Contact form
+- `/contact/thanks` - Form submission success page
+
+### Styling
+
+- **Tailwind CSS v4** with `@tailwindcss/vite` plugin
+- Tab indentation (configured in biome.json)
+- Mobile-first responsive design
+- Breakpoints: `md:` (tablet), `lg:` (desktop)
+
+### Base Path Configuration
+
+Production builds use `/homepage/` base path for GitHub Pages (configured in `web/vite.config.ts`). This is critical for proper asset loading in production.
+
+## Contact Form Implementation
+
+### Architecture
+
+The contact form uses a **client-server architecture** with validation at both ends:
+
+```
+Browser (React)
+    ↓ Form submission
+Cloudflare Worker (Hono API)
+    ↓ Validation + Email
+Resend API
+    ↓ Email delivery
+Recipient inbox
+```
+
+### Frontend (web/)
+
+**Technologies:**
+- react-hook-form: Form state management
+- Valibot: Schema validation via valibotResolver
+- @homepage/shared: Shared validation schema and types
+
+**Features:**
+- Real-time validation on blur (`mode: "onBlur"`)
+- Field-specific error messages
+- Multiple server error handling via `setError`
+- Loading state during submission
+- Success page navigation
+
+**Environment Variables:**
+- `VITE_CONTACT_FORM_ENDPOINT`: Worker API endpoint
+  - Development: `http://localhost:8787/api/contact`
+  - Production: Set by GitHub Actions during deployment
+
+### Backend (worker/)
+
+**Technologies:**
+- Hono: Ultra-fast web framework
+- Valibot: Request validation
+- Resend: Email delivery
+- React: JSX email templates
+
+**API Endpoints:**
+
+```typescript
+POST /api/contact
+- Validates form data with Valibot
+- Sends email via Resend
+- Returns: { success: true, messageId: string }
+- Errors: { errors: Record<string, string> } | { error: string }
+
+GET /preview/contact (development only)
+- Previews email template with sample data
+- Protected by WORKER_ENV check
+```
+
+**Environment Variables (Cloudflare Secrets):**
+- `RESEND_API_KEY`: Resend API key
+- `TO_EMAIL`: Recipient email address
+- `ALLOWED_ORIGIN`: CORS allowed origin
+- `WORKER_ENV`: Environment ("development" or "production")
+
+**Email Template:**
+- React JSX component (`worker/emails/contact-notification.tsx`)
+- Modern card design with FieldSection component
+- Rendered to HTML via `renderToStaticMarkup`
+
+### Shared Package (shared/)
+
+**Purpose:** Centralize validation logic and type definitions
+
+**Exports:**
+```typescript
+// Schemas
+export const contactSchema: v.ObjectSchema
+
+// Types
+export type ContactFormData
+export type ContactSuccessResponse
+export type ContactErrorResponse
+```
+
+**Validation Schema:**
+```typescript
+{
+  name: string (min 1 char)
+  email: string (min 1 char, valid email)
+  company?: string (optional)
+  subject: string (min 1 char)
+  message: string (min 10 chars)
+}
+```
+
+This ensures **consistent validation** between frontend and backend.
+
+## Important Implementation Details
+
+### Tech Proficiency Levels
+
+The tech stack displays proficiency using 1-5 dots. Definitions are shown in a legend on the Home page with specific meanings:
+- **Level 1**: Basic knowledge - can implement simple tasks with documentation
+- **Level 2**: Can implement - understands existing code, can add features
+- **Level 3**: Independent development - can handle requirements to implementation alone
+- **Level 4**: Design & optimization - can design architecture and solve complex problems
+- **Level 5**: Expert - provides technical leadership and makes strategic decisions
+
+### Project Categories
+
+Projects use `category: string[]` (array) to support multiple categories like `["Webアプリ開発", "スマホアプリ開発"]`. Categories are displayed as colored badges.
+
+### Scroll Behavior
+
+The Layout component implements scroll-to-top on route change using `useState` to track pathname changes. This ensures users see the top of each new page.
+
+## Deployment
+
+### Automated Deployment via GitHub Actions
+
+On push to `main` branch:
+
+1. **Worker Deployment** (`deploy-worker` job):
+   - Build worker with `pnpm build:worker`
+   - Deploy using `cloudflare/wrangler-action@v3.14.1`
+   - Retrieve deployment URL
+   - Pass URL to web deployment job
+
+2. **Web Deployment** (`deploy-web` job):
+   - Set `VITE_CONTACT_FORM_ENDPOINT` to worker URL
+   - Build web with `pnpm build:web`
+   - Deploy `web/dist/` to GitHub Pages
+
+### Manual Worker Deployment
+
+```bash
+cd worker
+pnpm deploy
+
+# Set secrets (first time only)
+pnpx wrangler secret put RESEND_API_KEY
+pnpx wrangler secret put TO_EMAIL
+```
+
+## Code Style
+
+- **Indentation**: Tabs (enforced by Biome)
+- **Quotes**: Double quotes for strings
+- **Imports**: Auto-organized by Biome
+- **TypeScript**: Strict mode enabled
+- Use Biome for all formatting and linting (not ESLint/Prettier)
+
+## Key Technologies
+
+### Frontend
+- React 19.2.0
+- TypeScript 5.9.3
+- Tailwind CSS v4
+- react-router-dom 7.9.5
+- react-hook-form 7.66.0
+- Valibot 1.1.0
+
+### Backend
+- Hono 4.10.4
+- Valibot 1.1.0
+- Resend 6.4.2
+- React (for JSX email templates)
+
+### Build Tools
+- Vite (web)
+- tsgo (TypeScript compilation)
+- Biome (formatting & linting)
+- pnpm (package manager)
+
+## Development Workflow
+
+1. **Start development servers:**
+   ```bash
+   pnpm dev  # Runs both web and worker in parallel
+   ```
+
+2. **Make changes** to web/, worker/, or shared/
+
+3. **Type check before commit:**
+   ```bash
+   pnpm typecheck
+   pnpm check
+   ```
+
+4. **Test contact form locally:**
+   - Frontend: http://localhost:5173/contact
+   - Worker API: http://localhost:8787/api/contact
+   - Email preview: http://localhost:8787/preview/contact
+
+5. **Commit and push** to trigger automatic deployment

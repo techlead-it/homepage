@@ -67,11 +67,13 @@ export interface Philosophy {
   identity: string;
 }
 
+export type NewsCategory = "announcement" | "tech-blog";
+
 export interface NewsArticle {
   id: string;
   title: string;
   date: string; // YYYY-MM-DD
-  category: string;
+  category: NewsCategory;
   summary: string;
   content: string; // Markdown本文
 }

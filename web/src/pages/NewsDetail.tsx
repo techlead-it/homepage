@@ -5,20 +5,29 @@ import { useParams } from "react-router-dom";
 import rehypeHighlight from "rehype-highlight";
 import Section from "../components/ui/Section";
 import { getNewsArticleById } from "../data/news";
+import type { NewsCategory } from "../types";
+
+/**
+ * カテゴリーラベルを日本語で返す
+ */
+const getCategoryLabel = (category: NewsCategory): string => {
+  switch (category) {
+    case "announcement":
+      return "お知らせ";
+    case "tech-blog":
+      return "技術ブログ";
+  }
+};
 
 /**
  * カテゴリーバッジのスタイルを返す
  */
-const getCategoryStyle = (category: string): string => {
+const getCategoryStyle = (category: NewsCategory): string => {
   switch (category) {
-    case "お知らせ":
+    case "announcement":
       return "bg-blue-100 text-blue-800";
-    case "プレスリリース":
-      return "bg-purple-100 text-purple-800";
-    case "技術ブログ":
+    case "tech-blog":
       return "bg-green-100 text-green-800";
-    default:
-      return "bg-gray-100 text-gray-800";
   }
 };
 
@@ -61,7 +70,7 @@ export default function NewsDetail() {
               <span
                 className={`px-3 py-1 rounded-full text-sm font-medium ${getCategoryStyle(article.category)}`}
               >
-                {article.category}
+                {getCategoryLabel(article.category)}
               </span>
               <time className="text-sm text-gray-500">
                 {formatDate(article.date)}

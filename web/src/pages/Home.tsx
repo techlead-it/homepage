@@ -8,6 +8,19 @@ import { projects } from "../data/projects";
 import { services } from "../data/services";
 import { strengths } from "../data/strengths";
 import { techStack } from "../data/techStack";
+import type { NewsCategory } from "../types";
+
+/**
+ * カテゴリーラベルを日本語で返す
+ */
+const getCategoryLabel = (category: NewsCategory): string => {
+  switch (category) {
+    case "announcement":
+      return "お知らせ";
+    case "tech-blog":
+      return "技術ブログ";
+  }
+};
 
 export default function Home() {
   return (
@@ -28,9 +41,6 @@ export default function Home() {
         <div className="max-w-4xl mx-auto">
           <div className="text-center mb-12">
             <h2 className="text-3xl font-bold text-gray-900 mb-4">お知らせ</h2>
-            <p className="text-lg text-gray-600">
-              最新のニュースと情報をお届けします
-            </p>
           </div>
           <div className="space-y-4">
             {getLatestNews(3).map((article) => (
@@ -51,7 +61,7 @@ export default function Home() {
                           })}
                         </time>
                         <span className="px-2 py-1 bg-blue-100 text-blue-800 text-xs font-medium rounded">
-                          {article.category}
+                          {getCategoryLabel(article.category)}
                         </span>
                       </div>
                       <h3 className="text-lg font-bold text-gray-900 hover:text-blue-600 transition-colors">

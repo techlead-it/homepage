@@ -1,8 +1,7 @@
-import "github-markdown-css/github-markdown.css";
-import "highlight.js/styles/github.css";
 import ReactMarkdown from "react-markdown";
 import { useParams } from "react-router-dom";
 import rehypeHighlight from "rehype-highlight";
+import remarkGfm from "remark-gfm";
 import Section from "../components/ui/Section";
 import { getNewsArticleById } from "../data/news";
 import type { NewsCategory } from "../types";
@@ -64,7 +63,7 @@ export default function NewsDetail() {
     <>
       {/* 記事ヘッダー */}
       <Section background="white">
-        <div className="max-w-4xl mx-auto">
+        <div className="max-w-5xl mx-auto">
           <div className="mb-6">
             <div className="flex items-center gap-3 mb-4">
               <span
@@ -79,8 +78,8 @@ export default function NewsDetail() {
           </div>
 
           {/* Markdown本文 */}
-          <article className="markdown-body">
-            <ReactMarkdown rehypePlugins={[rehypeHighlight]}>
+          <article className="prose max-w-none">
+            <ReactMarkdown rehypePlugins={[rehypeHighlight, remarkGfm]}>
               {article.content}
             </ReactMarkdown>
           </article>

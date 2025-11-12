@@ -28,6 +28,7 @@
     "react-markdown": "^10.1.0",
     "react-router-dom": "^7.9.5",
     "rehype-highlight": "^7.0.2",
+    "remark-gfm": "^4.0.1",
     "tailwindcss": "^4.1.17",
     "valibot": "^1.1.0"
   },

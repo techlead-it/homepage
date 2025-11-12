@@ -4,7 +4,7 @@ date: "2025-11-12"
 category: "announcement"
 ---
 
-# VimConf 2025 Smallのゴールドスポンサーに協賛しました"
+# VimConf 2025 Smallのゴールドスポンサーに協賛しました
 
 先日に開催された[VimConf 2025 Small](https://vimconf.org/2025)のゴールドスポンサーに協賛しました。
 

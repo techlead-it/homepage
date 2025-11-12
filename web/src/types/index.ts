@@ -66,3 +66,12 @@ export interface Philosophy {
   philosophy: string;
   identity: string;
 }
+
+export interface NewsArticle {
+  id: string;
+  title: string;
+  date: string; // YYYY-MM-DD
+  category: string;
+  summary: string;
+  content: string; // Markdown本文
+}

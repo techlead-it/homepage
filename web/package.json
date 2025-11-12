@@ -18,11 +18,16 @@
   "dependencies": {
     "@homepage/shared": "workspace:*",
     "@hookform/resolvers": "^5.2.2",
+    "@tailwindcss/typography": "^0.5.19",
+    "github-markdown-css": "^5.8.1",
+    "highlight.js": "^11.11.1",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
     "react-hook-form": "^7.66.0",
     "react-icons": "^5.5.0",
+    "react-markdown": "^10.1.0",
     "react-router-dom": "^7.9.5",
+    "rehype-highlight": "^7.0.2",
     "tailwindcss": "^4.1.17",
     "valibot": "^1.1.0"
   },

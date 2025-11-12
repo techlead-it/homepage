@@ -9,7 +9,8 @@
   "files": {
     "includes": [
       "**",
-      "!!**/dist"
+      "!!**/dist",
+      "!!**/index.css"
     ]
   },
   "formatter": {

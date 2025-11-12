@@ -1,4 +1,4 @@
-import type { NewsArticle } from "../types";
+import type { NewsArticle, NewsCategory } from "../types";
 
 /**
  * シンプルなフロントマター解析（ブラウザ対応）
@@ -61,7 +61,7 @@ export const newsArticles: NewsArticle[] = Object.entries(newsFiles)
       id,
       title: data.title,
       date: data.date,
-      category: data.category,
+      category: data.category as NewsCategory, // TODO: validation
       summary: data.summary,
       content: markdown,
     };

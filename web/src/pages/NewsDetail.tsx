@@ -1,7 +1,7 @@
 import "github-markdown-css/github-markdown.css";
 import "highlight.js/styles/github.css";
 import ReactMarkdown from "react-markdown";
-import { Link, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import rehypeHighlight from "rehype-highlight";
 import Section from "../components/ui/Section";
 import { getNewsArticleById } from "../data/news";
@@ -46,12 +46,6 @@ export default function NewsDetail() {
           <p className="text-gray-600 mb-8">
             お探しの記事は存在しないか、削除された可能性があります。
           </p>
-          <Link
-            to="/news"
-            className="inline-block bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors"
-          >
-            ニュース一覧に戻る
-          </Link>
         </div>
       </Section>
     );
@@ -59,30 +53,6 @@ export default function NewsDetail() {
 
   return (
     <>
-      {/* パンくずリスト */}
-      <Section background="gray">
-        <nav className="text-sm">
-          <ol className="flex items-center space-x-2 text-gray-600">
-            <li>
-              <Link to="/" className="hover:text-blue-600 transition-colors">
-                トップ
-              </Link>
-            </li>
-            <li>/</li>
-            <li>
-              <Link
-                to="/news"
-                className="hover:text-blue-600 transition-colors"
-              >
-                ニュース
-              </Link>
-            </li>
-            <li>/</li>
-            <li className="text-gray-900">{article.title}</li>
-          </ol>
-        </nav>
-      </Section>
-
       {/* 記事ヘッダー */}
       <Section background="white">
         <div className="max-w-4xl mx-auto">
@@ -97,9 +67,6 @@ export default function NewsDetail() {
                 {formatDate(article.date)}
               </time>
             </div>
-            <h1 className="text-3xl md:text-4xl font-bold text-gray-900">
-              {article.title}
-            </h1>
           </div>
 
           {/* Markdown本文 */}
@@ -108,30 +75,6 @@ export default function NewsDetail() {
               {article.content}
             </ReactMarkdown>
           </article>
-
-          {/* 記事下部のナビゲーション */}
-          <div className="mt-12 pt-8 border-t border-gray-200">
-            <Link
-              to="/news"
-              className="inline-flex items-center text-blue-600 hover:text-blue-800 font-medium transition-colors"
-            >
-              <svg
-                className="w-5 h-5 mr-2"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <title>戻る</title>
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M15 19l-7-7 7-7"
-                />
-              </svg>
-              ニュース一覧に戻る
-            </Link>
-          </div>
         </div>
       </Section>
     </>

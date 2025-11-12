@@ -3,7 +3,6 @@ import Button from "../components/ui/Button";
 import Card from "../components/ui/Card";
 import Section from "../components/ui/Section";
 import { getLatestNews } from "../data/news";
-import { philosophy } from "../data/philosophy";
 import { processSteps } from "../data/processSteps";
 import { projects } from "../data/projects";
 import { services } from "../data/services";
@@ -87,32 +86,6 @@ export default function Home() {
             <Button to="/news" variant="outline">
               すべてのお知らせを見る
             </Button>
-          </div>
-        </div>
-      </Section>
-
-      {/* 会社紹介セクション */}
-      <Section background="gray">
-        <div className="max-w-4xl mx-auto">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-gray-900 mb-4">
-              私たちについて
-            </h2>
-            <p className="text-lg text-gray-600">
-              テックリードが大切にしている想い
-            </p>
-          </div>
-          <div className="space-y-8">
-            <div className="bg-gray-50 p-8 rounded-lg">
-              <p className="text-gray-700 whitespace-pre-line leading-relaxed">
-                {philosophy.mission}
-              </p>
-            </div>
-            <div className="text-center">
-              <Button to="/introduction" variant="outline">
-                詳しく見る
-              </Button>
-            </div>
           </div>
         </div>
       </Section>

@@ -120,10 +120,31 @@ pnpm typecheck              # 型チェック
 
 ### 自動デプロイ（GitHub Actions）
 
-`main`ブランチへのプッシュで自動的にデプロイされます:
+WebとWorkerは**独立したワークフロー**で、関連ファイルの変更時のみデプロイされます。
 
-1. **Worker デプロイ**: Cloudflare Workersにworkerをデプロイ
-2. **Web デプロイ**: WorkerのURLを環境変数に設定し、GitHub Pagesにwebをデプロイ
+#### ワークフロー構成
+
+- `.github/workflows/deploy-worker.yaml` - Workerデプロイ
+- `.github/workflows/deploy-web.yaml` - Webデプロイ
+- `.github/workflows/ci-worker.yaml` - Worker CI（lint, typecheck, build）
+- `.github/workflows/ci-web.yaml` - Web CI（lint, typecheck, build）
+- `.github/workflows/pinact-check.yaml` - GitHub Actionsバージョン管理
+
+#### デプロイトリガー
+
+**Workerデプロイ** - 以下の変更時に実行:
+- `worker/**`
+- `shared/**`
+- `package.json`, `pnpm-lock.yaml`, `pnpm-workspace.yaml`
+- `.github/workflows/deploy-worker.yaml`
+
+**Webデプロイ** - 以下の変更時に実行:
+- `web/**`
+- `shared/**`
+- `package.json`, `pnpm-lock.yaml`, `pnpm-workspace.yaml`
+- `.github/workflows/deploy-web.yaml`
+
+**注**: Webデプロイは`secrets.CLOUDFLARE_API_ENDPOINT`を使用し、Worker URLは固定値として扱います。
 
 ### 手動デプロイ（Worker）
 

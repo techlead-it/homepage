@@ -237,18 +237,52 @@ The Layout component implements scroll-to-top on route change using `useState` t
 
 ### Automated Deployment via GitHub Actions
 
-On push to `main` branch:
+The project uses **separate workflows** for web and worker deployments, triggered independently based on file changes.
 
-1. **Worker Deployment** (`deploy-worker` job):
-   - Build worker with `pnpm build:worker`
-   - Deploy using `cloudflare/wrangler-action@v3.14.1`
-   - Retrieve deployment URL
-   - Pass URL to web deployment job
+#### Workflow Files
+- `.github/workflows/deploy-worker.yaml` - Worker deployment
+- `.github/workflows/deploy-web.yaml` - Web deployment
+- `.github/workflows/ci-worker.yaml` - Worker CI (lint, typecheck, build)
+- `.github/workflows/ci-web.yaml` - Web CI (lint, typecheck, build)
+- `.github/workflows/pinact-check.yaml` - GitHub Actions version pinning check
 
-2. **Web Deployment** (`deploy-web` job):
-   - Set `VITE_CONTACT_FORM_ENDPOINT` to worker URL
-   - Build web with `pnpm build:web`
-   - Deploy `web/dist/` to GitHub Pages
+#### Deployment Triggers
+
+**Worker Deployment** (runs when worker-related files change):
+- Triggers on push to `main` with changes to:
+  - `worker/**`
+  - `shared/**`
+  - `package.json`, `pnpm-lock.yaml`, `pnpm-workspace.yaml`
+  - `.github/workflows/deploy-worker.yaml`
+- Steps:
+  1. Build worker with `pnpm build:worker`
+  2. Deploy using `cloudflare/wrangler-action@v3.14.1`
+
+**Web Deployment** (runs when web-related files change):
+- Triggers on push to `main` with changes to:
+  - `web/**`
+  - `shared/**`
+  - `package.json`, `pnpm-lock.yaml`, `pnpm-workspace.yaml`
+  - `.github/workflows/deploy-web.yaml`
+- Steps:
+  1. Set `VITE_CONTACT_FORM_ENDPOINT` to `secrets.CLOUDFLARE_API_ENDPOINT`
+  2. Build web with `pnpm build:web`
+  3. Deploy `web/dist/` to GitHub Pages
+
+**Note**: Web and worker deployments are **independent**. The worker URL is fixed (`secrets.CLOUDFLARE_API_ENDPOINT`) and does not require dynamic retrieval from worker deployment.
+
+#### CI Workflows
+
+**CI runs on**:
+- Pull requests with changes to relevant files
+- Push to `main` branch with changes to relevant files
+
+Each workflow (ci-web, ci-worker) runs:
+- Biome linting (with reviewdog for PR comments)
+- TypeScript type checking
+- Production build validation
+
+**Pinact Check** runs only when workflow files (`.github/workflows/**`) are modified.
 
 ### Manual Worker Deployment
 

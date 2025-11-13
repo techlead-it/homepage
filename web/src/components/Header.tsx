@@ -18,7 +18,7 @@ export default function Header() {
             <Link to="/" className="flex items-center gap-2">
               <img
                 src="/logo.png"
-                alt="株式会社テックリード"
+                alt=""
                 className="h-8 w-8 object-contain translate-y-0.5"
               />
               <span className="text-xl font-bold text-gray-900">

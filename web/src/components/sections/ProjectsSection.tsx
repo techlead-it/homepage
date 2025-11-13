@@ -16,7 +16,7 @@ export default function ProjectsSection({ background }: SectionProps) {
               {project.category.map((cat) => (
                 <span
                   key={cat}
-                  className="inline-block px-3 py-1 text-xs font-semibold text-blue-600 bg-blue-100 rounded-full"
+                  className="inline-block px-3 py-1 text-xs font-semibold text-blue-600 bg-blue-50 rounded-full"
                 >
                   {cat}
                 </span>

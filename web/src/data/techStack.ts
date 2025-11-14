@@ -32,13 +32,14 @@ export const techStack: TechStack[] = [
     ],
   },
   {
-    category: "CI/CD・クラウド・インフラ",
+    category: "CI/CD・クラウド",
     items: [
       { name: "GitHub Actions", proficiency: 5 },
       { name: "AWS", proficiency: 4 },
       { name: "Google Cloud", proficiency: 4 },
       { name: "Docker", proficiency: 5 },
       { name: "Kubernetes", proficiency: 3 },
+      { name: "Terraform", proficiency: 3 },
     ],
   },
   {

@@ -4,7 +4,7 @@ export const companyInfo: CompanyInfo = {
   name: "株式会社テックリード",
   ceo: "兼平 松",
   founded: "2022年09月13日",
-  businesses: ["SES", "システム開発"],
+  businesses: ["システム開発"],
   address: {
     postalCode: "332-0025",
     prefecture: "埼玉県",

@@ -55,7 +55,7 @@ export default function Introduction() {
       <Section background="gray">
         <div className="max-w-4xl mx-auto">
           <Card>
-            <h2 className="text-3xl font-bold text-gray-900 mb-6">行動指針</h2>
+            <h2 className="text-3xl font-bold text-gray-900 mb-6">フィロソフィー</h2>
             <p className="text-gray-700 whitespace-pre-line leading-relaxed text-lg">
               {philosophy.philosophy}
             </p>

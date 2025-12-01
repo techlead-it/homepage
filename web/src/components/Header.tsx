@@ -17,7 +17,7 @@ export default function Header() {
           <div className="flex">
             <Link to="/" className="flex items-center gap-2">
               <img
-                src="/logo.png"
+                src="/logo.webp"
                 alt=""
                 className="h-8 w-8 object-contain translate-y-0.5"
               />

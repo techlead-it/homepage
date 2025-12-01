@@ -8,14 +8,7 @@ updates:
       timezone: "Asia/Tokyo"
 
   - package-ecosystem: npm
-    directory: /web
-    schedule:
-      interval: daily
-      time: "07:00"
-      timezone: "Asia/Tokyo"
-
-  - package-ecosystem: npm
-    directory: /worker
+    directory: /
     schedule:
       interval: daily
       time: "07:00"

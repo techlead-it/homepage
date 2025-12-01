@@ -1,0 +1,22 @@
+version: 2
+updates:
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+      time: "07:00"
+      timezone: "Asia/Tokyo"
+
+  - package-ecosystem: npm
+    directory: /web
+    schedule:
+      interval: daily
+      time: "07:00"
+      timezone: "Asia/Tokyo"
+
+  - package-ecosystem: npm
+    directory: /worker
+    schedule:
+      interval: daily
+      time: "07:00"
+      timezone: "Asia/Tokyo"

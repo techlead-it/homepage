@@ -14,7 +14,7 @@
   "dependencies": {
     "@homepage/shared": "workspace:*",
     "@hono/valibot-validator": "^0.5.3",
-    "hono": "^4.10.4",
+    "hono": "^4.10.7",
     "resend": "^6.4.2",
     "valibot": "^1.1.0"
   },

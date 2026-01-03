@@ -42,11 +42,13 @@ jobs:
         env:
           REVIEWDOG_GITHUB_API_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          pnpm oxlint worker --deny=correctness --warn=suspicious --warn=perf -f checkstyle | \
-            reviewdog -f=checkstyle -name="oxlint (worker)" \
+          pnpm oxlint worker --deny=correctness --warn=suspicious --warn=perf -f checkstyle > oxlint-worker.xml || true
+          if [ -s oxlint-worker.xml ]; then
+            cat oxlint-worker.xml | reviewdog -f=checkstyle -name="oxlint (worker)" \
               -reporter=github-pr-review \
               -filter-mode=added \
               -fail-level=any
+          fi
 
       - name: Run Oxfmt check (worker)
         run: pnpm --filter worker format:check

@@ -86,12 +86,14 @@ app.post(
       });
 
       if (error) {
+        // eslint-disable-next-line no-console
         console.error("Resend error:", error);
         return c.json({ error: "Failed to send email" }, 500);
       }
 
       return c.json({ success: true, messageId: data?.id }, 200);
     } catch (error) {
+      // eslint-disable-next-line no-console
       console.error("Server error:", error);
       return c.json({ error: "Internal server error" }, 500);
     }

@@ -78,6 +78,7 @@ export default function Contact() {
 
         navigate("/contact/thanks");
       } catch (error) {
+        // eslint-disable-next-line no-console
         console.error("Form submission error:", error);
         setSubmitError(
           error instanceof Error

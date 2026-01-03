@@ -39,16 +39,15 @@ jobs:
         uses: reviewdog/action-setup@d8a7baabd7f3e8544ee4dbde3ee41d0011c3a93f # v1.5.0
 
       - name: Run Oxlint with reviewdog (web)
+        working-directory: web
         env:
           REVIEWDOG_GITHUB_API_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          pnpm oxlint web --deny=correctness --warn=suspicious --warn=perf -f checkstyle > oxlint-web.xml || true
-          if [ -s oxlint-web.xml ]; then
-            cat oxlint-web.xml | reviewdog -f=checkstyle -name="oxlint (web)" \
+          pnpm exec oxlint --deny=correctness --warn=suspicious --warn=perf -f unix 2>&1 | \
+            reviewdog -efm="%f:%l:%c: %m" -name="oxlint (web)" \
               -reporter=github-pr-review \
               -filter-mode=added \
               -fail-level=any
-          fi
 
       - name: Run Oxfmt check (web)
         run: pnpm --filter web format:check

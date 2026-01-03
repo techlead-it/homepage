@@ -4,7 +4,7 @@ import type { NewsArticle, NewsCategory } from "../types";
  * シンプルなフロントマター解析（ブラウザ対応）
  */
 function parseFrontmatter(content: string): {
-  data: Record<string, string>;
+  data: { [key: string]: string };
   content: string;
 } {
   const frontmatterRegex = /^---\s*\n([\s\S]*?)\n---\s*\n([\s\S]*)$/;
@@ -15,12 +15,14 @@ function parseFrontmatter(content: string): {
   }
 
   const [, frontmatter, markdown] = match;
-  const data: Record<string, string> = {};
+  const data: { [key: string]: string } = {};
 
   // フロントマターの各行を解析
   for (const line of frontmatter.split("\n")) {
     const colonIndex = line.indexOf(":");
-    if (colonIndex === -1) continue;
+    if (-1 === colonIndex) {
+      continue;
+    }
 
     const key = line.slice(0, colonIndex).trim();
     let value = line.slice(colonIndex + 1).trim();

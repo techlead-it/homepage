@@ -12,6 +12,6 @@ perf.tokyo は、負荷試験・パフォーマンス改善の知見を共有す
 
 #1では、主にウェブアプリケーションからmruby VMのパフォーマンスチューニングに関する発表がありました。
 
--	夏休みWebアプリパフォーマンス相談室(仮) by @hachi_eiji
--	LLMOpsのパフォーマンスを支える技術と現場で実践した改善 by @po3rin
--	C#で書く高性能mruby VM - モダンJITとアンセーフ最適化技法 by @hadashiA
+- 夏休みWebアプリパフォーマンス相談室(仮) by @hachi_eiji
+- LLMOpsのパフォーマンスを支える技術と現場で実践した改善 by @po3rin
+- C#で書く高性能mruby VM - モダンJITとアンセーフ最適化技法 by @hadashiA

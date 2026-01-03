@@ -36,10 +36,14 @@ pnpm typecheck              # All packages
 pnpm typecheck:web          # Web only
 pnpm typecheck:worker       # Worker only
 
-# Code quality
-pnpm check                  # All packages
+# Code quality (Oxlint + Oxfmt)
+pnpm format                 # Format all packages
+pnpm format:check           # Check formatting
+pnpm lint                   # Lint all packages
+pnpm check                  # Format + lint all packages
 pnpm check:web              # Web only
 pnpm check:worker           # Worker only
+pnpm check:shared           # Shared only
 
 # Build
 pnpm build                  # Build worker, then web
@@ -53,14 +57,18 @@ pnpm build:worker           # Build worker only
 # Web (from web/ directory or use pnpm --filter web <command>)
 pnpm dev                    # Start dev server at http://localhost:5173
 pnpm build                  # TypeScript check + production build to dist/
-pnpm check                  # Run Biome formatting, linting
+pnpm format                 # Format with Oxfmt
+pnpm lint                   # Lint with Oxlint
+pnpm check                  # Run Oxfmt + Oxlint
 pnpm typecheck              # Type check with tsgo
 
 # Worker (from worker/ directory or use pnpm --filter worker <command>)
 pnpm dev                    # Start worker dev server at http://localhost:8787
 pnpm deploy                 # Deploy to Cloudflare Workers
 pnpm build                  # Build with tsgo
-pnpm check                  # Run Biome formatting, linting
+pnpm format                 # Format with Oxfmt
+pnpm lint                   # Lint with Oxlint
+pnpm check                  # Run Oxfmt + Oxlint
 pnpm typecheck              # Type check with tsgo
 ```
 
@@ -110,7 +118,7 @@ Client-side routing via react-router-dom with BrowserRouter. Routes defined in `
 ### Styling
 
 - **Tailwind CSS v4** with `@tailwindcss/vite` plugin
-- Tab indentation (configured in biome.json)
+- Space indentation (configured in `.oxfmtrc.json`)
 - Mobile-first responsive design
 - Breakpoints: `md:` (tablet), `lg:` (desktop)
 
@@ -278,7 +286,8 @@ The project uses **separate workflows** for web and worker deployments, triggere
 - Push to `main` branch with changes to relevant files
 
 Each workflow (ci-web, ci-worker) runs:
-- Biome linting (with reviewdog for PR comments)
+- Oxlint linting (with GitHub annotations)
+- Oxfmt format checking
 - TypeScript type checking
 - Production build validation
 
@@ -297,11 +306,11 @@ pnpx wrangler secret put TO_EMAIL
 
 ## Code Style
 
-- **Indentation**: Tabs (enforced by Biome)
+- **Indentation**: Spaces (2 spaces, configured in `.oxfmtrc.json`)
 - **Quotes**: Double quotes for strings
-- **Imports**: Auto-organized by Biome
+- **Imports**: Auto-sorted by Oxlint (`sort-imports` rule)
 - **TypeScript**: Strict mode enabled
-- Use Biome for all formatting and linting (not ESLint/Prettier)
+- Use Oxlint for linting and Oxfmt for formatting (not ESLint/Prettier/Biome)
 
 ## Key Technologies
 
@@ -322,7 +331,8 @@ pnpx wrangler secret put TO_EMAIL
 ### Build Tools
 - Vite (web)
 - tsgo (TypeScript compilation)
-- Biome (formatting & linting)
+- Oxlint (linting)
+- Oxfmt (formatting)
 - pnpm (package manager)
 
 ## Development Workflow

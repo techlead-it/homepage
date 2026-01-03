@@ -18,11 +18,13 @@ Cloudflare Worker for handling contact form submissions using Hono, Valibot, and
 ### Setup
 
 1. Copy `.dev.vars.example` to `.dev.vars`:
+
    ```bash
    cp .dev.vars.example .dev.vars
    ```
 
 2. Edit `.dev.vars` and add your actual values:
+
    ```env
    RESEND_API_KEY=re_your_actual_api_key
    TO_EMAIL=info@techlead.jp
@@ -62,11 +64,13 @@ curl -X POST http://localhost:8787/api/contact \
 ### Steps
 
 1. Login to Cloudflare:
+
    ```bash
    pnpx wrangler login
    ```
 
 2. Set production secrets:
+
    ```bash
    pnpx wrangler secret put RESEND_API_KEY
    pnpx wrangler secret put TO_EMAIL
@@ -85,6 +89,7 @@ curl -X POST http://localhost:8787/api/contact \
 Health check endpoint.
 
 **Response:**
+
 ```
 Contact Form Worker is running
 ```
@@ -94,6 +99,7 @@ Contact Form Worker is running
 Submit a contact form.
 
 **Request Body:**
+
 ```json
 {
   "name": "山田太郎",
@@ -105,6 +111,7 @@ Submit a contact form.
 ```
 
 **Response (success):**
+
 ```json
 {
   "success": true,
@@ -113,6 +120,7 @@ Submit a contact form.
 ```
 
 **Response (validation error):**
+
 ```json
 {
   "success": false,

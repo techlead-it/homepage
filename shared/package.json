@@ -1,28 +1,38 @@
 {
-	"name": "@homepage/shared",
-	"version": "0.0.1",
-	"private": true,
-	"type": "module",
-	"exports": {
-		".": {
-			"types": "./src/index.ts",
-			"default": "./src/index.ts"
-		},
-		"./schemas": {
-			"types": "./src/schemas/index.ts",
-			"default": "./src/schemas/index.ts"
-		},
-		"./types": {
-			"types": "./src/types/index.ts",
-			"default": "./src/types/index.ts"
-		}
-	},
-	"dependencies": {
-		"valibot": "^1.1.0"
-	},
-	"devDependencies": {
-		"@biomejs/biome": "2.3.4",
-		"@typescript/native-preview": "7.0.0-dev.20251110.1",
-		"typescript": "^5.7.2"
-	}
+  "name": "@homepage/shared",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "format": "oxfmt --write .",
+    "format:check": "oxfmt .",
+    "lint": "oxlint --fix",
+    "lint:fix": "oxlint --fix",
+    "lint:check": "oxlint",
+    "check": "pnpm format && pnpm lint",
+    "check:ci": "pnpm format:check && pnpm lint:check"
+  },
+  "exports": {
+    ".": {
+      "types": "./src/index.ts",
+      "default": "./src/index.ts"
+    },
+    "./schemas": {
+      "types": "./src/schemas/index.ts",
+      "default": "./src/schemas/index.ts"
+    },
+    "./types": {
+      "types": "./src/types/index.ts",
+      "default": "./src/types/index.ts"
+    }
+  },
+  "dependencies": {
+    "valibot": "^1.1.0"
+  },
+  "devDependencies": {
+    "oxlint": "^0.17.0",
+    "oxfmt": "^0.17.0",
+    "@typescript/native-preview": "7.0.0-dev.20251110.1",
+    "typescript": "^5.7.2"
+  }
 }

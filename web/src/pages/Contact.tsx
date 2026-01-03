@@ -13,7 +13,7 @@ import Section from "../components/ui/Section";
 export default function Contact() {
   const navigate = useNavigate();
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [submitError, setSubmitError] = useState<string | null>(null);
+  const [submitError, setSubmitError] = useState<string | null>(undefined);
 
   const {
     register,
@@ -28,7 +28,7 @@ export default function Contact() {
   const onSubmit = useCallback(
     async (data: ContactFormData) => {
       setIsSubmitting(true);
-      setSubmitError(null);
+      setSubmitError(undefined);
 
       try {
         const endpoint = import.meta.env.VITE_CONTACT_FORM_ENDPOINT;
@@ -82,13 +82,13 @@ export default function Contact() {
         setSubmitError(
           error instanceof Error
             ? error.message
-            : "送信中にエラーが発生しました。しばらく経ってから再度お試しください。",
+            : "送信中にエラーが発生しました。しばらく経ってから再度お試しください。"
         );
       } finally {
         setIsSubmitting(false);
       }
     },
-    [navigate, setError],
+    [navigate, setError]
   );
 
   return (

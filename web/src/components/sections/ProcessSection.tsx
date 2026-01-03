@@ -21,7 +21,7 @@ export default function ProcessSection({ background }: SectionProps) {
                   {step.title}
                 </h3>
                 <p className="text-gray-600 mb-3">{step.description}</p>
-                {step.deliverables && step.deliverables.length > 0 && (
+                {step.deliverables && 0 < step.deliverables.length && (
                   <div className="mt-3">
                     <p className="text-sm font-semibold text-gray-700 mb-2">
                       成果物:

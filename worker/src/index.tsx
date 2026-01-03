@@ -6,12 +6,12 @@ import { renderToStaticMarkup } from "react-dom/server";
 import { Resend } from "resend";
 import { ContactNotification } from "../emails/contact-notification";
 
-type Bindings = {
+interface Bindings {
   RESEND_API_KEY: string;
   TO_EMAIL: string;
   ALLOWED_ORIGIN: string;
   WORKER_ENV?: string;
-};
+}
 
 const app = new Hono<{ Bindings: Bindings }>();
 
@@ -29,7 +29,7 @@ app.get("/", (c) => {
 });
 
 app.get("/preview/contact", (c) => {
-  if (c.env.WORKER_ENV !== "development") {
+  if ("development" !== c.env.WORKER_ENV) {
     return c.text("Not Found", 404);
   }
 
@@ -50,7 +50,7 @@ app.post(
   "/api/contact",
   vValidator("json", contactSchema, (result, c) => {
     if (!result.success) {
-      const errors: Record<string, string> = {};
+      const errors: { [key: string]: string } = {};
       for (const issue of result.issues) {
         const path = issue.path
           // biome-ignore lint/suspicious/noExplicitAny: Valibot path types are complex
@@ -95,7 +95,7 @@ app.post(
       console.error("Server error:", error);
       return c.json({ error: "Internal server error" }, 500);
     }
-  },
+  }
 );
 
 export default app;

@@ -77,6 +77,7 @@ pnpm typecheck              # Type check with tsgo
 ### Data-Driven Content Model
 
 All content is separated from presentation in `web/src/data/`:
+
 - **company.ts**: Company info and client list
 - **philosophy.ts**: Mission, vision, values, identity
 - **projects.ts**: Project portfolio (real client work)
@@ -91,16 +92,19 @@ Type definitions in `web/src/types/index.ts` ensure type safety across all data.
 ### Component Architecture
 
 **Layout Pattern**: All pages wrapped in `Layout` component which provides:
+
 - Fixed header navigation
 - Main content area with top padding (pt-16) to account for fixed header
 - Footer
 - Automatic scroll-to-top on route change
 
 **Page Components** (`web/src/pages/`):
+
 - Each page uses `Section` components with alternating `background="white"` and `background="gray"`
 - All pages follow the pattern: Hero → Content Sections → CTA
 
 **Reusable UI Components** (`web/src/components/ui/`):
+
 - `Section`: Content wrapper with configurable background
 - `Card`: Content card with optional hover effect
 - `Button`: Links styled as buttons (uses react-router-dom Link)
@@ -108,6 +112,7 @@ Type definitions in `web/src/types/index.ts` ensure type safety across all data.
 ### Routing
 
 Client-side routing via react-router-dom with BrowserRouter. Routes defined in `web/src/App.tsx`:
+
 - `/` - Home
 - `/about` - Company info
 - `/introduction` - Company introduction
@@ -145,11 +150,13 @@ Recipient inbox
 ### Frontend (web/)
 
 **Technologies:**
+
 - react-hook-form: Form state management
 - Valibot: Schema validation via valibotResolver
 - @homepage/shared: Shared validation schema and types
 
 **Features:**
+
 - Real-time validation on blur (`mode: "onBlur"`)
 - Field-specific error messages
 - Multiple server error handling via `setError`
@@ -157,6 +164,7 @@ Recipient inbox
 - Success page navigation
 
 **Environment Variables:**
+
 - `VITE_CONTACT_FORM_ENDPOINT`: Worker API endpoint
   - Development: `http://localhost:8787/api/contact`
   - Production: Set by GitHub Actions during deployment
@@ -164,6 +172,7 @@ Recipient inbox
 ### Backend (worker/)
 
 **Technologies:**
+
 - Hono: Ultra-fast web framework
 - Valibot: Request validation
 - Resend: Email delivery
@@ -184,12 +193,14 @@ GET /preview/contact (development only)
 ```
 
 **Environment Variables (Cloudflare Secrets):**
+
 - `RESEND_API_KEY`: Resend API key
 - `TO_EMAIL`: Recipient email address
 - `ALLOWED_ORIGIN`: CORS allowed origin
 - `WORKER_ENV`: Environment ("development" or "production")
 
 **Email Template:**
+
 - React JSX component (`worker/emails/contact-notification.tsx`)
 - Modern card design with FieldSection component
 - Rendered to HTML via `renderToStaticMarkup`
@@ -199,6 +210,7 @@ GET /preview/contact (development only)
 **Purpose:** Centralize validation logic and type definitions
 
 **Exports:**
+
 ```typescript
 // Schemas
 export const contactSchema: v.ObjectSchema
@@ -210,6 +222,7 @@ export type ContactErrorResponse
 ```
 
 **Validation Schema:**
+
 ```typescript
 {
   name: string (min 1 char)
@@ -227,6 +240,7 @@ This ensures **consistent validation** between frontend and backend.
 ### Tech Proficiency Levels
 
 The tech stack displays proficiency using 1-5 dots. Definitions are shown in a legend on the Home page with specific meanings:
+
 - **Level 1**: Basic knowledge - can implement simple tasks with documentation
 - **Level 2**: Can implement - understands existing code, can add features
 - **Level 3**: Independent development - can handle requirements to implementation alone
@@ -248,6 +262,7 @@ The Layout component implements scroll-to-top on route change using `useState` t
 The project uses **separate workflows** for web and worker deployments, triggered independently based on file changes.
 
 #### Workflow Files
+
 - `.github/workflows/deploy-worker.yaml` - Worker deployment
 - `.github/workflows/deploy-web.yaml` - Web deployment
 - `.github/workflows/ci-worker.yaml` - Worker CI (lint, typecheck, build)
@@ -257,6 +272,7 @@ The project uses **separate workflows** for web and worker deployments, triggere
 #### Deployment Triggers
 
 **Worker Deployment** (runs when worker-related files change):
+
 - Triggers on push to `main` with changes to:
   - `worker/**`
   - `shared/**`
@@ -267,6 +283,7 @@ The project uses **separate workflows** for web and worker deployments, triggere
   2. Deploy using `cloudflare/wrangler-action@v3.14.1`
 
 **Web Deployment** (runs when web-related files change):
+
 - Triggers on push to `main` with changes to:
   - `web/**`
   - `shared/**`
@@ -282,10 +299,12 @@ The project uses **separate workflows** for web and worker deployments, triggere
 #### CI Workflows
 
 **CI runs on**:
+
 - Pull requests with changes to relevant files
 - Push to `main` branch with changes to relevant files
 
 Each workflow (ci-web, ci-worker) runs:
+
 - Oxlint linting (with GitHub annotations)
 - Oxfmt format checking
 - TypeScript type checking
@@ -315,6 +334,7 @@ pnpx wrangler secret put TO_EMAIL
 ## Key Technologies
 
 ### Frontend
+
 - React 19.2.0
 - TypeScript 5.9.3
 - Tailwind CSS v4
@@ -323,12 +343,14 @@ pnpx wrangler secret put TO_EMAIL
 - Valibot 1.1.0
 
 ### Backend
+
 - Hono 4.10.4
 - Valibot 1.1.0
 - Resend 6.4.2
 - React (for JSX email templates)
 
 ### Build Tools
+
 - Vite (web)
 - tsgo (TypeScript compilation)
 - Oxlint (linting)
@@ -338,6 +360,7 @@ pnpx wrangler secret put TO_EMAIL
 ## Development Workflow
 
 1. **Start development servers:**
+
    ```bash
    pnpm dev  # Runs both web and worker in parallel
    ```
@@ -345,6 +368,7 @@ pnpx wrangler secret put TO_EMAIL
 2. **Make changes** to web/, worker/, or shared/
 
 3. **Type check before commit:**
+
    ```bash
    pnpm typecheck
    pnpm check
@@ -357,7 +381,6 @@ pnpx wrangler secret put TO_EMAIL
 
 5. **Commit and push** to trigger automatic deployment
 
-
 # AI-DLC and Spec-Driven Development
 
 Kiro-style Spec Driven Development implementation on AI-DLC (AI Development Life Cycle)
@@ -365,6 +388,7 @@ Kiro-style Spec Driven Development implementation on AI-DLC (AI Development Life
 ## Project Context
 
 ### Paths
+
 - Steering: `.kiro/steering/`
 - Specs: `.kiro/specs/`
 
@@ -374,13 +398,16 @@ Kiro-style Spec Driven Development implementation on AI-DLC (AI Development Life
 **Specs** (`.kiro/specs/`) - Formalize development process for individual features
 
 ### Active Specifications
+
 - Check `.kiro/specs/` for active specifications
 - Use `/kiro:spec-status [feature-name]` to check progress
 
 ## Development Guidelines
+
 - Think in English, but generate responses in Japanese (思考は英語、回答の生成は日本語で行うように)
 
 ## Minimal Workflow
+
 - Phase 0 (optional): `/kiro:steering`, `/kiro:steering-custom`
 - Phase 1 (Specification):
   - `/kiro:spec-init "description"`
@@ -394,12 +421,90 @@ Kiro-style Spec Driven Development implementation on AI-DLC (AI Development Life
 - Progress check: `/kiro:spec-status {feature}` (use anytime)
 
 ## Development Rules
+
 - 3-phase approval workflow: Requirements → Design → Tasks → Implementation
 - Human review required each phase; use `-y` only for intentional fast-track
 - Keep steering current and verify alignment with `/kiro:spec-status`
 
 ## Steering Configuration
+
 - Load entire `.kiro/steering/` as project memory
 - Default files: `product.md`, `tech.md`, `structure.md`
 - Custom files are supported (managed via `/kiro:steering-custom`)
 
+<!--VITE PLUS START-->
+
+# Using Vite+, the Unified Toolchain for the Web
+
+This project is using Vite+, a unified toolchain built on top of Vite, Rolldown, Vitest, tsdown, Oxlint, Oxfmt, and Vite Task. Vite+ wraps runtime management, package management, and frontend tooling in a single global CLI called `vp`. Vite+ is distinct from Vite, but it invokes Vite through `vp dev` and `vp build`.
+
+## Vite+ Workflow
+
+`vp` is a global binary that handles the full development lifecycle. Run `vp help` to print a list of commands and `vp <command> --help` for information about a specific command.
+
+### Start
+
+- create - Create a new project from a template
+- migrate - Migrate an existing project to Vite+
+- config - Configure hooks and agent integration
+- staged - Run linters on staged files
+- install (`i`) - Install dependencies
+- env - Manage Node.js versions
+
+### Develop
+
+- dev - Run the development server
+- check - Run format, lint, and TypeScript type checks
+- lint - Lint code
+- fmt - Format code
+- test - Run tests
+
+### Execute
+
+- run - Run monorepo tasks
+- exec - Execute a command from local `node_modules/.bin`
+- dlx - Execute a package binary without installing it as a dependency
+- cache - Manage the task cache
+
+### Build
+
+- build - Build for production
+- pack - Build libraries
+- preview - Preview production build
+
+### Manage Dependencies
+
+Vite+ automatically detects and wraps the underlying package manager such as pnpm, npm, or Yarn through the `packageManager` field in `package.json` or package manager-specific lockfiles.
+
+- add - Add packages to dependencies
+- remove (`rm`, `un`, `uninstall`) - Remove packages from dependencies
+- update (`up`) - Update packages to latest versions
+- dedupe - Deduplicate dependencies
+- outdated - Check for outdated packages
+- list (`ls`) - List installed packages
+- why (`explain`) - Show why a package is installed
+- info (`view`, `show`) - View package information from the registry
+- link (`ln`) / unlink - Manage local package links
+- pm - Forward a command to the package manager
+
+### Maintain
+
+- upgrade - Update `vp` itself to the latest version
+
+These commands map to their corresponding tools. For example, `vp dev --port 3000` runs Vite's dev server and works the same as Vite. `vp test` runs JavaScript tests through the bundled Vitest. The version of all tools can be checked using `vp --version`. This is useful when researching documentation, features, and bugs.
+
+## Common Pitfalls
+
+- **Using the package manager directly:** Do not use pnpm, npm, or Yarn directly. Vite+ can handle all package manager operations.
+- **Always use Vite commands to run tools:** Don't attempt to run `vp vitest` or `vp oxlint`. They do not exist. Use `vp test` and `vp lint` instead.
+- **Running scripts:** Vite+ built-in commands (`vp dev`, `vp build`, `vp test`, etc.) always run the Vite+ built-in tool, not any `package.json` script of the same name. To run a custom script that shares a name with a built-in command, use `vp run <script>`. For example, if you have a custom `dev` script that runs multiple services concurrently, run it with `vp run dev`, not `vp dev` (which always starts Vite's dev server).
+- **Do not install Vitest, Oxlint, Oxfmt, or tsdown directly:** Vite+ wraps these tools. They must not be installed directly. You cannot upgrade these tools by installing their latest versions. Always use Vite+ commands.
+- **Use Vite+ wrappers for one-off binaries:** Use `vp dlx` instead of package-manager-specific `dlx`/`npx` commands.
+- **Import JavaScript modules from `vite-plus`:** Instead of importing from `vite` or `vitest`, all modules should be imported from the project's `vite-plus` dependency. For example, `import { defineConfig } from 'vite-plus';` or `import { expect, test, vi } from 'vite-plus/test';`. You must not install `vitest` to import test utilities.
+- **Type-Aware Linting:** There is no need to install `oxlint-tsgolint`, `vp lint --type-aware` works out of the box.
+
+## Review Checklist for Agents
+
+- [ ] Run `vp install` after pulling remote changes and before getting started.
+- [ ] Run `vp check` and `vp test` to validate changes.
+<!--VITE PLUS END-->

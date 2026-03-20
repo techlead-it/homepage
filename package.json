@@ -2,7 +2,6 @@
   "name": "homepage",
   "version": "1.0.0",
   "private": true,
-  "packageManager": "pnpm@10.21.0",
   "description": "TechLead Inc. corporate homepage",
   "scripts": {
     "dev": "pnpm -r --parallel --stream dev",
@@ -22,7 +21,11 @@
     "check:worker": "pnpm --filter worker check",
     "check:shared": "pnpm --filter @homepage/shared check",
     "check:ci": "pnpm -r run check:ci",
-    "deploy:worker": "pnpm --filter worker deploy"
+    "deploy:worker": "pnpm --filter worker deploy",
+    "prepare": "vp config"
+  },
+  "devDependencies": {
+    "vite-plus": "catalog:"
   },
   "devEngines": {
     "runtime": [
@@ -33,12 +36,12 @@
       }
     ]
   },
+  "packageManager": "pnpm@10.21.0",
   "pnpm": {
     "onlyBuiltDependencies": [
       "esbuild",
       "workerd",
       "sharp"
     ]
-  },
-  "devDependencies": {}
+  }
 }

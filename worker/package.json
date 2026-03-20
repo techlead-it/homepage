@@ -8,11 +8,11 @@
     "deploy": "wrangler deploy",
     "build": "tsgo -b",
     "typecheck": "tsgo --noEmit",
-    "format": "oxfmt --write .",
-    "format:check": "oxfmt .",
-    "lint": "oxlint --fix",
-    "lint:fix": "oxlint --fix",
-    "lint:check": "oxlint",
+    "format": "vp fmt --write .",
+    "format:check": "vp fmt .",
+    "lint": "vp lint --fix",
+    "lint:fix": "vp lint --fix",
+    "lint:check": "vp lint",
     "check": "pnpm format && pnpm lint",
     "check:ci": "pnpm format:check && pnpm lint:check"
   },
@@ -24,14 +24,13 @@
     "valibot": "^1.1.0"
   },
   "devDependencies": {
-    "oxlint": "^0.17.0",
-    "oxfmt": "^0.17.0",
     "@cloudflare/workers-types": "^4.20250110.0",
     "@types/react": "^19.0.8",
     "@types/react-dom": "^19.2.2",
     "@typescript/native-preview": "7.0.0-dev.20251110.1",
     "react": "^19.0.0",
     "react-dom": "^19.2.0",
+    "vite-plus": "catalog:",
     "wrangler": "^4.46.0"
   }
 }

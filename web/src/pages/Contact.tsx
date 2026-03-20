@@ -1,14 +1,24 @@
 import { contactSchema } from "@homepage/shared/schemas";
-import type {
-  ContactErrorResponse,
-  ContactFormData,
-} from "@homepage/shared/types";
+import type { ContactFormData } from "@homepage/shared/types";
 import { valibotResolver } from "@hookform/resolvers/valibot";
 import { useCallback, useState } from "react";
+import * as v from "valibot";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import Card from "../components/ui/Card";
 import Section from "../components/ui/Section";
+
+const fieldErrorsSchema = v.object({
+  errors: v.record(v.string(), v.string()),
+});
+const singleErrorSchema = v.object({ error: v.string() });
+const contactFieldSchema = v.picklist([
+  "name",
+  "email",
+  "company",
+  "subject",
+  "message",
+] satisfies (keyof ContactFormData)[]);
 
 export default function Contact() {
   const navigate = useNavigate();
@@ -45,38 +55,32 @@ export default function Contact() {
         });
 
         if (!response.ok) {
-          try {
-            const errorData = (await response.json()) as ContactErrorResponse;
-            if ("errors" in errorData) {
-              // Multiple field errors
-              let hasErrors = false;
-              for (const [field, message] of Object.entries(errorData.errors)) {
-                if (field in data) {
-                  setError(field as keyof ContactFormData, {
-                    type: "server",
-                    message,
-                  });
-                  hasErrors = true;
-                }
+          const errorData: unknown = await response.json().catch(() => null);
+
+          const fieldErrors = v.safeParse(fieldErrorsSchema, errorData);
+          if (fieldErrors.success) {
+            let hasErrors = false;
+            for (const [field, message] of Object.entries(
+              fieldErrors.output.errors
+            )) {
+              const key = v.safeParse(contactFieldSchema, field);
+              if (key.success) {
+                setError(key.output, { type: "server", message });
+                hasErrors = true;
               }
-              if (hasErrors) {
-                return;
-              }
-            } else if ("error" in errorData) {
-              // Single error message
-              throw new Error(errorData.error);
             }
-          } catch (error) {
-            // If error is already thrown from above, re-throw it
-            if (error instanceof Error) {
-              throw error;
-            }
-            // JSON parse error - use default message
+            if (hasErrors) return;
           }
-          throw new Error("送信に失敗しました");
+
+          const singleError = v.safeParse(singleErrorSchema, errorData);
+          throw new Error(
+            singleError.success
+              ? singleError.output.error
+              : "送信に失敗しました"
+          );
         }
 
-        navigate("/contact/thanks");
+        void navigate("/contact/thanks");
       } catch (error) {
         // eslint-disable-next-line no-console
         console.error("Form submission error:", error);
@@ -132,12 +136,14 @@ export default function Contact() {
                   type="text"
                   id="name"
                   {...register("name")}
+                  aria-invalid={!!errors.name}
+                  aria-describedby={errors.name ? "name-error" : undefined}
                   className={`w-full px-4 py-2 border rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
                     errors.name ? "border-red-500" : "border-gray-300"
                   }`}
                 />
                 {errors.name && (
-                  <p className="mt-1 text-sm text-red-600">
+                  <p id="name-error" className="mt-1 text-sm text-red-600">
                     {errors.name.message}
                   </p>
                 )}
@@ -154,12 +160,14 @@ export default function Contact() {
                   type="email"
                   id="email"
                   {...register("email")}
+                  aria-invalid={!!errors.email}
+                  aria-describedby={errors.email ? "email-error" : undefined}
                   className={`w-full px-4 py-2 border rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
                     errors.email ? "border-red-500" : "border-gray-300"
                   }`}
                 />
                 {errors.email && (
-                  <p className="mt-1 text-sm text-red-600">
+                  <p id="email-error" className="mt-1 text-sm text-red-600">
                     {errors.email.message}
                   </p>
                 )}
@@ -190,6 +198,10 @@ export default function Contact() {
                 <select
                   id="subject"
                   {...register("subject")}
+                  aria-invalid={!!errors.subject}
+                  aria-describedby={
+                    errors.subject ? "subject-error" : undefined
+                  }
                   className={`w-full px-4 py-2 border rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
                     errors.subject ? "border-red-500" : "border-gray-300"
                   }`}
@@ -201,7 +213,7 @@ export default function Contact() {
                   <option value="その他">その他</option>
                 </select>
                 {errors.subject && (
-                  <p className="mt-1 text-sm text-red-600">
+                  <p id="subject-error" className="mt-1 text-sm text-red-600">
                     {errors.subject.message}
                   </p>
                 )}
@@ -218,12 +230,16 @@ export default function Contact() {
                   id="message"
                   rows={6}
                   {...register("message")}
+                  aria-invalid={!!errors.message}
+                  aria-describedby={
+                    errors.message ? "message-error" : undefined
+                  }
                   className={`w-full px-4 py-2 border rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
                     errors.message ? "border-red-500" : "border-gray-300"
                   }`}
                 />
                 {errors.message && (
-                  <p className="mt-1 text-sm text-red-600">
+                  <p id="message-error" className="mt-1 text-sm text-red-600">
                     {errors.message.message}
                   </p>
                 )}

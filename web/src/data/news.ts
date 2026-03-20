@@ -1,4 +1,13 @@
-import type { NewsArticle, NewsCategory } from "../types";
+import * as v from "valibot";
+import type { NewsArticle } from "../types";
+import { newsCategories } from "../types";
+
+const newsFrontmatterSchema = v.object({
+  title: v.string(),
+  date: v.string(),
+  category: v.picklist([...newsCategories]),
+  summary: v.string(),
+});
 
 /**
  * シンプルなフロントマター解析（ブラウザ対応）
@@ -42,7 +51,7 @@ function parseFrontmatter(content: string): {
 }
 
 // Markdownファイルを動的にインポート
-const newsFiles = import.meta.glob("../content/news/*.md", {
+const newsFiles = import.meta.glob<string>("../content/news/*.md", {
   eager: true,
   query: "?raw",
   import: "default",
@@ -53,23 +62,25 @@ const newsFiles = import.meta.glob("../content/news/*.md", {
  */
 export const newsArticles: NewsArticle[] = Object.entries(newsFiles)
   .map(([filepath, content]) => {
-    const { data, content: markdown } = parseFrontmatter(content as string);
+    const { data, content: markdown } = parseFrontmatter(content);
 
     // ファイル名からIDを生成（例: 2025-01-15-company-launch.md → 2025-01-15-company-launch）
     const filename = filepath.split("/").pop() || "";
     const id = filename.replace(/\.md$/, "");
 
+    const article = v.parse(newsFrontmatterSchema, data);
+
     return {
       id,
-      title: data.title,
-      date: data.date,
-      category: data.category as NewsCategory, // TODO: validation
-      summary: data.summary,
+      title: article.title,
+      date: article.date,
+      category: article.category,
+      summary: article.summary,
       content: markdown,
     };
   })
   // 日付の新しい順にソート
-  .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+  .toSorted((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
 
 /**
  * IDで記事を検索

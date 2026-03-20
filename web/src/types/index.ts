@@ -67,7 +67,8 @@ export interface Philosophy {
   identity: string;
 }
 
-export type NewsCategory = "announcement" | "tech-blog";
+export const newsCategories = ["announcement", "tech-blog"] as const;
+export type NewsCategory = (typeof newsCategories)[number];
 
 export interface NewsArticle {
   id: string;

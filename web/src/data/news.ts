@@ -6,7 +6,7 @@ const newsFrontmatterSchema = v.object({
   title: v.string(),
   date: v.string(),
   category: v.picklist([...newsCategories]),
-  summary: v.string(),
+  summary: v.optional(v.string(), ""),
 });
 
 /**

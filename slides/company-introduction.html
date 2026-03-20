@@ -1,0 +1,1802 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>株式会社テックリード 会社紹介</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;900&family=Zen+Kaku+Gothic+New:wght@500;700;900&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --color-primary: #111827;
+        --color-secondary: #6b7280;
+        --color-accent: #2563eb;
+        --color-accent-dark: #1e3a5f;
+        --color-danger: #dc2626;
+        --color-bg: #ffffff;
+        --color-bg-alt: #f8fafc;
+        --color-text: #111827;
+        --color-text-muted: #6b7280;
+        --color-border: #e5e7eb;
+        --font-heading:
+          "Zen Kaku Gothic New", "Noto Sans JP", system-ui, sans-serif;
+        --font-body: "Noto Sans JP", system-ui, sans-serif;
+        --spacing-slide-padding: 5rem;
+        --radius-sm: 0.5rem;
+        --radius-md: 1rem;
+        --radius-lg: 1.5rem;
+        --radius-full: 9999px;
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: var(--font-body);
+        background: #000;
+        overflow: hidden;
+      }
+
+      .slide {
+        width: 1920px;
+        height: 1080px;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform-origin: center center;
+        overflow: hidden;
+        display: none;
+      }
+
+      .slide.active {
+        display: block;
+      }
+
+      @media print {
+        body {
+          background: white;
+          overflow: visible;
+        }
+
+        .slide {
+          position: relative;
+          top: auto;
+          left: auto;
+          transform: none !important;
+          display: block !important;
+          break-after: page;
+          page-break-after: always;
+        }
+
+        #slide-nav,
+        #slide-progress {
+          display: none !important;
+        }
+
+        @page {
+          size: 1920px 1080px landscape;
+          margin: 0;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div id="slide-container">
+      <!-- ======================================== -->
+      <!-- Slide 1: Cover -->
+      <!-- ======================================== -->
+      <section
+        class="slide"
+        data-slide="1"
+        data-family="hero"
+        data-variant="cover"
+      >
+        <div
+          class="w-[1920px] h-[1080px] relative overflow-hidden"
+          style="
+            background: linear-gradient(
+              135deg,
+              var(--color-primary),
+              var(--color-accent)
+            );
+          "
+        >
+          <!-- 装飾SVG 右上 -->
+          <div
+            class="absolute top-0 right-0 w-[800px] h-full pointer-events-none opacity-10"
+          >
+            <svg viewBox="0 0 800 1080" fill="none">
+              <circle cx="500" cy="200" r="350" fill="var(--color-bg)" />
+              <circle
+                cx="650"
+                cy="700"
+                r="250"
+                fill="var(--color-text-muted)"
+              />
+            </svg>
+          </div>
+          <!-- 装飾SVG 左下 -->
+          <div
+            class="absolute bottom-0 left-0 w-[500px] h-[500px] pointer-events-none opacity-5"
+          >
+            <svg viewBox="0 0 500 500" fill="none">
+              <circle cx="100" cy="400" r="300" fill="var(--color-bg)" />
+            </svg>
+          </div>
+          <!-- メインコンテンツ -->
+          <div class="absolute bottom-32 left-20 max-w-[1200px]">
+            <p
+              class="text-[24px] font-bold text-white/40 tracking-[0.3em] mb-6"
+            >
+              COMPANY INTRODUCTION
+            </p>
+            <h1
+              class="text-[96px] font-black leading-[1.1] tracking-tight text-white"
+              style="font-family: var(--font-heading)"
+            >
+              株式会社テックリード
+            </h1>
+            <p class="text-[36px] mt-8 font-medium text-white/60">
+              作って終わりにしない。<br />一緒に作り、一緒に育てる。
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ======================================== -->
+      <!-- Slide 2: こんな課題はありませんか？ -->
+      <!-- ======================================== -->
+      <section
+        class="slide"
+        data-slide="2"
+        data-family="single-column"
+        data-variant="bullet-list"
+      >
+        <div
+          class="w-[1920px] h-[1080px] relative overflow-hidden p-20"
+          style="background: var(--color-bg)"
+        >
+          <!-- テクスチャ装飾 -->
+          <div
+            class="absolute bottom-0 right-0 w-[400px] h-[400px] opacity-[0.03] pointer-events-none"
+          >
+            <svg viewBox="0 0 400 400" fill="none">
+              <circle cx="350" cy="350" r="300" fill="var(--color-accent)" />
+            </svg>
+          </div>
+          <!-- コンテンツ -->
+          <div class="mt-24">
+            <h2
+              class="text-[52px] font-bold mb-4"
+              style="
+                color: var(--color-accent);
+                font-family: var(--font-heading);
+              "
+            >
+              こんな課題はありませんか？
+            </h2>
+            <p class="text-[24px] mb-16" style="color: var(--color-text-muted)">
+              多くのお客様が抱える、開発パートナー選びの悩み
+            </p>
+            <ul class="space-y-10">
+              <!-- 項目1 -->
+              <li class="flex items-start gap-8">
+                <div
+                  class="w-16 h-16 rounded-xl flex items-center justify-center shrink-0 text-white"
+                  style="background: var(--color-danger)"
+                >
+                  <svg
+                    width="28"
+                    height="28"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <line x1="12" y1="1" x2="12" y2="23"></line>
+                    <path
+                      d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"
+                    ></path>
+                  </svg>
+                </div>
+                <div>
+                  <p
+                    class="text-[32px] font-bold"
+                    style="color: var(--color-text)"
+                  >
+                    外注したが品質が低く、作り直しでコストが倍に
+                  </p>
+                  <p
+                    class="text-[24px] mt-2"
+                    style="color: var(--color-text-muted)"
+                  >
+                    テスト不足・設計不備による手戻りが経営を圧迫
+                  </p>
+                </div>
+              </li>
+              <!-- 項目2 -->
+              <li class="flex items-start gap-8">
+                <div
+                  class="w-16 h-16 rounded-xl flex items-center justify-center shrink-0 text-white"
+                  style="background: var(--color-danger)"
+                >
+                  <svg
+                    width="28"
+                    height="28"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <line x1="15" y1="9" x2="9" y2="15"></line>
+                    <line x1="9" y1="9" x2="15" y2="15"></line>
+                  </svg>
+                </div>
+                <div>
+                  <p
+                    class="text-[32px] font-bold"
+                    style="color: var(--color-text)"
+                  >
+                    要件を伝えたのに、期待と違うものが納品された
+                  </p>
+                  <p
+                    class="text-[24px] mt-2"
+                    style="color: var(--color-text-muted)"
+                  >
+                    コミュニケーション不足で認識齟齬が発生
+                  </p>
+                </div>
+              </li>
+              <!-- 項目3 -->
+              <li class="flex items-start gap-8">
+                <div
+                  class="w-16 h-16 rounded-xl flex items-center justify-center shrink-0 text-white"
+                  style="background: var(--color-danger)"
+                >
+                  <svg
+                    width="28"
+                    height="28"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+                    <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                  </svg>
+                </div>
+                <div>
+                  <p
+                    class="text-[32px] font-bold"
+                    style="color: var(--color-text)"
+                  >
+                    技術的な判断を丸投げするしかなく、妥当性が判断できない
+                  </p>
+                  <p
+                    class="text-[24px] mt-2"
+                    style="color: var(--color-text-muted)"
+                  >
+                    提案の良し悪しを評価できるパートナーが不在
+                  </p>
+                </div>
+              </li>
+              <!-- 項目4 -->
+              <li class="flex items-start gap-8">
+                <div
+                  class="w-16 h-16 rounded-xl flex items-center justify-center shrink-0 text-white"
+                  style="background: var(--color-danger)"
+                >
+                  <svg
+                    width="28"
+                    height="28"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <path
+                      d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"
+                    ></path>
+                    <line x1="1" y1="1" x2="23" y2="23"></line>
+                  </svg>
+                </div>
+                <div>
+                  <p
+                    class="text-[32px] font-bold"
+                    style="color: var(--color-text)"
+                  >
+                    開発の進捗が見えず、完成まで不安が続いた
+                  </p>
+                  <p
+                    class="text-[24px] mt-2"
+                    style="color: var(--color-text-muted)"
+                  >
+                    ブラックボックス化した開発で状況が把握できない
+                  </p>
+                </div>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- ======================================== -->
+      <!-- Slide 3: テックリードの3つの約束 -->
+      <!-- ======================================== -->
+      <section
+        class="slide"
+        data-slide="3"
+        data-family="grid"
+        data-variant="cards"
+      >
+        <div
+          class="w-[1920px] h-[1080px] relative overflow-hidden p-20 flex flex-col justify-center"
+          style="background: var(--color-bg)"
+        >
+          <!-- テクスチャ装飾 -->
+          <div
+            class="absolute bottom-0 right-0 w-[400px] h-[400px] opacity-[0.03] pointer-events-none"
+          >
+            <svg viewBox="0 0 400 400" fill="none">
+              <circle cx="350" cy="350" r="300" fill="var(--color-accent)" />
+            </svg>
+          </div>
+          <!-- コンテンツ -->
+          <div>
+            <h2
+              class="text-[52px] font-bold mb-4"
+              style="
+                color: var(--color-accent);
+                font-family: var(--font-heading);
+              "
+            >
+              テックリードの3つの約束
+            </h2>
+            <p class="text-[24px] mb-14" style="color: var(--color-text-muted)">
+              お客様に安心と喜びを届けるために
+            </p>
+            <div class="grid grid-cols-3 gap-10">
+              <!-- Card 1: 品質 -->
+              <div
+                class="rounded-2xl p-10 shadow-lg"
+                style="
+                  background: var(--color-bg-alt);
+                  border-left: 4px solid var(--color-accent);
+                "
+              >
+                <div
+                  class="w-16 h-16 rounded-xl flex items-center justify-center mb-6 text-white"
+                  style="background: var(--color-accent)"
+                >
+                  <svg
+                    width="28"
+                    height="28"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <path
+                      d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"
+                    ></path>
+                    <polyline points="9 12 11 14 15 10"></polyline>
+                  </svg>
+                </div>
+                <h3
+                  class="text-[28px] font-bold mb-4"
+                  style="color: var(--color-text)"
+                >
+                  品質を妥協しない
+                </h3>
+                <p
+                  class="text-[22px] leading-relaxed"
+                  style="color: var(--color-text-muted)"
+                >
+                  テスト駆動開発（TDD）と自動テストにより、「動くけど壊れやすい」を作りません。CI/CDで品質を継続的に担保します。
+                </p>
+              </div>
+              <!-- Card 2: 透明性 -->
+              <div
+                class="rounded-2xl p-10 shadow-lg"
+                style="
+                  background: var(--color-bg-alt);
+                  border-left: 4px solid var(--color-accent);
+                "
+              >
+                <div
+                  class="w-16 h-16 rounded-xl flex items-center justify-center mb-6 text-white"
+                  style="background: var(--color-accent)"
+                >
+                  <svg
+                    width="28"
+                    height="28"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <path
+                      d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"
+                    ></path>
+                    <circle cx="12" cy="12" r="3"></circle>
+                  </svg>
+                </div>
+                <h3
+                  class="text-[28px] font-bold mb-4"
+                  style="color: var(--color-text)"
+                >
+                  透明性を保つ
+                </h3>
+                <p
+                  class="text-[22px] leading-relaxed"
+                  style="color: var(--color-text-muted)"
+                >
+                  スプリントごとに動くソフトウェアをお見せします。進捗を可視化し、完成まで不安にさせません。
+                </p>
+              </div>
+              <!-- Card 3: パートナー -->
+              <div
+                class="rounded-2xl p-10 shadow-lg"
+                style="
+                  background: var(--color-bg-alt);
+                  border-left: 4px solid var(--color-accent);
+                "
+              >
+                <div
+                  class="w-16 h-16 rounded-xl flex items-center justify-center mb-6 text-white"
+                  style="background: var(--color-accent)"
+                >
+                  <svg
+                    width="28"
+                    height="28"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                    <circle cx="9" cy="7" r="4"></circle>
+                    <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                    <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                  </svg>
+                </div>
+                <h3
+                  class="text-[28px] font-bold mb-4"
+                  style="color: var(--color-text)"
+                >
+                  対等なパートナーであり続ける
+                </h3>
+                <p
+                  class="text-[22px] leading-relaxed"
+                  style="color: var(--color-text-muted)"
+                >
+                  言われた通りに作るだけではありません。技術の専門家として、ビジネス価値を最大化する最適な提案をします。
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ======================================== -->
+      <!-- Slide 4: Section Divider - 実績紹介 -->
+      <!-- ======================================== -->
+      <section
+        class="slide"
+        data-slide="4"
+        data-family="hero"
+        data-variant="section-divider"
+      >
+        <div
+          class="w-[1920px] h-[1080px] relative overflow-hidden"
+          style="
+            background: linear-gradient(
+              135deg,
+              var(--color-primary),
+              var(--color-accent)
+            );
+          "
+        >
+          <div class="absolute top-12 right-20">
+            <span class="text-[280px] font-black text-white/20 leading-none"
+              >01</span
+            >
+          </div>
+          <div class="absolute bottom-32 left-20">
+            <p class="text-[28px] font-medium text-white/50 mb-4">
+              CASE STUDIES
+            </p>
+            <h2
+              class="text-[120px] font-black text-white leading-none"
+              style="font-family: var(--font-heading)"
+            >
+              実績紹介
+            </h2>
+          </div>
+        </div>
+      </section>
+
+      <!-- ======================================== -->
+      <!-- Slide 5: 実績 - ResortDX（縦3段構成） -->
+      <!-- ======================================== -->
+      <section
+        class="slide"
+        data-slide="5"
+        data-family="hero"
+        data-variant="showcase"
+      >
+        <div
+          class="w-[1920px] h-[1080px] relative overflow-hidden flex flex-col"
+          style="background: var(--color-bg)"
+        >
+          <!-- 上段: タイトル + バッジ -->
+          <div class="flex items-center gap-6 px-20 pt-6 pb-4">
+            <span
+              class="inline-block px-4 py-2 rounded-full text-[15px] font-bold text-white shrink-0"
+              style="background: var(--color-accent)"
+              >CASE 01</span
+            >
+            <h2
+              class="text-[36px] font-bold"
+              style="color: var(--color-text); font-family: var(--font-heading)"
+            >
+              リゾートホテル向け 業務管理システム
+            </h2>
+            <div class="flex gap-2 ml-auto shrink-0">
+              <span
+                class="px-3 py-1 rounded-full text-[13px] font-bold"
+                style="
+                  color: var(--color-accent);
+                  border: 1px solid var(--color-accent);
+                "
+                >React 19</span
+              >
+              <span
+                class="px-3 py-1 rounded-full text-[13px] font-bold"
+                style="
+                  color: var(--color-accent);
+                  border: 1px solid var(--color-accent);
+                "
+                >TypeScript</span
+              >
+              <span
+                class="px-3 py-1 rounded-full text-[13px] font-bold"
+                style="
+                  color: var(--color-accent);
+                  border: 1px solid var(--color-accent);
+                "
+                >i18next</span
+              >
+              <span
+                class="px-3 py-1 rounded-full text-[13px] font-bold"
+                style="
+                  color: var(--color-accent);
+                  border: 1px solid var(--color-accent);
+                "
+                >Tailwind CSS</span
+              >
+            </div>
+          </div>
+          <!-- 中段: スクリーンショット -->
+          <div
+            class="flex-1 flex items-center justify-center px-10"
+            style="background: var(--color-bg-alt)"
+          >
+            <div class="relative flex flex-col items-center">
+              <span
+                class="text-[14px] font-bold px-4 py-1 rounded-full text-white mb-2"
+                style="background: var(--color-primary)"
+                >管理者画面</span
+              >
+              <img
+                src="resortdx_admin.png"
+                alt="ResortDX 管理画面"
+                class="rounded-xl shadow-2xl object-contain"
+                style="max-width: 1750px; max-height: 760px"
+              />
+            </div>
+          </div>
+          <!-- 下段: 課題→アプローチ→成果 -->
+          <div
+            class="flex gap-0 px-20 py-5"
+            style="border-top: 1px solid var(--color-border)"
+          >
+            <div class="flex-1 pr-8">
+              <p
+                class="text-[16px] font-bold mb-2"
+                style="color: var(--color-accent)"
+              >
+                課題
+              </p>
+              <p
+                class="text-[18px] leading-relaxed"
+                style="color: var(--color-text)"
+              >
+                旅館の業務（清掃・配膳・送迎・お祝い対応）が属人化し、スタッフ間の情報共有が困難だった
+              </p>
+            </div>
+            <div
+              class="flex-1 px-8"
+              style="border-left: 1px solid var(--color-border)"
+            >
+              <p
+                class="text-[16px] font-bold mb-2"
+                style="color: var(--color-accent)"
+              >
+                アプローチ
+              </p>
+              <p
+                class="text-[18px] leading-relaxed"
+                style="color: var(--color-text)"
+              >
+                管理者・スタッフ・ゲストの3ロール対応の統合業務管理アプリを設計・開発
+              </p>
+            </div>
+            <div
+              class="flex-1 pl-8"
+              style="border-left: 1px solid var(--color-border)"
+            >
+              <p
+                class="text-[16px] font-bold mb-2"
+                style="color: var(--color-accent)"
+              >
+                成果
+              </p>
+              <p
+                class="text-[18px] leading-relaxed"
+                style="color: var(--color-text)"
+              >
+                5業務タイプの可視化・リアルタイム共有を実現。多言語対応でインバウンドにも対応
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ======================================== -->
+      <!-- Slide 6: 実績 - ResortDX ゲストポータル（縦3段構成） -->
+      <!-- ======================================== -->
+      <section
+        class="slide"
+        data-slide="6"
+        data-family="hero"
+        data-variant="showcase"
+      >
+        <div
+          class="w-[1920px] h-[1080px] relative overflow-hidden flex flex-col"
+          style="background: var(--color-bg)"
+        >
+          <!-- 上段: タイトル + バッジ -->
+          <div class="flex items-center gap-6 px-20 pt-6 pb-4">
+            <span
+              class="inline-block px-4 py-2 rounded-full text-[15px] font-bold text-white shrink-0"
+              style="background: var(--color-accent)"
+              >CASE 01 — ゲスト向け</span
+            >
+            <h2
+              class="text-[36px] font-bold"
+              style="color: var(--color-text); font-family: var(--font-heading)"
+            >
+              ゲストポータル
+            </h2>
+            <div class="flex gap-2 ml-auto shrink-0">
+              <span
+                class="px-3 py-1 rounded-full text-[13px] font-bold"
+                style="
+                  color: var(--color-accent);
+                  border: 1px solid var(--color-accent);
+                "
+                >React 19</span
+              >
+              <span
+                class="px-3 py-1 rounded-full text-[13px] font-bold"
+                style="
+                  color: var(--color-accent);
+                  border: 1px solid var(--color-accent);
+                "
+                >TypeScript</span
+              >
+              <span
+                class="px-3 py-1 rounded-full text-[13px] font-bold"
+                style="
+                  color: var(--color-accent);
+                  border: 1px solid var(--color-accent);
+                "
+                >i18next</span
+              >
+              <span
+                class="px-3 py-1 rounded-full text-[13px] font-bold"
+                style="
+                  color: var(--color-accent);
+                  border: 1px solid var(--color-accent);
+                "
+                >Tailwind CSS</span
+              >
+            </div>
+          </div>
+          <!-- 中段: 3枚のモバイルスクショ横並び -->
+          <div
+            class="flex-1 flex items-center justify-center gap-16 px-20"
+            style="background: var(--color-bg-alt)"
+          >
+            <div class="flex flex-col items-center">
+              <span
+                class="text-[14px] font-bold px-4 py-1 rounded-full text-white mb-3"
+                style="background: var(--color-primary)"
+                >ホーム</span
+              >
+              <img
+                src="resortdx_guest1.png"
+                alt="ゲストポータル ホーム"
+                class="rounded-2xl shadow-2xl object-contain"
+                style="max-height: 700px; border: 3px solid var(--color-border)"
+              />
+            </div>
+            <div class="flex flex-col items-center">
+              <span
+                class="text-[14px] font-bold px-4 py-1 rounded-full text-white mb-3"
+                style="background: var(--color-primary)"
+                >お食事</span
+              >
+              <img
+                src="resortdx_guest2.png"
+                alt="ゲストポータル お食事"
+                class="rounded-2xl shadow-2xl object-contain"
+                style="max-height: 700px; border: 3px solid var(--color-border)"
+              />
+            </div>
+            <div class="flex flex-col items-center">
+              <span
+                class="text-[14px] font-bold px-4 py-1 rounded-full text-white mb-3"
+                style="background: var(--color-primary)"
+                >ご依頼</span
+              >
+              <img
+                src="resortdx_guest3.png"
+                alt="ゲストポータル ご依頼"
+                class="rounded-2xl shadow-2xl object-contain"
+                style="max-height: 700px; border: 3px solid var(--color-border)"
+              />
+            </div>
+          </div>
+          <!-- 下段: 課題→アプローチ→成果 -->
+          <div
+            class="flex gap-0 px-20 py-5"
+            style="border-top: 1px solid var(--color-border)"
+          >
+            <div class="flex-1 pr-8">
+              <p
+                class="text-[16px] font-bold mb-2"
+                style="color: var(--color-accent)"
+              >
+                課題
+              </p>
+              <p
+                class="text-[18px] leading-relaxed"
+                style="color: var(--color-text)"
+              >
+                旅館の業務（清掃・配膳・送迎・お祝い対応）が属人化し、スタッフ間の情報共有が困難だった
+              </p>
+            </div>
+            <div
+              class="flex-1 px-8"
+              style="border-left: 1px solid var(--color-border)"
+            >
+              <p
+                class="text-[16px] font-bold mb-2"
+                style="color: var(--color-accent)"
+              >
+                アプローチ
+              </p>
+              <p
+                class="text-[18px] leading-relaxed"
+                style="color: var(--color-text)"
+              >
+                管理者・スタッフ・ゲストの3ロール対応の統合業務管理アプリを設計・開発
+              </p>
+            </div>
+            <div
+              class="flex-1 pl-8"
+              style="border-left: 1px solid var(--color-border)"
+            >
+              <p
+                class="text-[16px] font-bold mb-2"
+                style="color: var(--color-accent)"
+              >
+                成果
+              </p>
+              <p
+                class="text-[18px] leading-relaxed"
+                style="color: var(--color-text)"
+              >
+                5業務タイプの可視化・リアルタイム共有を実現。多言語対応でインバウンドにも対応
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ======================================== -->
+      <!-- Slide 7: 実績 - アレルゲンチェッカー（縦3段構成） -->
+      <!-- ======================================== -->
+      <section
+        class="slide"
+        data-slide="7"
+        data-family="hero"
+        data-variant="showcase"
+      >
+        <div
+          class="w-[1920px] h-[1080px] relative overflow-hidden flex flex-col"
+          style="background: var(--color-bg)"
+        >
+          <!-- 上段: タイトル + バッジ -->
+          <div class="flex items-center gap-6 px-20 pt-6 pb-4">
+            <span
+              class="inline-block px-4 py-2 rounded-full text-[15px] font-bold text-white shrink-0"
+              style="background: var(--color-accent)"
+              >CASE 02</span
+            >
+            <h2
+              class="text-[36px] font-bold"
+              style="color: var(--color-text); font-family: var(--font-heading)"
+            >
+              アレルゲンチェックシステム
+            </h2>
+            <p
+              class="text-[24px] font-black shrink-0"
+              style="color: var(--color-accent)"
+            >
+              28品目を自動判定
+            </p>
+            <div class="flex gap-2 ml-auto shrink-0">
+              <span
+                class="px-3 py-1 rounded-full text-[13px] font-bold"
+                style="
+                  color: var(--color-accent);
+                  border: 1px solid var(--color-accent);
+                "
+                >React 19</span
+              >
+              <span
+                class="px-3 py-1 rounded-full text-[13px] font-bold"
+                style="
+                  color: var(--color-accent);
+                  border: 1px solid var(--color-accent);
+                "
+                >TypeScript</span
+              >
+              <span
+                class="px-3 py-1 rounded-full text-[13px] font-bold"
+                style="
+                  color: var(--color-accent);
+                  border: 1px solid var(--color-accent);
+                "
+                >OCR</span
+              >
+              <span
+                class="px-3 py-1 rounded-full text-[13px] font-bold"
+                style="
+                  color: var(--color-accent);
+                  border: 1px solid var(--color-accent);
+                "
+                >Tailwind CSS</span
+              >
+            </div>
+          </div>
+          <!-- 中段: スクリーンショット -->
+          <div
+            class="flex-1 flex items-center justify-center px-10"
+            style="background: var(--color-bg-alt)"
+          >
+            <div class="relative flex flex-col items-center">
+              <span
+                class="text-[14px] font-bold px-4 py-1 rounded-full text-white mb-2"
+                style="background: var(--color-primary)"
+                >割当判定画面</span
+              >
+              <img
+                src="allergen_checker.png"
+                alt="アレルゲンチェッカー ダッシュボード"
+                class="rounded-xl shadow-2xl object-contain"
+                style="max-width: 1750px; max-height: 760px"
+              />
+            </div>
+          </div>
+          <!-- 下段: 課題→アプローチ→成果 -->
+          <div
+            class="flex gap-0 px-20 py-5"
+            style="border-top: 1px solid var(--color-border)"
+          >
+            <div class="flex-1 pr-8">
+              <p
+                class="text-[16px] font-bold mb-2"
+                style="color: var(--color-accent)"
+              >
+                課題
+              </p>
+              <p
+                class="text-[18px] leading-relaxed"
+                style="color: var(--color-text)"
+              >
+                食材のアレルゲン確認が手作業で、見落としリスクと担当者の負荷が大きかった
+              </p>
+            </div>
+            <div
+              class="flex-1 px-8"
+              style="border-left: 1px solid var(--color-border)"
+            >
+              <p
+                class="text-[16px] font-bold mb-2"
+                style="color: var(--color-accent)"
+              >
+                アプローチ
+              </p>
+              <p
+                class="text-[18px] leading-relaxed"
+                style="color: var(--color-text)"
+              >
+                OCRによる食材取込、顧客アレルギー情報との自動照合、厨房連携シート出力までを一気通貫で開発
+              </p>
+            </div>
+            <div
+              class="flex-1 pl-8"
+              style="border-left: 1px solid var(--color-border)"
+            >
+              <p
+                class="text-[16px] font-bold mb-2"
+                style="color: var(--color-accent)"
+              >
+                成果
+              </p>
+              <p
+                class="text-[18px] leading-relaxed"
+                style="color: var(--color-text)"
+              >
+                特定原材料8品目+準特定原材料20品目の判定を自動化。食の安全を守る業務フローをデジタル化
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ======================================== -->
+      <!-- Slide 7: 開発の進め方 -->
+      <!-- ======================================== -->
+      <section
+        class="slide"
+        data-slide="7"
+        data-family="sequence"
+        data-variant="steps"
+      >
+        <div
+          class="w-[1920px] h-[1080px] relative overflow-hidden p-20 flex flex-col justify-center"
+          style="background: var(--color-bg)"
+        >
+          <!-- テクスチャ装飾 -->
+          <div
+            class="absolute bottom-0 right-0 w-[400px] h-[400px] opacity-[0.03] pointer-events-none"
+          >
+            <svg viewBox="0 0 400 400" fill="none">
+              <circle cx="350" cy="350" r="300" fill="var(--color-accent)" />
+            </svg>
+          </div>
+          <!-- コンテンツ -->
+          <div>
+            <h2
+              class="text-[52px] font-bold mb-4"
+              style="
+                color: var(--color-accent);
+                font-family: var(--font-heading);
+              "
+            >
+              開発の進め方
+            </h2>
+            <p class="text-[24px] mb-6" style="color: var(--color-text-muted)">
+              アジャイル開発で、完成まで不安にさせません
+            </p>
+            <p
+              class="text-[28px] font-bold mb-16 px-6 py-3 rounded-lg inline-block"
+              style="
+                color: var(--color-accent);
+                background: var(--color-bg-alt);
+              "
+            >
+              「スプリントごとに動くソフトウェアをお見せします」
+            </p>
+            <div class="flex items-start gap-4 mt-4">
+              <!-- Step 1 -->
+              <div
+                class="flex-1 text-center rounded-2xl p-6"
+                style="background: var(--color-bg-alt)"
+              >
+                <div
+                  class="w-20 h-20 rounded-full flex items-center justify-center mx-auto text-white"
+                  style="background: var(--color-accent)"
+                >
+                  <svg
+                    width="32"
+                    height="32"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <path
+                      d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"
+                    ></path>
+                  </svg>
+                </div>
+                <h3
+                  class="text-[26px] font-bold mt-6 mb-4"
+                  style="color: var(--color-text)"
+                >
+                  ヒアリング・<br />要件定義
+                </h3>
+                <p class="text-[20px]" style="color: var(--color-text-muted)">
+                  課題を深掘りし<br />ゴールを共有
+                </p>
+              </div>
+              <!-- 矢印 -->
+              <div class="flex items-center pt-8">
+                <svg width="48" height="24" viewBox="0 0 48 24" fill="none">
+                  <path
+                    d="M36 0L48 12L36 24M0 12H46"
+                    stroke="var(--color-text-muted)"
+                    stroke-width="2"
+                  />
+                </svg>
+              </div>
+              <!-- Step 2 -->
+              <div
+                class="flex-1 text-center rounded-2xl p-6"
+                style="background: var(--color-bg-alt)"
+              >
+                <div
+                  class="w-20 h-20 rounded-full flex items-center justify-center mx-auto text-white"
+                  style="background: var(--color-accent)"
+                >
+                  <svg
+                    width="32"
+                    height="32"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <polyline points="16 18 22 12 16 6"></polyline>
+                    <polyline points="8 6 2 12 8 18"></polyline>
+                  </svg>
+                </div>
+                <h3
+                  class="text-[26px] font-bold mt-6 mb-4"
+                  style="color: var(--color-text)"
+                >
+                  スプリント開発<br />（TDD）
+                </h3>
+                <p class="text-[20px]" style="color: var(--color-text-muted)">
+                  1-2週間単位で開発<br />テスト駆動で品質担保
+                </p>
+              </div>
+              <!-- 矢印 -->
+              <div class="flex items-center pt-8">
+                <svg width="48" height="24" viewBox="0 0 48 24" fill="none">
+                  <path
+                    d="M36 0L48 12L36 24M0 12H46"
+                    stroke="var(--color-text-muted)"
+                    stroke-width="2"
+                  />
+                </svg>
+              </div>
+              <!-- Step 3 -->
+              <div
+                class="flex-1 text-center rounded-2xl p-6"
+                style="background: var(--color-bg-alt)"
+              >
+                <div
+                  class="w-20 h-20 rounded-full flex items-center justify-center mx-auto text-white"
+                  style="background: var(--color-accent)"
+                >
+                  <svg
+                    width="32"
+                    height="32"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path>
+                    <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
+                  </svg>
+                </div>
+                <h3
+                  class="text-[26px] font-bold mt-6 mb-4"
+                  style="color: var(--color-text)"
+                >
+                  デモ・<br />フィードバック
+                </h3>
+                <p class="text-[20px]" style="color: var(--color-text-muted)">
+                  毎スプリント動くものを提示<br />方向修正を随時実施
+                </p>
+              </div>
+              <!-- 矢印 -->
+              <div class="flex items-center pt-8">
+                <svg width="48" height="24" viewBox="0 0 48 24" fill="none">
+                  <path
+                    d="M36 0L48 12L36 24M0 12H46"
+                    stroke="var(--color-text-muted)"
+                    stroke-width="2"
+                  />
+                </svg>
+              </div>
+              <!-- Step 4 -->
+              <div
+                class="flex-1 text-center rounded-2xl p-6"
+                style="background: var(--color-bg-alt)"
+              >
+                <div
+                  class="w-20 h-20 rounded-full flex items-center justify-center mx-auto text-white"
+                  style="background: var(--color-accent-dark)"
+                >
+                  <svg
+                    width="32"
+                    height="32"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                    <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                  </svg>
+                </div>
+                <h3
+                  class="text-[26px] font-bold mt-6 mb-4"
+                  style="color: var(--color-text)"
+                >
+                  納品・<br />保守サポート
+                </h3>
+                <p class="text-[20px]" style="color: var(--color-text-muted)">
+                  リリース後も<br />継続的にサポート
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ======================================== -->
+      <!-- Slide 8: なぜテックリードか -->
+      <!-- ======================================== -->
+      <section
+        class="slide"
+        data-slide="8"
+        data-family="split"
+        data-variant="two-column"
+      >
+        <div
+          class="w-[1920px] h-[1080px] relative overflow-hidden p-20 flex flex-col justify-center"
+          style="background: var(--color-bg)"
+        >
+          <!-- テクスチャ装飾 -->
+          <div
+            class="absolute bottom-0 right-0 w-[400px] h-[400px] opacity-[0.03] pointer-events-none"
+          >
+            <svg viewBox="0 0 400 400" fill="none">
+              <circle cx="350" cy="350" r="300" fill="var(--color-accent)" />
+            </svg>
+          </div>
+          <!-- コンテンツ -->
+          <div>
+            <h2
+              class="text-[52px] font-bold mb-14"
+              style="
+                color: var(--color-accent);
+                font-family: var(--font-heading);
+              "
+            >
+              なぜテックリードか
+            </h2>
+            <div class="flex gap-20">
+              <!-- 左カラム: 選ばれる理由 -->
+              <div class="flex-1">
+                <h3
+                  class="text-[28px] font-bold mb-8"
+                  style="color: var(--color-text)"
+                >
+                  選ばれる3つの理由
+                </h3>
+                <div class="space-y-8">
+                  <div class="flex items-start gap-6">
+                    <div
+                      class="w-12 h-12 rounded-full flex items-center justify-center shrink-0 text-white text-[20px] font-black"
+                      style="background: var(--color-accent)"
+                    >
+                      1
+                    </div>
+                    <div>
+                      <p
+                        class="text-[24px] font-bold"
+                        style="color: var(--color-text)"
+                      >
+                        ハイスキルな代表が直接開発に携わる
+                      </p>
+                      <p
+                        class="text-[20px] mt-2"
+                        style="color: var(--color-text-muted)"
+                      >
+                        スキル偏差値70超の代表が設計・実装に直接関与。<br />伝言ゲームなく、高い品質を担保します。
+                      </p>
+                    </div>
+                  </div>
+                  <div class="flex items-start gap-6">
+                    <div
+                      class="w-12 h-12 rounded-full flex items-center justify-center shrink-0 text-white text-[20px] font-black"
+                      style="background: var(--color-accent)"
+                    >
+                      2
+                    </div>
+                    <div>
+                      <p
+                        class="text-[24px] font-bold"
+                        style="color: var(--color-text)"
+                      >
+                        Rust & Go のエキスパート
+                      </p>
+                      <p
+                        class="text-[20px] mt-2"
+                        style="color: var(--color-text-muted)"
+                      >
+                        高性能・高信頼性が求められる領域に強い。<br />両言語でエキスパートレベルの実力。
+                      </p>
+                    </div>
+                  </div>
+                  <div class="flex items-start gap-6">
+                    <div
+                      class="w-12 h-12 rounded-full flex items-center justify-center shrink-0 text-white text-[20px] font-black"
+                      style="background: var(--color-accent)"
+                    >
+                      3
+                    </div>
+                    <div>
+                      <p
+                        class="text-[24px] font-bold"
+                        style="color: var(--color-text)"
+                      >
+                        スピードと柔軟性
+                      </p>
+                      <p
+                        class="text-[20px] mt-2"
+                        style="color: var(--color-text-muted)"
+                      >
+                        少数精鋭の意思決定の速さ。<br />変化に即座に対応できる機動力。
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!-- 右カラム: アウトプット実績 -->
+              <div class="flex-1">
+                <h3
+                  class="text-[28px] font-bold mb-8"
+                  style="color: var(--color-text)"
+                >
+                  業界で認められた専門性
+                </h3>
+                <div class="space-y-6">
+                  <div
+                    class="rounded-xl p-6"
+                    style="background: var(--color-bg-alt)"
+                  >
+                    <div class="flex items-center justify-between mb-3">
+                      <p
+                        class="text-[18px] font-bold"
+                        style="color: var(--color-accent)"
+                      >
+                        Findy スキル偏差値
+                      </p>
+                      <p
+                        class="text-[14px]"
+                        style="color: var(--color-text-muted)"
+                      >
+                        平均50 / 70以上 = 上位10-20%
+                      </p>
+                    </div>
+                    <div class="flex gap-6">
+                      <div>
+                        <p
+                          class="text-[36px] font-black"
+                          style="color: var(--color-accent)"
+                        >
+                          72.4
+                        </p>
+                        <p
+                          class="text-[16px]"
+                          style="color: var(--color-text-muted)"
+                        >
+                          Go
+                        </p>
+                      </div>
+                      <div>
+                        <p
+                          class="text-[36px] font-black"
+                          style="color: var(--color-accent)"
+                        >
+                          70.9
+                        </p>
+                        <p
+                          class="text-[16px]"
+                          style="color: var(--color-text-muted)"
+                        >
+                          Rust
+                        </p>
+                      </div>
+                      <div>
+                        <p
+                          class="text-[36px] font-black"
+                          style="color: var(--color-accent)"
+                        >
+                          70.4
+                        </p>
+                        <p
+                          class="text-[16px]"
+                          style="color: var(--color-text-muted)"
+                        >
+                          TypeScript
+                        </p>
+                      </div>
+                    </div>
+                    <p
+                      class="text-[14px] mt-3"
+                      style="color: var(--color-text-muted)"
+                    >
+                      ※ 3言語すべてで上位10-20%のハイスキル認定
+                    </p>
+                  </div>
+                  <div
+                    class="rounded-xl p-6"
+                    style="background: var(--color-bg-alt)"
+                  >
+                    <p
+                      class="text-[18px] font-bold mb-3"
+                      style="color: var(--color-accent)"
+                    >
+                      発信・執筆実績
+                    </p>
+                    <ul class="space-y-3">
+                      <li class="flex items-center gap-3">
+                        <span style="color: var(--color-accent)">&#10003;</span>
+                        <span
+                          class="text-[20px]"
+                          style="color: var(--color-text)"
+                          >Software Design 連載（全5回）</span
+                        >
+                      </li>
+                      <li class="flex items-center gap-3">
+                        <span style="color: var(--color-accent)">&#10003;</span>
+                        <span
+                          class="text-[20px]"
+                          style="color: var(--color-text)"
+                          >書籍「Vimが好きになる本」出版</span
+                        >
+                      </li>
+                      <li class="flex items-center gap-3">
+                        <span style="color: var(--color-accent)">&#10003;</span>
+                        <span
+                          class="text-[20px]"
+                          style="color: var(--color-text)"
+                          >VimConf 登壇（2019, 2023）</span
+                        >
+                      </li>
+                      <li class="flex items-center gap-3">
+                        <span style="color: var(--color-accent)">&#10003;</span>
+                        <span
+                          class="text-[20px]"
+                          style="color: var(--color-text)"
+                          >Findy インタビュー記事掲載</span
+                        >
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ======================================== -->
+      <!-- Slide 9: 取引先 -->
+      <!-- ======================================== -->
+      <section
+        class="slide"
+        data-slide="9"
+        data-family="grid"
+        data-variant="logos"
+      >
+        <div
+          class="w-[1920px] h-[1080px] relative overflow-hidden p-20 flex flex-col justify-center"
+          style="background: var(--color-bg)"
+        >
+          <!-- テクスチャ装飾 -->
+          <div
+            class="absolute bottom-0 right-0 w-[400px] h-[400px] opacity-[0.03] pointer-events-none"
+          >
+            <svg viewBox="0 0 400 400" fill="none">
+              <circle cx="350" cy="350" r="300" fill="var(--color-accent)" />
+            </svg>
+          </div>
+          <!-- コンテンツ -->
+          <div>
+            <h2
+              class="text-[52px] font-bold mb-4"
+              style="
+                color: var(--color-accent);
+                font-family: var(--font-heading);
+              "
+            >
+              取引先
+            </h2>
+            <p class="text-[24px] mb-14" style="color: var(--color-text-muted)">
+              多様な業種のお客様にサービスを提供しています
+            </p>
+            <div class="grid grid-cols-4 gap-8">
+              <div
+                class="h-40 rounded-xl flex items-center justify-center px-6"
+                style="background: var(--color-bg-alt)"
+              >
+                <p
+                  class="text-[24px] font-bold text-center"
+                  style="color: var(--color-text)"
+                >
+                  FRAIM株式会社
+                </p>
+              </div>
+              <div
+                class="h-40 rounded-xl flex items-center justify-center px-6"
+                style="background: var(--color-bg-alt)"
+              >
+                <p
+                  class="text-[24px] font-bold text-center"
+                  style="color: var(--color-text)"
+                >
+                  株式会社<br />UKIYOcreate
+                </p>
+              </div>
+              <div
+                class="h-40 rounded-xl flex items-center justify-center px-6"
+                style="background: var(--color-bg-alt)"
+              >
+                <p
+                  class="text-[24px] font-bold text-center"
+                  style="color: var(--color-text)"
+                >
+                  株式会社<br />Waitinglist
+                </p>
+              </div>
+              <div
+                class="h-40 rounded-xl flex items-center justify-center px-6"
+                style="background: var(--color-bg-alt)"
+              >
+                <p
+                  class="text-[24px] font-bold text-center"
+                  style="color: var(--color-text)"
+                >
+                  株式会社<br />ティー・エス・イー
+                </p>
+              </div>
+              <div
+                class="h-40 rounded-xl flex items-center justify-center px-6"
+                style="background: var(--color-bg-alt)"
+              >
+                <p
+                  class="text-[24px] font-bold text-center"
+                  style="color: var(--color-text)"
+                >
+                  KAPFILM
+                </p>
+              </div>
+              <div
+                class="h-40 rounded-xl flex items-center justify-center px-6"
+                style="background: var(--color-bg-alt)"
+              >
+                <p
+                  class="text-[24px] font-bold text-center"
+                  style="color: var(--color-text)"
+                >
+                  NodeX 株式会社
+                </p>
+              </div>
+              <div
+                class="h-40 rounded-xl flex items-center justify-center px-6"
+                style="background: var(--color-bg-alt)"
+              >
+                <p
+                  class="text-[24px] font-bold text-center"
+                  style="color: var(--color-text)"
+                >
+                  株式会社<br />アットマーク
+                </p>
+              </div>
+              <div
+                class="h-40 rounded-xl flex items-center justify-center px-6 border-2 border-dashed"
+                style="border-color: var(--color-border)"
+              >
+                <p
+                  class="text-[20px] font-medium text-center"
+                  style="color: var(--color-text-muted)"
+                >
+                  次の<br />パートナーは<br />あなたです
+                </p>
+              </div>
+            </div>
+            <!-- 補足: 他の実績 -->
+            <div class="mt-12 flex gap-6 items-center">
+              <p
+                class="text-[20px] font-bold"
+                style="color: var(--color-text-muted)"
+              >
+                他の開発実績:
+              </p>
+              <span
+                class="px-4 py-2 rounded-full text-[16px]"
+                style="
+                  color: var(--color-text-muted);
+                  border: 1px solid var(--color-border);
+                "
+                >IoT基盤システム</span
+              >
+              <span
+                class="px-4 py-2 rounded-full text-[16px]"
+                style="
+                  color: var(--color-text-muted);
+                  border: 1px solid var(--color-border);
+                "
+                >メール配信サービス</span
+              >
+              <span
+                class="px-4 py-2 rounded-full text-[16px]"
+                style="
+                  color: var(--color-text-muted);
+                  border: 1px solid var(--color-border);
+                "
+                >ゼロトラストPF</span
+              >
+              <span
+                class="px-4 py-2 rounded-full text-[16px]"
+                style="
+                  color: var(--color-text-muted);
+                  border: 1px solid var(--color-border);
+                "
+                >BtoB・BtoCシステム</span
+              >
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ======================================== -->
+      <!-- Slide 10: Closing / CTA -->
+      <!-- ======================================== -->
+      <section
+        class="slide"
+        data-slide="10"
+        data-family="hero"
+        data-variant="closing"
+      >
+        <div
+          class="w-[1920px] h-[1080px] relative overflow-hidden flex items-center justify-center"
+          style="background: var(--color-bg)"
+        >
+          <!-- テクスチャ装飾 -->
+          <div
+            class="absolute bottom-0 right-0 w-[400px] h-[400px] opacity-[0.03] pointer-events-none"
+          >
+            <svg viewBox="0 0 400 400" fill="none">
+              <circle cx="350" cy="350" r="300" fill="var(--color-accent)" />
+            </svg>
+          </div>
+          <!-- 装飾 -->
+          <div
+            class="absolute top-0 right-0 w-[600px] h-full opacity-[0.08] pointer-events-none"
+          >
+            <svg viewBox="0 0 600 1080" fill="none">
+              <circle cx="400" cy="300" r="300" fill="var(--color-accent)" />
+              <circle cx="500" cy="700" r="200" fill="var(--color-primary)" />
+            </svg>
+          </div>
+          <!-- コンテンツ -->
+          <div class="text-center">
+            <p
+              class="text-[24px] font-bold tracking-[0.2em] mb-6"
+              style="color: var(--color-accent)"
+            >
+              CONTACT US
+            </p>
+            <h2
+              class="text-[64px] font-black mb-8"
+              style="color: var(--color-text); font-family: var(--font-heading)"
+            >
+              まずはお気軽に<br />ご相談ください
+            </h2>
+            <p
+              class="text-[28px] mb-12 max-w-[800px] mx-auto"
+              style="color: var(--color-text-muted)"
+            >
+              「まだ要件が固まっていない」段階からでもOK。<br />初回のご相談は無料です。
+            </p>
+            <div
+              class="inline-block rounded-2xl px-12 py-8"
+              style="
+                background: var(--color-bg-alt);
+                border: 2px solid var(--color-accent);
+              "
+            >
+              <p
+                class="text-[24px] font-bold mb-4"
+                style="color: var(--color-text)"
+              >
+                株式会社テックリード
+              </p>
+              <p class="text-[20px]" style="color: var(--color-text-muted)">
+                代表: 兼平 松
+              </p>
+              <p class="text-[20px] mt-2" style="color: var(--color-accent)">
+                https://techlead-it.github.io/homepage/contact
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <!-- ナビゲーションUI -->
+    <div
+      id="slide-nav"
+      class="fixed bottom-0 left-0 right-0 z-50 transition-opacity duration-300"
+      style="opacity: 0.6"
+      onmouseenter="this.style.opacity = '1'"
+      onmouseleave="this.style.opacity = '0.6'"
+    >
+      <div class="w-full h-1" style="background: var(--color-border)">
+        <div
+          id="slide-progress-bar"
+          class="h-full transition-all duration-300"
+          style="background: var(--color-accent); width: 0%"
+        ></div>
+      </div>
+      <div
+        class="flex justify-end px-6 py-2"
+        style="background: rgba(0, 0, 0, 0.03)"
+      >
+        <span
+          id="slide-counter"
+          class="text-sm font-mono"
+          style="color: var(--color-text-muted)"
+        >
+          1 / 10
+        </span>
+      </div>
+    </div>
+
+    <script>
+      (function () {
+        "use strict";
+
+        const slides = document.querySelectorAll(".slide");
+        const totalSlides = slides.length;
+        let currentSlide = 0;
+
+        const progressBar = document.getElementById("slide-progress-bar");
+        const slideCounter = document.getElementById("slide-counter");
+
+        function showSlide(index) {
+          if (index < 0 || index >= totalSlides) return;
+          slides[currentSlide].classList.remove("active");
+          currentSlide = index;
+          slides[currentSlide].classList.add("active");
+          updateUI();
+        }
+
+        function updateUI() {
+          const progress = ((currentSlide + 1) / totalSlides) * 100;
+          progressBar.style.width = progress + "%";
+          slideCounter.textContent = currentSlide + 1 + " / " + totalSlides;
+          history.replaceState(null, "", "#" + (currentSlide + 1));
+        }
+
+        function nextSlide() {
+          showSlide(currentSlide + 1);
+        }
+        function prevSlide() {
+          showSlide(currentSlide - 1);
+        }
+
+        window.navigateToSlide = function (n) {
+          showSlide(n - 1);
+        };
+
+        document.addEventListener("keydown", function (e) {
+          switch (e.key) {
+            case "ArrowRight":
+            case " ":
+            case "PageDown":
+              e.preventDefault();
+              nextSlide();
+              break;
+            case "ArrowLeft":
+            case "PageUp":
+              e.preventDefault();
+              prevSlide();
+              break;
+            case "Home":
+              e.preventDefault();
+              showSlide(0);
+              break;
+            case "End":
+              e.preventDefault();
+              showSlide(totalSlides - 1);
+              break;
+          }
+        });
+
+        function scaleSlides() {
+          const scaleX = window.innerWidth / 1920;
+          const scaleY = window.innerHeight / 1080;
+          const scale = Math.min(scaleX, scaleY);
+          slides.forEach(function (slide) {
+            slide.style.transform =
+              "translate(-50%, -50%) scale(" + scale + ")";
+          });
+        }
+
+        window.addEventListener("resize", scaleSlides);
+
+        function getInitialSlide() {
+          const hash = window.location.hash;
+          if (hash) {
+            const num = parseInt(hash.substring(1), 10);
+            if (num >= 1 && num <= totalSlides) return num - 1;
+          }
+          return 0;
+        }
+
+        currentSlide = getInitialSlide();
+        slides[currentSlide].classList.add("active");
+        scaleSlides();
+        updateUI();
+      })();
+    </script>
+  </body>
+</html>

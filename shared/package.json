@@ -27,11 +27,11 @@
     "check:ci": "pnpm format:check && pnpm lint:check"
   },
   "dependencies": {
-    "valibot": "^1.1.0"
+    "valibot": "^1.4.1"
   },
   "devDependencies": {
-    "@typescript/native-preview": "7.0.0-dev.20251110.1",
-    "typescript": "^5.7.2",
+    "@typescript/native-preview": "7.0.0-dev.20260611.2",
+    "typescript": "^6.0.3",
     "vite-plus": "catalog:"
   }
 }

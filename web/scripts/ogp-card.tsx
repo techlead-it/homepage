@@ -1,5 +1,3 @@
-import React from "react";
-
 type NewsCategory = "announcement" | "tech-blog";
 
 export interface OgpCardProps {

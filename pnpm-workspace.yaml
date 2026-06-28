@@ -7,7 +7,7 @@ minimumReleaseAge: 1400 # 1 day
 catalog:
   vite: npm:@voidzero-dev/vite-plus-core@latest
   vitest: npm:@voidzero-dev/vite-plus-test@latest
-  vite-plus: latest
+  vite-plus: ^0.2.1
 overrides:
   vite: "catalog:"
   vitest: "catalog:"
@@ -27,3 +27,7 @@ minimumReleaseAgeExclude:
   - "@oxlint-tsgolint/*"
   - oxfmt
   - "@oxfmt/*"
+allowBuilds:
+  esbuild: true
+  sharp: true
+  workerd: true

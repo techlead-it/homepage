@@ -31,12 +31,12 @@
     "runtime": [
       {
         "name": "node",
-        "version": "^24.2.0",
+        "version": "^24.18.0",
         "onFail": "download"
       }
     ]
   },
-  "packageManager": "pnpm@10.21.0",
+  "packageManager": "pnpm@11.9.0",
   "pnpm": {
     "onlyBuiltDependencies": [
       "esbuild",

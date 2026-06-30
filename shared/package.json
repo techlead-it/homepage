@@ -27,7 +27,7 @@
     "check:ci": "pnpm format:check && pnpm lint:check"
   },
   "dependencies": {
-    "valibot": "^1.4.1"
+    "valibot": "^1.4.2"
   },
   "devDependencies": {
     "@typescript/native-preview": "7.0.0-dev.20260627.2",

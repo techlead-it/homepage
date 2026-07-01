@@ -119,6 +119,34 @@ Client-side routing via react-router-dom with BrowserRouter. Routes defined in `
 - `/recruitment` - Job listings
 - `/contact` - Contact form
 - `/contact/thanks` - Form submission success page
+- `/slides` - Company intro slide gallery (see Company Slides below)
+
+### Company Slides
+
+会社紹介スライド（Claude Design 等で作った単一 HTML）を業界・文脈ごとに配信する仕組み。
+
+**配置方法**: HTML を `web/public/slides/{id}.html` に置くだけ。手動で `slides.ts` を編集する必要はない。
+
+- 実体は `techlead-it.com/slides/{id}.html` としてそのまま配信される（Vite の `public/` は無変換でコピーされる）
+- ビルド時に `web/plugins/vite-plugin-slides.ts` が `public/slides/*.html` を走査し、一覧ページ `/slides` に自動反映する（`virtual:slides` として `Slide[]` を供給）
+- HashRouter のため実パス `/slides/*.html` は SPA ルーティングと衝突しない
+
+**メタデータ**は各 HTML の `<head>` から抽出する。`id` はファイル名。
+
+```html
+<head>
+  <title>DX推進のご提案</title>
+  <meta name="description" content="現場の業務をどう変えるか" />
+  <meta name="slide-context" content="DX" />
+</head>
+```
+
+- `<title>` 無し → `id`（ファイル名）
+- `<meta name="description">` 無し → 空文字
+- `<meta name="slide-context">` 無し → `"その他"` グループ
+- 一覧の並び順はファイル名の昇順（`01-dx.html` のように接頭辞で制御可能）
+
+メタ抽出の純粋関数は `web/src/data/slideParser.ts`（`parseSlideEntry`）。
 
 ### Styling
 

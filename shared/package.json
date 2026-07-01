@@ -30,7 +30,7 @@
     "valibot": "^1.4.2"
   },
   "devDependencies": {
-    "@typescript/native-preview": "7.0.0-dev.20260627.2",
+    "@typescript/native-preview": "7.0.0-dev.20260629.1",
     "typescript": "^6.0.3",
     "vite-plus": "catalog:"
   }

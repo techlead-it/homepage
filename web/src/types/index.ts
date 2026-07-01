@@ -78,3 +78,10 @@ export interface NewsArticle {
   summary: string;
   content: string; // Markdown本文
 }
+
+export interface Slide {
+  id: string; // ファイル名。/slides/{id}.html として配信される
+  title: string;
+  description: string;
+  context: string; // "DX" などの文脈タグ。一覧のグルーピングに使う
+}

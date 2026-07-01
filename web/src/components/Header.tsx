@@ -54,6 +54,12 @@ export default function Header() {
               ニュース
             </Link>
             <Link
+              to="/slides"
+              className="text-gray-700 hover:text-gray-900 px-3 py-2 text-sm font-medium"
+            >
+              会社紹介資料
+            </Link>
+            <Link
               to="https://zenn.dev/p/techlead"
               className="text-gray-700 hover:text-gray-900 px-3 py-2 text-sm font-medium"
             >
@@ -117,6 +123,13 @@ export default function Header() {
               className="block text-gray-700 hover:text-gray-900 hover:bg-gray-50 px-3 py-2 rounded-md text-base font-medium"
             >
               ニュース
+            </Link>
+            <Link
+              to="/slides"
+              onClick={closeMobileMenu}
+              className="block text-gray-700 hover:text-gray-900 hover:bg-gray-50 px-3 py-2 rounded-md text-base font-medium"
+            >
+              会社紹介資料
             </Link>
             <Link
               to="https://zenn.dev/p/techlead"

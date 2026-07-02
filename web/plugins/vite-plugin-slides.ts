@@ -2,6 +2,7 @@ import fs from "node:fs";
 import path from "node:path";
 import type { Plugin } from "vite-plus";
 import { parseSlideEntry } from "../src/data/slideParser";
+import { patchSlideBundler } from "./slideBundlerPatch";
 
 const VIRTUAL_ID = "virtual:slides";
 const RESOLVED_ID = `\0${VIRTUAL_ID}`;
@@ -27,6 +28,10 @@ const buildSlidesModule = (): string => {
 /**
  * web/public/slides/*.html を置くだけで会社紹介資料の一覧に自動反映する。
  * `virtual:slides` として Slide[] を供給する。
+ *
+ * さらに、Claude Design が生成した Bundler HTML を配信/ビルド時に patch し、
+ * Cloudflare Bot Fight Mode の inject などによる展開後の外部エラーが Bundler の
+ * error handler で赤バナー化されないようにする。
  */
 export function vitePluginSlides(): Plugin {
   return {
@@ -56,6 +61,43 @@ export function vitePluginSlides(): Plugin {
       server.watcher.on("add", invalidate);
       server.watcher.on("change", invalidate);
       server.watcher.on("unlink", invalidate);
+
+      // /slides/*.html は Vite の public assets middleware より前で intercept し
+      // patch 済み HTML を返す。
+      server.middlewares.use("/slides/", (req, res, next) => {
+        const url = req.url ?? "";
+        if (!url.endsWith(".html")) {
+          next();
+          return;
+        }
+        const filename = path.basename(url.split("?")[0]);
+        const filepath = path.join(SLIDES_DIR, filename);
+        fs.readFile(filepath, "utf-8", (err, html) => {
+          if (err) {
+            next();
+            return;
+          }
+          res.setHeader("Content-Type", "text/html; charset=utf-8");
+          res.end(patchSlideBundler(html));
+        });
+      });
+    },
+
+    async writeBundle(options) {
+      if (!options.dir) return;
+      const slidesDist = path.resolve(options.dir, "slides");
+      if (!fs.existsSync(slidesDist)) return;
+      const files = fs
+        .readdirSync(slidesDist)
+        .filter((file) => file.endsWith(".html"));
+      for (const file of files) {
+        const filepath = path.join(slidesDist, file);
+        const html = fs.readFileSync(filepath, "utf-8");
+        const patched = patchSlideBundler(html);
+        if (patched !== html) {
+          fs.writeFileSync(filepath, patched);
+        }
+      }
     },
   };
 }

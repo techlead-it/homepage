@@ -5,8 +5,8 @@ packages:
 
 minimumReleaseAge: 1400 # 1 day
 catalog:
-  vite: npm:@voidzero-dev/vite-plus-core@latest
-  vite-plus: ^0.2.1
+  vite: npm:@voidzero-dev/vite-plus-core@^0.2.2
+  vite-plus: ^0.2.2
 overrides:
   vite: "catalog:"
 peerDependencyRules:

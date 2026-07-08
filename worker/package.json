@@ -24,13 +24,13 @@
     "valibot": "^1.4.2"
   },
   "devDependencies": {
-    "@cloudflare/workers-types": "^5.20260706.1",
+    "@cloudflare/workers-types": "^5.20260707.1",
     "@types/react": "^19.2.17",
     "@types/react-dom": "^19.2.3",
-    "@typescript/native-preview": "7.0.0-dev.20260706.1",
+    "@typescript/native-preview": "7.0.0-dev.20260707.2",
     "react": "^19.2.7",
     "react-dom": "^19.2.7",
     "vite-plus": "catalog:",
-    "wrangler": "^4.107.0"
+    "wrangler": "^4.107.1"
   }
 }

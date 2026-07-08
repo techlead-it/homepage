@@ -6,8 +6,8 @@
   "scripts": {
     "dev": "wrangler dev",
     "deploy": "wrangler deploy",
-    "build": "tsgo -b",
-    "typecheck": "tsgo --noEmit",
+    "build": "tsc -b",
+    "typecheck": "tsc --noEmit",
     "format": "vp fmt --write .",
     "format:check": "vp fmt .",
     "lint": "vp lint --fix",
@@ -27,9 +27,9 @@
     "@cloudflare/workers-types": "^5.20260706.1",
     "@types/react": "^19.2.17",
     "@types/react-dom": "^19.2.3",
-    "@typescript/native-preview": "7.0.0-dev.20260706.1",
     "react": "^19.2.7",
     "react-dom": "^19.2.7",
+    "typescript": "^7.0.2",
     "vite-plus": "catalog:",
     "wrangler": "^4.107.0"
   }

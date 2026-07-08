@@ -60,16 +60,16 @@ pnpm build                  # TypeScript check + production build to dist/
 pnpm format                 # Format with Oxfmt
 pnpm lint                   # Lint with Oxlint
 pnpm check                  # Run Oxfmt + Oxlint
-pnpm typecheck              # Type check with tsgo
+pnpm typecheck              # Type check with tsc
 
 # Worker (from worker/ directory or use pnpm --filter worker <command>)
 pnpm dev                    # Start worker dev server at http://localhost:8787
 pnpm deploy                 # Deploy to Cloudflare Workers
-pnpm build                  # Build with tsgo
+pnpm build                  # Build with tsc
 pnpm format                 # Format with Oxfmt
 pnpm lint                   # Lint with Oxlint
 pnpm check                  # Run Oxfmt + Oxlint
-pnpm typecheck              # Type check with tsgo
+pnpm typecheck              # Type check with tsc
 ```
 
 ## Web Architecture
@@ -380,7 +380,7 @@ pnpx wrangler secret put TO_EMAIL
 ### Build Tools
 
 - Vite (web)
-- tsgo (TypeScript compilation)
+- TypeScript 7 (native compiler, `tsc`)
 - Oxlint (linting)
 - Oxfmt (formatting)
 - pnpm (package manager)

@@ -6,9 +6,9 @@
   "scripts": {
     "dev": "vp dev",
     "generate:og": "tsx scripts/generate-og-images.ts",
-    "build": "tsgo -b && vp build",
+    "build": "tsc -b && vp build",
     "preview": "vp preview",
-    "typecheck": "tsgo --noEmit",
+    "typecheck": "tsc --noEmit",
     "format": "vp fmt --write .",
     "format:check": "vp fmt .",
     "lint": "vp lint --fix",
@@ -42,12 +42,12 @@
     "@types/node": "^26.1.0",
     "@types/react": "^19.2.17",
     "@types/react-dom": "^19.2.3",
-    "@typescript/native-preview": "7.0.0-dev.20260706.1",
     "@vitejs/plugin-react": "^6.0.3",
     "gray-matter": "^4.0.3",
     "jsdom": "^29.1.1",
     "takumi-js": "^1.8.7",
     "tsx": "^4.23.0",
+    "typescript": "^7.0.2",
     "vite": "catalog:",
     "vite-plus": "catalog:"
   }

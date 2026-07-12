@@ -28,7 +28,8 @@ const OGP_HEIGHT = 630;
 const NOTO_SANS_JP_BOLD_URL =
   "https://github.com/notofonts/noto-cjk/raw/main/Sans/OTF/Japanese/NotoSansCJKjp-Bold.otf";
 
-let rendererPromise: Promise<Renderer> | null = null;
+let rendererPromise: Promise<{ renderer: Renderer; logo: Buffer }> | null =
+  null;
 
 async function loadFont(): Promise<Buffer> {
   try {
@@ -43,17 +44,16 @@ async function loadFont(): Promise<Buffer> {
   }
 }
 
-async function getRenderer(): Promise<Renderer> {
+async function getRenderer(): Promise<{ renderer: Renderer; logo: Buffer }> {
   if (!rendererPromise) {
     rendererPromise = (async () => {
       const [font, logo] = await Promise.all([
         loadFont(),
         fs.readFile(LOGO_PATH),
       ]);
-      return new Renderer({
-        fonts: [font],
-        persistentImages: [{ src: LOGO_KEY, data: logo }],
-      });
+      const renderer = new Renderer();
+      await renderer.registerFont(font);
+      return { renderer, logo };
     })();
   }
   return rendererPromise;
@@ -62,7 +62,7 @@ async function getRenderer(): Promise<Renderer> {
 export async function generateOgpImage(
   props: Omit<OgpCardProps, "logoSrc">
 ): Promise<Buffer> {
-  const renderer = await getRenderer();
+  const { renderer, logo } = await getRenderer();
   const { node, stylesheets } = await fromJsx(
     <OgpCard {...props} logoSrc={LOGO_KEY} />
   );
@@ -71,6 +71,7 @@ export async function generateOgpImage(
     height: OGP_HEIGHT,
     format: "png",
     stylesheets,
+    images: [{ src: LOGO_KEY, data: logo }],
   });
 }
 

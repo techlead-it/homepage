@@ -4,79 +4,56 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-This is a corporate homepage for 株式会社テックリード (TechLead Inc.), structured as a **pnpm workspace monorepo** with three packages:
+This is a corporate homepage for 株式会社テックリード (TechLead Inc.), a **single-package** Cloudflare Workers application. A React SPA (`src/front`) and a Hono Worker (`src/server`) are combined into one Vite project via `@cloudflare/vite-plugin`, and both are served from the same origin (`techlead-it.com`) as a single Cloudflare Worker.
 
-- **web/**: React SPA for the homepage (built and served as Workers Assets by `worker/`)
-- **worker/**: Cloudflare Worker serving the web SPA (Workers Assets) and the contact form API, on the same origin (`techlead-it.com`)
-- **shared/**: Common types and validation schemas
-
-## Monorepo Structure
+## Project Structure
 
 ```
 homepage/
-├── web/              # Frontend React application
-├── worker/           # Cloudflare Worker for API
-├── shared/           # Shared types and schemas
-├── pnpm-workspace.yaml
-└── package.json      # Root workspace configuration
+├── index.html               # SPA entry HTML
+├── public/                  # Static assets (company intro slides, etc.)
+├── plugins/                 # Vite plugins (OGP generation, slide listing)
+├── scripts/                 # OGP image generation scripts
+├── src/
+│   ├── front/                # React SPA
+│   ├── server/                # Hono Worker (entry: wrangler.jsonc's `main`)
+│   │   └── emails/            # React JSX email templates
+│   └── shared/                 # Types/validation schemas shared by front and server
+├── wrangler.jsonc              # Cloudflare Worker configuration
+├── vite.config.ts              # Vite + vite-plus (lint/fmt/test) configuration
+├── tsconfig.json                # Solution file (references app / node / worker)
+├── tsconfig.app.json            # src/front + src/shared (DOM lib)
+├── tsconfig.node.json            # vite.config.ts, plugins, scripts
+├── tsconfig.worker.json          # src/server + src/shared (Workers types)
+├── worker-configuration.d.ts     # `wrangler types` output (committed, regenerated on install)
+└── lefthook.yml                  # pre-push: vp check + vp build
 ```
 
 ## Development Commands
 
-**Package Manager**: Use `pnpm` exclusively (not npm or yarn)
-
-### Root Level Commands
+**Package Manager**: Use `pnpm` exclusively (not npm or yarn). Day-to-day commands go through `vp` (vite-plus).
 
 ```bash
-# Development (runs both web and worker dev servers in parallel)
-pnpm dev
+pnpm install       # postinstall runs `wrangler types` and regenerates worker-configuration.d.ts
 
-# Type checking
-pnpm typecheck              # All packages
-pnpm typecheck:web          # Web only
-pnpm typecheck:worker       # Worker only
+vp dev             # Dev server: SPA + Worker served together on a single port (5173)
+vp check           # Format + lint (Oxlint/Oxfmt, type-aware) + typecheck (tsc -b)
+vp test            # Run tests (vitest, jsdom)
+vp build           # Production build → dist/client (SPA) + dist/<worker-name> (Worker)
 
-# Code quality (Oxlint + Oxfmt)
-pnpm format                 # Format all packages
-pnpm format:check           # Check formatting
-pnpm lint                   # Lint all packages
-pnpm check                  # Format + lint all packages
-pnpm check:web              # Web only
-pnpm check:worker           # Worker only
-pnpm check:shared           # Shared only
-
-# Build
-pnpm build                  # Build worker, then web
-pnpm build:web              # Build web only
-pnpm build:worker           # Build worker only
+pnpm cf:preview    # Production-equivalent build + serve locally (vp build && wrangler dev)
+pnpm deploy        # vp build && wrangler deploy
+pnpm types         # Regenerate worker-configuration.d.ts (after wrangler.jsonc bindings change)
+pnpm generate:og   # Regenerate OGP images for news articles
 ```
 
-### Package-Specific Commands
-
-```bash
-# Web (from web/ directory or use pnpm --filter web <command>)
-pnpm dev                    # Start dev server at http://localhost:5173
-pnpm build                  # TypeScript check + production build to dist/
-pnpm format                 # Format with Oxfmt
-pnpm lint                   # Lint with Oxlint
-pnpm check                  # Run Oxfmt + Oxlint
-pnpm typecheck              # Type check with tsc
-
-# Worker (from worker/ directory or use pnpm --filter worker <command>)
-pnpm dev                    # Start worker dev server at http://localhost:8787
-pnpm deploy                 # Deploy to Cloudflare Workers
-pnpm build                  # Build with tsc
-pnpm format                 # Format with Oxfmt
-pnpm lint                   # Lint with Oxlint
-pnpm check                  # Run Oxfmt + Oxlint
-pnpm typecheck              # Type check with tsc
-```
+There are no `dev`/`build`/`test`/`check` entries in `package.json` — these are vite-plus's built-in commands (`vp <command>`), invoked directly.
 
 ## Web Architecture
 
 ### Data-Driven Content Model
 
-All content is separated from presentation in `web/src/data/`:
+All content is separated from presentation in `src/front/data/`:
 
 - **company.ts**: Company info and client list
 - **philosophy.ts**: Mission, vision, values, identity
@@ -87,7 +64,7 @@ All content is separated from presentation in `web/src/data/`:
 - **strengths.ts**: Company strengths
 - **recruitment.ts**: Job positions
 
-Type definitions in `web/src/types/index.ts` ensure type safety across all data.
+Type definitions in `src/front/types/index.ts` ensure type safety across all data.
 
 ### Component Architecture
 
@@ -98,12 +75,12 @@ Type definitions in `web/src/types/index.ts` ensure type safety across all data.
 - Footer
 - Automatic scroll-to-top on route change
 
-**Page Components** (`web/src/pages/`):
+**Page Components** (`src/front/pages/`):
 
 - Each page uses `Section` components with alternating `background="white"` and `background="gray"`
 - All pages follow the pattern: Hero → Content Sections → CTA
 
-**Reusable UI Components** (`web/src/components/ui/`):
+**Reusable UI Components** (`src/front/components/ui/`):
 
 - `Section`: Content wrapper with configurable background
 - `Card`: Content card with optional hover effect
@@ -111,7 +88,7 @@ Type definitions in `web/src/types/index.ts` ensure type safety across all data.
 
 ### Routing
 
-Client-side routing via react-router-dom with BrowserRouter. Routes defined in `web/src/App.tsx`:
+Client-side routing via react-router-dom with BrowserRouter. Routes defined in `src/front/App.tsx`:
 
 - `/` - Home
 - `/about` - Company info
@@ -125,11 +102,11 @@ Client-side routing via react-router-dom with BrowserRouter. Routes defined in `
 
 会社紹介スライド（Claude Design 等で作った単一 HTML）を業界・文脈ごとに配信する仕組み。
 
-**配置方法**: HTML を `web/public/slides/{id}.html` に置くだけ。手動で `slides.ts` を編集する必要はない。
+**配置方法**: HTML を `public/slides/{id}.html` に置くだけ。手動で `slides.ts` を編集する必要はない。
 
-- 実体は `techlead-it.com/slides/{id}.html` としてそのまま配信される（Vite の `public/` は無変換でコピーされ、`worker/wrangler.toml` の `[assets]` で `html_handling = "none"` を指定しているため `.html` 拡張子付きで exact match 配信される）
-- ビルド時に `web/plugins/vite-plugin-slides.ts` が `public/slides/*.html` を走査し、一覧ページ `/slides` に自動反映する（`virtual:slides` として `Slide[]` を供給）
-- `run_worker_first` に含まれない `/slides/*.html` は asset 一致が SPA fallback (`not_found_handling = "single-page-application"`) より優先されるため、BrowserRouter のルーティングと衝突しない
+- 実体は `techlead-it.com/slides/{id}.html` としてそのまま配信される（Vite の `public/` は無変換でコピーされ、`wrangler.jsonc` の `assets.html_handling = "none"` を指定しているため `.html` 拡張子付きで exact match 配信される）
+- ビルド時に `plugins/vite-plugin-slides.ts` が `public/slides/*.html` を走査し、一覧ページ `/slides` に自動反映する（`virtual:slides` として `Slide[]` を供給）
+- `assets.run_worker_first` に含まれない `/slides/*.html` は asset 一致が SPA fallback (`not_found_handling = "single-page-application"`) より優先されるため、BrowserRouter のルーティングと衝突しない
 
 **メタデータ**は各 HTML の `<head>` から抽出する。`id` はファイル名。
 
@@ -146,12 +123,12 @@ Client-side routing via react-router-dom with BrowserRouter. Routes defined in `
 - `<meta name="slide-context">` 無し → `"その他"` グループ
 - 一覧の並び順はファイル名の昇順（`01-dx.html` のように接頭辞で制御可能）
 
-メタ抽出の純粋関数は `web/src/data/slideParser.ts`（`parseSlideEntry`）。
+メタ抽出の純粋関数は `src/front/data/slideParser.ts`（`parseSlideEntry`）。
 
 ### Styling
 
 - **Tailwind CSS v4** with `@tailwindcss/vite` plugin
-- Space indentation (configured in `.oxfmtrc.json`)
+- Space indentation
 - Mobile-first responsive design
 - Breakpoints: `md:` (tablet), `lg:` (desktop)
 
@@ -171,13 +148,13 @@ Resend API
 Recipient inbox
 ```
 
-### Frontend (web/)
+### Frontend (src/front)
 
 **Technologies:**
 
 - react-hook-form: Form state management
 - Valibot: Schema validation via valibotResolver
-- @homepage/shared: Shared validation schema and types
+- `src/shared`: Shared validation schema and types (plain relative imports, no package alias)
 
 **Features:**
 
@@ -187,9 +164,9 @@ Recipient inbox
 - Loading state during submission
 - Success page navigation
 
-**API endpoint**: The form submits to the relative path `/api/contact` (same-origin, since worker serves both the SPA and the API). In dev, `web/vite.config.ts`'s `server.proxy` forwards `/api` to `http://localhost:8787` where `wrangler dev` runs.
+**API endpoint**: The form submits to the relative path `/api/contact` (same-origin). In dev, `@cloudflare/vite-plugin` runs the Worker inside the same Vite dev server, so `/api/*` and `/preview/*` are handled without a separate process or proxy config.
 
-### Backend (worker/)
+### Backend (src/server)
 
 **Technologies:**
 
@@ -220,21 +197,21 @@ GET /preview/contact (development only)
 
 **Email Template:**
 
-- React JSX component (`worker/emails/contact-notification.tsx`)
+- React JSX component (`src/server/emails/contact-notification.tsx`)
 - Modern card design with FieldSection component
 - Rendered to HTML via `renderToStaticMarkup`
 
-### Shared Package (shared/)
+### Shared Types (src/shared)
 
-**Purpose:** Centralize validation logic and type definitions
+**Purpose:** Centralize validation logic and type definitions used by both `src/front` and `src/server`, imported via plain relative paths (no package boundary — this is a single package).
 
 **Exports:**
 
 ```typescript
-// Schemas
+// src/shared/schemas
 export const contactSchema: v.ObjectSchema
 
-// Types
+// src/shared/types
 export type ContactFormData
 export type ContactSuccessResponse
 export type ContactErrorResponse
@@ -276,47 +253,36 @@ The Layout component implements scroll-to-top on route change using `useState` t
 
 ## Deployment
 
-web and worker are deployed together as a single Cloudflare Worker (`homepage-contact-form`) that serves the SPA via Workers Assets and the API from the same origin (`techlead-it.com`, apex custom domain declared in `worker/wrangler.toml`).
+The SPA and Worker are built and deployed together as a single Cloudflare Worker (`homepage-contact-form`) that serves the SPA via Workers Assets (`dist/client`, `wrangler.jsonc`'s `assets.directory`) and the API from the same origin (`techlead-it.com`, apex custom domain declared in `wrangler.jsonc`).
 
 ### Automated Deployment via GitHub Actions
 
 #### Workflow Files
 
-- `.github/workflows/deploy.yaml` - Builds worker then web (`pnpm build`), then deploys via `wrangler deploy` (which uploads `web/dist` as Workers Assets alongside the worker code)
-- `.github/workflows/ci-worker.yaml` - Worker CI (lint, typecheck, build)
-- `.github/workflows/ci-web.yaml` - Web CI (lint, typecheck, build)
+- `.github/workflows/deploy.yaml` - `vp build` then `wrangler deploy`
+- `.github/workflows/ci.yaml` - Lint (Oxlint + reviewdog), test, typecheck, format check, build
 - `.github/workflows/pinact-check.yaml` - GitHub Actions version pinning check
 
 #### Deployment Trigger
 
-- Triggers on push to `main` with changes to:
-  - `web/**`, `worker/**`, `shared/**`
-  - `package.json`, `pnpm-lock.yaml`, `pnpm-workspace.yaml`
-  - `.github/workflows/deploy.yaml`
+- Triggers on push to `main` with changes to `src/**`, `plugins/**`, `scripts/**`, `public/**`, `index.html`, `wrangler.jsonc`, `vite.config.ts`, `tsconfig*.json`, `package.json`, `pnpm-lock.yaml`, `pnpm-workspace.yaml`, or the deploy workflow itself
 - `concurrency: { group: deploy, cancel-in-progress: false }` serializes overlapping deploy runs
 
-#### CI Workflows
+#### CI Workflow
 
-**CI runs on**:
+Runs on pull requests and pushes to `main` (paths-ignored: `**.md`, `LICENSE`):
 
-- Pull requests with changes to relevant files
-- Push to `main` branch with changes to relevant files
-
-Each workflow (ci-web, ci-worker) runs:
-
-- Oxlint linting (with GitHub annotations)
-- Oxfmt format checking
-- TypeScript type checking
-- Production build validation
+- Oxlint with reviewdog (inline PR annotations)
+- `vp test` (unit/component tests)
+- `vp check` (format check + lint + typecheck)
+- `vp build` (production build validation)
 
 **Pinact Check** runs only when workflow files (`.github/workflows/**`) are modified.
 
 ### Manual Deployment
 
 ```bash
-pnpm build           # builds worker then web (web/dist is the assets directory)
-cd worker
-pnpm deploy
+pnpm deploy   # vp build && wrangler deploy
 
 # Set secrets (first time only)
 pnpx wrangler secret put RESEND_API_KEY
@@ -325,7 +291,7 @@ pnpx wrangler secret put TO_EMAIL
 
 ## Code Style
 
-- **Indentation**: Spaces (2 spaces, configured in `.oxfmtrc.json`)
+- **Indentation**: Spaces (2 spaces)
 - **Quotes**: Double quotes for strings
 - **Imports**: Auto-sorted by Oxlint (`sort-imports` rule)
 - **TypeScript**: Strict mode enabled
@@ -333,53 +299,53 @@ pnpx wrangler secret put TO_EMAIL
 
 ## Key Technologies
 
-### Frontend
+### Frontend (src/front)
 
-- React 19.2.0
-- TypeScript 5.9.3
+- React 19
+- TypeScript 7 (native compiler, `tsc`)
 - Tailwind CSS v4
-- react-router-dom 7.9.5
-- react-hook-form 7.66.0
-- Valibot 1.1.0
+- react-router-dom
+- react-hook-form
+- Valibot
 
-### Backend
+### Backend (src/server)
 
-- Hono 4.10.4
-- Valibot 1.1.0
-- Resend 6.4.2
+- Hono
+- Valibot
+- Resend
 - React (for JSX email templates)
 
 ### Build Tools
 
-- Vite (web)
+- Vite + `@cloudflare/vite-plugin` (single dev server for SPA + Worker)
+- vite-plus (`vp`): unified Oxlint/Oxfmt/Vitest CLI
 - TypeScript 7 (native compiler, `tsc`)
-- Oxlint (linting)
-- Oxfmt (formatting)
 - pnpm (package manager)
+- lefthook (pre-push: `vp check` + `vp build`)
 
 ## Development Workflow
 
-1. **Start development servers:**
+1. **Start the dev server:**
 
    ```bash
-   pnpm dev  # Runs both web and worker in parallel
+   vp dev  # SPA + Worker on http://localhost:5173
    ```
 
-2. **Make changes** to web/, worker/, or shared/
+2. **Make changes** under `src/front`, `src/server`, or `src/shared`
 
-3. **Type check before commit:**
+3. **Check before commit:**
 
    ```bash
-   pnpm typecheck
-   pnpm check
+   vp check
+   vp test
    ```
 
 4. **Test contact form locally:**
    - Frontend: http://localhost:5173/contact
-   - Worker API: http://localhost:8787/api/contact
-   - Email preview: http://localhost:8787/preview/contact
+   - Worker API: http://localhost:5173/api/contact
+   - Email preview: http://localhost:5173/preview/contact
 
-5. **Commit and push** to trigger automatic deployment
+5. **Commit and push** — `lefthook` runs `vp check` + `vp build` on pre-push; pushing to `main` triggers automatic deployment
 
 <!--VITE PLUS START-->
 

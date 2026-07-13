@@ -1,7 +1,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import type { Plugin } from "vite-plus";
-import { parseSlideEntry } from "../src/data/slideParser";
+import { parseSlideEntry } from "../src/front/data/slideParser";
 import { patchSlideBundler } from "./slideBundlerPatch";
 
 const VIRTUAL_ID = "virtual:slides";

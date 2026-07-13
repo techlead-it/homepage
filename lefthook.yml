@@ -1,0 +1,6 @@
+pre-push:
+  jobs:
+    - name: check
+      run: vp check
+    - name: build
+      run: vp build

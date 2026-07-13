@@ -1,8 +1,24 @@
+import { cloudflare } from "@cloudflare/vite-plugin";
+import tailwindcss from "@tailwindcss/vite";
+import react from "@vitejs/plugin-react";
 import { defineConfig } from "vite-plus";
+import { vitePluginOgp } from "./plugins/vite-plugin-ogp";
+import { vitePluginSlides } from "./plugins/vite-plugin-slides";
 
 export default defineConfig({
-  staged: {
-    "*": "vp check --fix",
+  // VITEST 実行時は jsdom environment と Workers environment が競合するため cloudflare() を無効化
+  plugins: [
+    tailwindcss(),
+    react(),
+    vitePluginOgp(),
+    vitePluginSlides(),
+    !process.env.VITEST && cloudflare(),
+  ],
+  test: {
+    environment: "jsdom",
+    globals: true,
+    setupFiles: ["./src/front/test-setup.ts"],
+    exclude: ["**/node_modules/**", "**/dist/**"],
   },
   fmt: {
     printWidth: 80,
@@ -32,7 +48,14 @@ export default defineConfig({
       "import/group-exports": "off",
       "import/exports-last": "off",
     },
-    ignorePatterns: ["dist", "**/dist", "node_modules", "**/index.css"],
+    ignorePatterns: [
+      "dist",
+      "**/dist",
+      "node_modules",
+      "**/index.css",
+      ".wrangler",
+      "worker-configuration.d.ts",
+    ],
     overrides: [
       {
         files: ["**/*.test.ts", "**/*.spec.ts"],

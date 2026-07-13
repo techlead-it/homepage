@@ -1,0 +1,23 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "homepage-contact-form",
+  "compatibility_date": "2026-07-01",
+  "main": "./src/server/index.tsx",
+  "routes": [{ "pattern": "techlead-it.com", "custom_domain": true }],
+  "assets": {
+    "directory": "./dist/client",
+    "not_found_handling": "single-page-application",
+    "run_worker_first": ["/api/*", "/preview/*"],
+    "html_handling": "none",
+  },
+  "observability": {
+    "logs": {
+      "enabled": false,
+      "invocation_logs": true,
+    },
+  },
+  // Development environment variables are in .dev.vars (local only, not deployed)
+  // Production secrets are set via wrangler secret or GitHub Actions:
+  // - RESEND_API_KEY
+  // - TO_EMAIL
+}

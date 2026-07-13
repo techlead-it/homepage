@@ -1,19 +1,7 @@
 packages:
-  - "shared"
-  - "web"
-  - "worker"
+  - "."
 
 minimumReleaseAge: 1400 # 1 day
-catalog:
-  vite: npm:@voidzero-dev/vite-plus-core@^0.2.4
-  vite-plus: ^0.2.4
-overrides:
-  vite: "catalog:"
-peerDependencyRules:
-  allowAny:
-    - vite
-  allowedVersions:
-    vite: "*"
 minimumReleaseAgeExclude:
   - vite-plus
   - "@voidzero-dev/*"
@@ -27,3 +15,4 @@ allowBuilds:
   esbuild: true
   sharp: true
   workerd: true
+  lefthook: true

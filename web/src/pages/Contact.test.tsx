@@ -1,17 +1,8 @@
 import { cleanup, render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { MemoryRouter, Route, Routes } from "react-router-dom";
-import {
-  afterEach,
-  beforeEach,
-  describe,
-  expect,
-  it,
-  vi,
-} from "vite-plus/test";
+import { afterEach, describe, expect, it, vi } from "vite-plus/test";
 import Contact from "./Contact";
-
-const ENDPOINT = "http://localhost:8787/api/contact";
 
 function renderContact() {
   return render(
@@ -45,14 +36,9 @@ async function fillAndSubmitForm(user: ReturnType<typeof userEvent.setup>) {
   await user.click(screen.getByRole("button", { name: "送信する" }));
 }
 
-beforeEach(() => {
-  import.meta.env.VITE_CONTACT_FORM_ENDPOINT = ENDPOINT;
-});
-
 afterEach(() => {
   cleanup();
   vi.restoreAllMocks();
-  delete import.meta.env.VITE_CONTACT_FORM_ENDPOINT;
 });
 
 describe("Contact", () => {
@@ -78,14 +64,12 @@ describe("Contact", () => {
 
   it("navigates to thanks page on successful submission", async () => {
     const user = userEvent.setup();
-    vi.stubGlobal(
-      "fetch",
-      vi.fn().mockResolvedValue(
-        new Response(JSON.stringify({ success: true, messageId: "123" }), {
-          status: 200,
-        })
-      )
+    const fetchMock = vi.fn().mockResolvedValue(
+      new Response(JSON.stringify({ success: true, messageId: "123" }), {
+        status: 200,
+      })
     );
+    vi.stubGlobal("fetch", fetchMock);
     renderContact();
 
     await fillAndSubmitForm(user);
@@ -93,6 +77,10 @@ describe("Contact", () => {
     await waitFor(() => {
       expect(screen.getByText("送信完了")).toBeInTheDocument();
     });
+    expect(fetchMock).toHaveBeenCalledWith(
+      "/api/contact",
+      expect.objectContaining({ method: "POST" })
+    );
   });
 
   it("shows field errors returned by server", async () => {
@@ -174,20 +162,6 @@ describe("Contact", () => {
 
     await waitFor(() => {
       expect(screen.getByText("送信に失敗しました")).toBeInTheDocument();
-    });
-  });
-
-  it("shows error when endpoint is not configured", async () => {
-    const user = userEvent.setup();
-    delete import.meta.env.VITE_CONTACT_FORM_ENDPOINT;
-    renderContact();
-
-    await fillAndSubmitForm(user);
-
-    await waitFor(() => {
-      expect(
-        screen.getByText("Contact form endpoint is not configured")
-      ).toBeInTheDocument();
     });
   });
 

@@ -41,12 +41,7 @@ export default function Contact() {
       setSubmitError(null);
 
       try {
-        const endpoint = import.meta.env.VITE_CONTACT_FORM_ENDPOINT;
-        if (!endpoint) {
-          throw new Error("Contact form endpoint is not configured");
-        }
-
-        const response = await fetch(endpoint, {
+        const response = await fetch("/api/contact", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",

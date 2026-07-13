@@ -1,6 +1,6 @@
 # Contact Form Worker
 
-Cloudflare Worker for handling contact form submissions using Hono, Valibot, and Resend.
+Cloudflare Worker that serves the `web` SPA as Workers Assets and handles contact form submissions using Hono, Valibot, and Resend.
 
 ## Tech Stack
 
@@ -28,7 +28,6 @@ Cloudflare Worker for handling contact form submissions using Hono, Valibot, and
    ```env
    RESEND_API_KEY=re_your_actual_api_key
    TO_EMAIL=info@techlead.jp
-   ALLOWED_ORIGIN=http://localhost:5173
    WORKER_ENV=development
    ```
 
@@ -74,25 +73,14 @@ curl -X POST http://localhost:8787/api/contact \
    ```bash
    pnpx wrangler secret put RESEND_API_KEY
    pnpx wrangler secret put TO_EMAIL
-   pnpx wrangler secret put ALLOWED_ORIGIN
    ```
 
-3. Deploy:
+3. Build web and deploy (serves the built `web/dist` as Workers Assets alongside the API):
    ```bash
-   pnpm deploy
+   pnpm build && pnpm deploy
    ```
 
 ## API
-
-### GET /
-
-Health check endpoint.
-
-**Response:**
-
-```
-Contact Form Worker is running
-```
 
 ### POST /api/contact
 
@@ -138,7 +126,6 @@ These variables are **only loaded during `wrangler dev`** and are **not deployed
 
 - `RESEND_API_KEY`: Resend API key
 - `TO_EMAIL`: Email address to receive submissions
-- `ALLOWED_ORIGIN`: Frontend URL for CORS (e.g., http://localhost:5173)
 - `WORKER_ENV`: Set to "development" to enable /preview/contact endpoint
 
 ### Production (Cloudflare secrets)
@@ -147,4 +134,3 @@ Set via `wrangler secret put` or GitHub Actions:
 
 - `RESEND_API_KEY`: Resend API key
 - `TO_EMAIL`: Email address to receive submissions
-- `ALLOWED_ORIGIN`: Production web URL (e.g., https://techlead-it.github.io)

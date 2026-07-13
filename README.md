@@ -14,7 +14,7 @@ homepage/
 │   │   └── types/         # 型定義
 │   ├── dist/              # ビルド成果物
 │   └── package.json
-├── worker/                 # バックエンド（Cloudflare Worker）
+├── worker/                 # バックエンド + web配信（Cloudflare Worker）
 │   ├── emails/            # メールテンプレート
 │   ├── src/               # Worker実装
 │   └── package.json
@@ -28,13 +28,14 @@ homepage/
 
 ### パッケージ詳細
 
-- **web/**: React SPAで構築されたコーポレートホームページ（GitHub Pagesにデプロイ）
-- **worker/**: お問い合わせフォームAPI用のCloudflare Worker
+- **web/**: React SPAで構築されたコーポレートホームページ（worker/ が Cloudflare Workers Assets として配信）
+- **worker/**: web の静的アセット配信とお問い合わせフォームAPIを担う Cloudflare Worker
 - **shared/**: フロントエンドとバックエンド間で共有する型定義とバリデーションスキーマ
 
 ## 技術スタック
 
 ### フロントエンド（web/）
+
 - React 19.2.0
 - TypeScript 5.9.3
 - Tailwind CSS v4
@@ -44,12 +45,14 @@ homepage/
 - Vite（ビルドツール）
 
 ### バックエンド（worker/）
+
 - Hono 4.10.4
 - Valibot 1.1.0
 - Resend 6.4.2（メール送信）
 - React（JSXメールテンプレート）
 
 ### 開発ツール
+
 - pnpm（パッケージマネージャー）
 - tsgo（TypeScriptコンパイル）
 - Biome（フォーマット・リント）

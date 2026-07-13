@@ -6,8 +6,8 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 This is a corporate homepage for 株式会社テックリード (TechLead Inc.), structured as a **pnpm workspace monorepo** with three packages:
 
-- **web/**: React SPA for the homepage (deployed to GitHub Pages)
-- **worker/**: Cloudflare Worker for contact form API
+- **web/**: React SPA for the homepage (built and served as Workers Assets by `worker/`)
+- **worker/**: Cloudflare Worker serving the web SPA (Workers Assets) and the contact form API, on the same origin (`techlead-it.com`)
 - **shared/**: Common types and validation schemas
 
 ## Monorepo Structure
@@ -127,9 +127,9 @@ Client-side routing via react-router-dom with BrowserRouter. Routes defined in `
 
 **配置方法**: HTML を `web/public/slides/{id}.html` に置くだけ。手動で `slides.ts` を編集する必要はない。
 
-- 実体は `techlead-it.com/slides/{id}.html` としてそのまま配信される（Vite の `public/` は無変換でコピーされる）
+- 実体は `techlead-it.com/slides/{id}.html` としてそのまま配信される（Vite の `public/` は無変換でコピーされ、`worker/wrangler.toml` の `[assets]` で `html_handling = "none"` を指定しているため `.html` 拡張子付きで exact match 配信される）
 - ビルド時に `web/plugins/vite-plugin-slides.ts` が `public/slides/*.html` を走査し、一覧ページ `/slides` に自動反映する（`virtual:slides` として `Slide[]` を供給）
-- HashRouter のため実パス `/slides/*.html` は SPA ルーティングと衝突しない
+- `run_worker_first` に含まれない `/slides/*.html` は asset 一致が SPA fallback (`not_found_handling = "single-page-application"`) より優先されるため、BrowserRouter のルーティングと衝突しない
 
 **メタデータ**は各 HTML の `<head>` から抽出する。`id` はファイル名。
 
@@ -154,10 +154,6 @@ Client-side routing via react-router-dom with BrowserRouter. Routes defined in `
 - Space indentation (configured in `.oxfmtrc.json`)
 - Mobile-first responsive design
 - Breakpoints: `md:` (tablet), `lg:` (desktop)
-
-### Base Path Configuration
-
-Production builds use `/homepage/` base path for GitHub Pages (configured in `web/vite.config.ts`). This is critical for proper asset loading in production.
 
 ## Contact Form Implementation
 
@@ -191,11 +187,7 @@ Recipient inbox
 - Loading state during submission
 - Success page navigation
 
-**Environment Variables:**
-
-- `VITE_CONTACT_FORM_ENDPOINT`: Worker API endpoint
-  - Development: `http://localhost:8787/api/contact`
-  - Production: Set by GitHub Actions during deployment
+**API endpoint**: The form submits to the relative path `/api/contact` (same-origin, since worker serves both the SPA and the API). In dev, `web/vite.config.ts`'s `server.proxy` forwards `/api` to `http://localhost:8787` where `wrangler dev` runs.
 
 ### Backend (worker/)
 
@@ -224,7 +216,6 @@ GET /preview/contact (development only)
 
 - `RESEND_API_KEY`: Resend API key
 - `TO_EMAIL`: Recipient email address
-- `ALLOWED_ORIGIN`: CORS allowed origin
 - `WORKER_ENV`: Environment ("development" or "production")
 
 **Email Template:**
@@ -285,44 +276,24 @@ The Layout component implements scroll-to-top on route change using `useState` t
 
 ## Deployment
 
-### Automated Deployment via GitHub Actions
+web and worker are deployed together as a single Cloudflare Worker (`homepage-contact-form`) that serves the SPA via Workers Assets and the API from the same origin (`techlead-it.com`, apex custom domain declared in `worker/wrangler.toml`).
 
-The project uses **separate workflows** for web and worker deployments, triggered independently based on file changes.
+### Automated Deployment via GitHub Actions
 
 #### Workflow Files
 
-- `.github/workflows/deploy-worker.yaml` - Worker deployment
-- `.github/workflows/deploy-web.yaml` - Web deployment
+- `.github/workflows/deploy.yaml` - Builds worker then web (`pnpm build`), then deploys via `wrangler deploy` (which uploads `web/dist` as Workers Assets alongside the worker code)
 - `.github/workflows/ci-worker.yaml` - Worker CI (lint, typecheck, build)
 - `.github/workflows/ci-web.yaml` - Web CI (lint, typecheck, build)
 - `.github/workflows/pinact-check.yaml` - GitHub Actions version pinning check
 
-#### Deployment Triggers
-
-**Worker Deployment** (runs when worker-related files change):
+#### Deployment Trigger
 
 - Triggers on push to `main` with changes to:
-  - `worker/**`
-  - `shared/**`
+  - `web/**`, `worker/**`, `shared/**`
   - `package.json`, `pnpm-lock.yaml`, `pnpm-workspace.yaml`
-  - `.github/workflows/deploy-worker.yaml`
-- Steps:
-  1. Build worker with `pnpm build:worker`
-  2. Deploy using `cloudflare/wrangler-action@v3.14.1`
-
-**Web Deployment** (runs when web-related files change):
-
-- Triggers on push to `main` with changes to:
-  - `web/**`
-  - `shared/**`
-  - `package.json`, `pnpm-lock.yaml`, `pnpm-workspace.yaml`
-  - `.github/workflows/deploy-web.yaml`
-- Steps:
-  1. Set `VITE_CONTACT_FORM_ENDPOINT` to `secrets.CLOUDFLARE_API_ENDPOINT`
-  2. Build web with `pnpm build:web`
-  3. Deploy `web/dist/` to GitHub Pages
-
-**Note**: Web and worker deployments are **independent**. The worker URL is fixed (`secrets.CLOUDFLARE_API_ENDPOINT`) and does not require dynamic retrieval from worker deployment.
+  - `.github/workflows/deploy.yaml`
+- `concurrency: { group: deploy, cancel-in-progress: false }` serializes overlapping deploy runs
 
 #### CI Workflows
 
@@ -340,9 +311,10 @@ Each workflow (ci-web, ci-worker) runs:
 
 **Pinact Check** runs only when workflow files (`.github/workflows/**`) are modified.
 
-### Manual Worker Deployment
+### Manual Deployment
 
 ```bash
+pnpm build           # builds worker then web (web/dist is the assets directory)
 cd worker
 pnpm deploy
 

@@ -1,21 +1,28 @@
-name: Deploy Worker
+name: Deploy
 on:
   workflow_dispatch:
   push:
     branches:
       - main
     paths:
+      - "web/**"
       - "worker/**"
       - "shared/**"
       - "package.json"
       - "pnpm-lock.yaml"
       - "pnpm-workspace.yaml"
-      - ".github/workflows/deploy-worker.yaml"
+      - ".github/workflows/deploy.yaml"
+
+concurrency:
+  group: deploy
+  cancel-in-progress: false
 
 jobs:
-  deploy-worker:
-    name: Deploy Worker
+  deploy:
+    name: Deploy
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     steps:
       - uses: actions/checkout@v7.0.0
         with:
@@ -26,8 +33,8 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Build worker
-        run: pnpm build:worker
+      - name: Build
+        run: pnpm build
 
       - name: Deploy worker
         id: wrangler-deploy

@@ -54,8 +54,9 @@ homepage/
 ### 開発ツール
 
 - pnpm（パッケージマネージャー）
-- tsgo（TypeScriptコンパイル）
-- Biome（フォーマット・リント）
+- TypeScript 7（ネイティブコンパイラ、`tsc`）
+- Oxlint（リント）
+- Oxfmt（フォーマット）
 
 ## 開発
 

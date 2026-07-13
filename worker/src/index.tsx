@@ -1,7 +1,6 @@
 import { contactSchema } from "@homepage/shared/schemas";
 import { vValidator } from "@hono/valibot-validator";
 import { Hono } from "hono";
-import { cors } from "hono/cors";
 import { renderToStaticMarkup } from "react-dom/server";
 import { Resend } from "resend";
 import { ContactNotification } from "../emails/contact-notification";
@@ -9,24 +8,10 @@ import { ContactNotification } from "../emails/contact-notification";
 interface Bindings {
   RESEND_API_KEY: string;
   TO_EMAIL: string;
-  ALLOWED_ORIGIN: string;
   WORKER_ENV?: string;
 }
 
 const app = new Hono<{ Bindings: Bindings }>();
-
-app.use("/api/*", async (c, next) => {
-  const corsMiddleware = cors({
-    origin: c.env.ALLOWED_ORIGIN || "http://localhost:5173",
-    allowMethods: ["POST", "OPTIONS"],
-    allowHeaders: ["Content-Type"],
-  });
-  return corsMiddleware(c, next);
-});
-
-app.get("/", (c) => {
-  return c.text("Contact Form Worker is running");
-});
 
 app.get("/preview/contact", (c) => {
   if ("development" !== c.env.WORKER_ENV) {

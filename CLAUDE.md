@@ -253,7 +253,7 @@ The Layout component implements scroll-to-top on route change using `useState` t
 
 ## Deployment
 
-The SPA and Worker are built and deployed together as a single Cloudflare Worker (`homepage-contact-form`) that serves the SPA via Workers Assets (`dist/client`, `wrangler.jsonc`'s `assets.directory`) and the API from the same origin (`techlead-it.com`, apex custom domain declared in `wrangler.jsonc`).
+The SPA and Worker are built and deployed together as a single Cloudflare Worker (`homepage`) that serves the SPA via Workers Assets (`dist/client`, `wrangler.jsonc`'s `assets.directory`) and the API from the same origin (`techlead-it.com`, apex custom domain declared in `wrangler.jsonc`).
 
 ### Automated Deployment via GitHub Actions
 

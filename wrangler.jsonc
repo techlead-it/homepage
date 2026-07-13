@@ -1,6 +1,6 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
-  "name": "homepage-contact-form",
+  "name": "homepage",
   "compatibility_date": "2026-07-01",
   "main": "./src/server/index.tsx",
   "routes": [{ "pattern": "techlead-it.com", "custom_domain": true }],

@@ -36,7 +36,7 @@ homepage/
 ```bash
 pnpm install       # postinstall runs `wrangler types` and regenerates worker-configuration.d.ts
 
-vp dev             # Dev server: SPA + Worker served together on a single port (5173)
+pnpm dev           # Dev server: SPA + Worker served together on a single port (5173)
 vp check           # Format + lint (Oxlint/Oxfmt, type-aware) + typecheck (tsc -b)
 vp test            # Run tests (vitest, jsdom)
 vp build           # Production build → dist/client (SPA) + dist/<worker-name> (Worker)
@@ -328,7 +328,7 @@ pnpx wrangler secret put TO_EMAIL
 1. **Start the dev server:**
 
    ```bash
-   vp dev  # SPA + Worker on http://localhost:5173
+   pnpm dev  # SPA + Worker on http://localhost:5173
    ```
 
 2. **Make changes** under `src/front`, `src/server`, or `src/shared`

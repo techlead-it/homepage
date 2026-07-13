@@ -1,6 +1,6 @@
 # 株式会社テックリード ホームページ
 
-Cloudflare Workers 上で動作する単一パッケージ構成の Web アプリケーション。React SPA (`src/front`) と Hono Worker (`src/server`) を `@cloudflare/vite-plugin` で単一の Vite プロジェクトに同居させ、`vp dev` で両方を同一ポートから起動する。
+Cloudflare Workers 上で動作する単一パッケージ構成の Web アプリケーション。React SPA (`src/front`) と Hono Worker (`src/server`) を `@cloudflare/vite-plugin` で単一の Vite プロジェクトに同居させ、`pnpm dev` で両方を同一ポートから起動する。
 
 ## プロジェクト構成
 
@@ -63,7 +63,7 @@ cp .dev.vars.example .dev.vars   # RESEND_API_KEY / TO_EMAIL / WORKER_ENV を設
 ### コマンド
 
 ```bash
-vp dev            # 開発サーバー起動 (SPA + Worker を単一ポートで同時提供)
+pnpm dev          # 開発サーバー起動 (SPA + Worker を単一ポートで同時提供)
 vp check          # フォーマット + lint + 型チェック
 vp test           # テスト実行 (jsdom)
 vp build          # 本番ビルド (dist/client + dist/<worker名>)

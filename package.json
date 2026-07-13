@@ -5,6 +5,7 @@
   "description": "TechLead Inc. corporate homepage",
   "type": "module",
   "scripts": {
+    "dev": "vp dev",
     "postinstall": "wrangler types && vp fmt worker-configuration.d.ts --write",
     "deploy": "vp build && wrangler deploy",
     "cf:preview": "vp build && wrangler dev",

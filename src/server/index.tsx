@@ -1,11 +1,11 @@
-import { contactSchema } from "@homepage/shared/schemas";
+import { contactSchema } from "../shared/schemas";
 import { vValidator } from "@hono/valibot-validator";
 import { Hono } from "hono";
 import { renderToStaticMarkup } from "react-dom/server";
 import { Resend } from "resend";
-import { ContactNotification } from "../emails/contact-notification";
+import { ContactNotification } from "./emails/contact-notification";
 
-interface Bindings {
+interface Bindings extends Cloudflare.Env {
   RESEND_API_KEY: string;
   TO_EMAIL: string;
   WORKER_ENV?: string;

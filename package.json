@@ -3,29 +3,54 @@
   "version": "1.0.0",
   "private": true,
   "description": "TechLead Inc. corporate homepage",
+  "type": "module",
   "scripts": {
-    "dev": "pnpm -r --parallel --stream dev",
-    "build": "pnpm --filter worker build && pnpm --filter web build",
-    "build:web": "pnpm --filter web build",
-    "build:worker": "pnpm --filter worker build",
-    "preview": "pnpm --filter web preview",
-    "typecheck": "pnpm -r run typecheck",
-    "typecheck:web": "pnpm --filter web typecheck",
-    "typecheck:worker": "pnpm --filter worker typecheck",
-    "format": "pnpm -r run format",
-    "format:check": "pnpm -r run format:check",
-    "lint": "pnpm -r run lint",
-    "lint:fix": "pnpm -r run lint:fix",
-    "check": "pnpm -r run check",
-    "check:web": "pnpm --filter web check",
-    "check:worker": "pnpm --filter worker check",
-    "check:shared": "pnpm --filter @homepage/shared check",
-    "check:ci": "pnpm -r run check:ci",
-    "deploy:worker": "pnpm --filter worker deploy",
-    "prepare": "vp config"
+    "dev": "vp dev",
+    "postinstall": "wrangler types && vp fmt worker-configuration.d.ts --write",
+    "deploy": "vp build && wrangler deploy",
+    "cf:preview": "vp build && wrangler dev",
+    "types": "wrangler types",
+    "generate:og": "tsx scripts/generate-og-images.ts"
+  },
+  "dependencies": {
+    "@hono/valibot-validator": "^0.6.1",
+    "@hookform/resolvers": "^5.4.0",
+    "@tailwindcss/typography": "^0.5.20",
+    "github-markdown-css": "^5.9.0",
+    "highlight.js": "^11.11.1",
+    "hono": "^4.12.29",
+    "react": "^19.2.7",
+    "react-dom": "^19.2.7",
+    "react-hook-form": "^7.81.0",
+    "react-icons": "^5.7.0",
+    "react-markdown": "^10.1.0",
+    "react-router-dom": "^7.18.1",
+    "rehype-highlight": "^7.0.2",
+    "remark-gfm": "^4.0.1",
+    "resend": "^6.17.2",
+    "tailwindcss": "^4.3.2",
+    "valibot": "^1.4.2"
   },
   "devDependencies": {
-    "vite-plus": "catalog:"
+    "@cloudflare/vite-plugin": "^1.44.0",
+    "@cloudflare/workers-types": "^5.20260711.1",
+    "@tailwindcss/vite": "^4.3.2",
+    "@testing-library/jest-dom": "^6.9.1",
+    "@testing-library/react": "^16.3.2",
+    "@testing-library/user-event": "^14.6.1",
+    "@types/node": "^26.1.1",
+    "@types/react": "^19.2.17",
+    "@types/react-dom": "^19.2.3",
+    "@vitejs/plugin-react": "^6.0.3",
+    "gray-matter": "^4.0.3",
+    "jsdom": "^29.1.1",
+    "lefthook": "^2.1.10",
+    "takumi-js": "^2.0.3",
+    "tsx": "^4.23.0",
+    "typescript": "^7.0.2",
+    "vite": "^8.0.16",
+    "vite-plus": "^0.2.4",
+    "wrangler": "^4.110.0"
   },
   "devEngines": {
     "runtime": [
@@ -36,12 +61,5 @@
       }
     ]
   },
-  "packageManager": "pnpm@11.9.0",
-  "pnpm": {
-    "onlyBuiltDependencies": [
-      "esbuild",
-      "workerd",
-      "sharp"
-    ]
-  }
+  "packageManager": "pnpm@11.9.0"
 }

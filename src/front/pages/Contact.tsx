@@ -1,5 +1,5 @@
-import { contactSchema } from "@homepage/shared/schemas";
-import type { ContactFormData } from "@homepage/shared/types";
+import { contactSchema } from "../../shared/schemas";
+import type { ContactFormData } from "../../shared/types";
 import { valibotResolver } from "@hookform/resolvers/valibot";
 import { useCallback, useState } from "react";
 import * as v from "valibot";

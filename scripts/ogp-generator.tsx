@@ -15,7 +15,7 @@ interface NewsArticleFrontmatter {
   summary?: string;
 }
 
-const NEWS_DIR = path.join(process.cwd(), "src", "content", "news");
+const NEWS_DIR = path.join(process.cwd(), "src", "front", "content", "news");
 const OUTPUT_DIR = path.join(process.cwd(), "public", "og", "news");
 const CACHE_DIR = path.join(process.cwd(), "cache", "ogp");
 const FONT_PATH = path.join(process.cwd(), "fonts", "NotoSansJP-Bold.ttf");

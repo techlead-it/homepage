@@ -18,22 +18,18 @@ dist-ssr
 # TypeScript
 *.tsbuildinfo
 
-# Workspace outputs
-web/dist
-worker/dist
-
 # Worker
-worker/.wrangler
-worker/.dev.vars
-worker/.env*
+.wrangler
+.dev.vars
 
 # Environment
-web/.env*.local
+.env*
+!.env*.example
 
 # OGP generation
-web/cache/
-web/fonts/
-web/public/og/
+cache/
+fonts/
+public/og/
 
 # Editor directories and files
 .vscode/*

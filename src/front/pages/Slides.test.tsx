@@ -21,7 +21,7 @@ const companyCategory: SlideCategory = {
       id: "dx",
       title: "作って終わりにしない。現場に根付くDXを、一緒に。",
       description: "DXで、日本の競争力を底上げする",
-      path: "/slides/dx.html",
+      path: "/slides/company/dx.html",
     },
   ],
 };

@@ -83,7 +83,7 @@ export interface SlideDoc {
   id: string;
   title: string;
   description: string;
-  path: string; // 配信パス（例: "/slides/dx.html"）
+  path: string; // 配信パス（例: "/slides/company/dx.html"）
 }
 
 export interface SlideCategory {

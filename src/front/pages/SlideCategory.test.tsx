@@ -15,7 +15,7 @@ const categories: SlideCategoryType[] = [
         id: "dx",
         title: "作って終わりにしない。現場に根付くDXを、一緒に。",
         description: "DXで、日本の競争力を底上げする",
-        path: "/slides/dx.html",
+        path: "/slides/company/dx.html",
       },
     ],
   },
@@ -73,7 +73,7 @@ describe("SlideCategory", () => {
     const link = screen.getByRole("link", {
       name: /作って終わりにしない。現場に根付くDXを、一緒に。/,
     });
-    expect(link).toHaveAttribute("href", "/slides/dx.html");
+    expect(link).toHaveAttribute("href", "/slides/company/dx.html");
   });
 
   it("redirects to the slides top page for an unknown category", () => {

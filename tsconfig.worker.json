@@ -5,7 +5,7 @@
     "module": "ES2022",
     "lib": ["ES2022"],
     "moduleResolution": "bundler",
-    "types": ["@cloudflare/workers-types"],
+    "types": [],
     "jsx": "react-jsx",
     "jsxImportSource": "react",
     "resolveJsonModule": true,

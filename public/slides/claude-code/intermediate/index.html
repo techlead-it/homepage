@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Claude Code 研修 中級</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700;800&family=IBM+Plex+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='18' fill='%2314151f'/><text x='22' y='72' font-size='60' font-family='monospace' font-weight='bold' fill='%237dcfff'>❯</text></svg>">
+  <link rel="stylesheet" href="../shared/theme.css">
+  <style>
+    :root { --level: var(--cyan); }
+  </style>
+</head>
+<body>
+  <div id="slide-container"></div>
+
+  <div id="slide-nav">
+    <div class="rail"><div class="fill" id="nav-fill"></div></div>
+    <span class="counter" id="nav-counter">1 / 1</span>
+  </div>
+
+  <script>
+    /* =====================================================================
+       デッキランタイム (テンプレート + ナビゲーション)
+       3デッキ共通。変更する場合は beginner/intermediate/advanced すべてに
+       同じ変更を反映すること。
+       ===================================================================== */
+    const DECK = {
+      levelTag: '中級',
+      title: 'Claude Code 研修 中級',
+      duration: 'HANDS-ON ・ 4h',
+    };
+
+    const statusBar = (topic, time) => `
+      <div class="status-bar">
+        <span class="seg-left">${DECK.levelTag}</span>
+        <span class="seg-mid">${topic || DECK.title}</span>
+        <span class="seg-right">${time || DECK.duration}</span>
+      </div>`;
+
+    const slide = ({ prompt, title, badge, topic, time, body }) => `
+      <section class="slide">
+        <div class="slide-inner">
+          <p class="prompt-line"><span class="caret">❯</span> <span class="cmd">claude</span> <span class="arg">${prompt || ''}</span></p>
+          <h2 class="slide-title">${title}</h2>
+          ${badge ? `<span class="mode-badge ${badge}">${badge === 'hands-on' ? 'HANDS-ON ── 全員で手を動かす' : 'DEMO ── 講師デモ'}</span>` : ''}
+          <div class="slide-body">${body}</div>
+        </div>
+        ${statusBar(topic, time)}
+      </section>`;
+
+    const hero = ({ title, sub, meta }) => `
+      <section class="slide">
+        <div class="hero-inner">
+          <p class="hero-prompt"><span class="caret">❯</span> <span class="cmd">claude</span><span class="cursor-blink"></span></p>
+          <h1 class="hero-title">${title}</h1>
+          <p class="hero-sub">${sub}</p>
+          <div class="hero-meta">${meta.map((m) => `<span>${m}</span>`).join('')}</div>
+        </div>
+        ${statusBar('', '')}
+      </section>`;
+
+    const term = (title, lines) => `
+      <div class="term">
+        <div class="term-head"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="term-title">${title}</span></div>
+        <div class="term-body">${lines.map((l) => `<span class="${l.t}">${l.s}</span>`).join('\n')}</div>
+      </div>`;
+
+    const pass = (text) => `<div><span class="pass-chip">${text}</span></div>`;
+
+    const cards = (cols, items) => `
+      <div class="cols cols-${cols}">
+        ${items.map((c) => `
+          <div class="card">
+            ${c.num ? `<span class="num">${c.num}</span>` : ''}
+            ${c.title ? `<h3>${c.title}</h3>` : ''}
+            ${c.list ? `<ul>${c.list.map((li) => `<li>${li}</li>`).join('')}</ul>` : c.body || ''}
+          </div>`).join('')}
+      </div>`;
+
+    const timetable = (rows) => `
+      <table class="timetable">
+        <thead><tr><th>TIME</th><th>#</th><th>トピック</th><th>やること</th></tr></thead>
+        <tbody>
+          ${rows.map((r) => `
+            <tr${r.break ? ' class="break"' : ''}>
+              <td class="time">${r.time}</td>
+              <td class="tno">${r.no || '—'}</td>
+              <td class="topic">${r.topic}</td>
+              <td>${r.desc || ''}</td>
+            </tr>`).join('')}
+        </tbody>
+      </table>`;
+
+    const beforeAfter = (pairs) => `
+      <div class="ba-grid">
+        <div class="ba-col"><span class="ba-col-head before">BEFORE ── 受講前</span>
+          ${pairs.map((p) => `<div class="ba-item before">${p[0]}</div>`).join('')}
+        </div>
+        <div class="ba-arrows"><span></span>${pairs.map(() => '<span>→</span>').join('')}</div>
+        <div class="ba-col"><span class="ba-col-head after">AFTER ── 受講後</span>
+          ${pairs.map((p) => `<div class="ba-item after">${p[1]}</div>`).join('')}
+        </div>
+      </div>`;
+
+    const courseMap = (current) => {
+      const stages = [
+        { key: 'beginner', lv: 'BEGINNER', color: 'var(--green)', name: '初級', desc: '基本ワークフローを一人で回す' },
+        { key: 'intermediate', lv: 'INTERMEDIATE', color: 'var(--cyan)', name: '中級', desc: 'Subagent / Skill / Hook / MCP を自作する' },
+        { key: 'advanced', lv: 'ADVANCED', color: 'var(--magenta)', name: '上級', desc: 'プロジェクトのハーネスとして統合設計する' },
+      ];
+      return `
+        <div class="course-map">
+          ${stages.map((s, i) => `
+            ${i > 0 ? '<span class="arrow">→</span>' : ''}
+            <div class="card stage${s.key === current ? ' current' : ''}">
+              <span class="lv" style="color:${s.color}">${s.lv}</span>
+              <h3>${s.name}</h3>
+              <p>${s.desc}</p>
+            </div>`).join('')}
+        </div>`;
+    };
+
+    /* =====================================================================
+       スライド定義 (ここから下がこのデッキ固有のコンテンツ)
+       ===================================================================== */
+    const SLIDES = [
+      // 1. 表紙
+      hero({
+        title: 'Claude Code 研修 <span class="accent">中級</span>',
+        sub: 'Subagent・Skill・Hook・MCP ── 「個人で使える」から「チームの仕組みを作れる」へ。',
+        meta: ['半日 ・ 約4時間', 'ハンズオン形式', '初級コース修了者向け'],
+      }),
+
+      // 2. ゴール
+      slide({
+        prompt: '"このコースのゴールを教えて"',
+        title: '今日の到達点 ── 再利用可能な<em>仕組みを自作</em>できる',
+        body: `
+          ${cards(2, [
+            { num: 'GOAL 1', title: '開発フローにClaude Codeを統合', body: '<p>調査・実装・実機検証・PR作成・レビュー対応までを、対話で使うだけでなく日常の開発フローの一部として回せるようにします。</p>' },
+            { num: 'GOAL 2', title: 'チームで再利用できる仕組みを自作', body: '<p>Subagent・Skill・Hook・MCPを「自分の手で作って動かす」ところまで。作ったものはそのままチームに配布できます。</p>' },
+          ])}
+          ${pass('修了成果物 = 自作のSkill 2つ + migration保護hook + AIがレビュー対応まで済ませたPR 1件')}
+        `,
+      }),
+
+      // 3. 題材アプリとロードマップ
+      slide({
+        prompt: '"最終的に何を作るの?"',
+        title: '題材はひとつ ── <em>チームタスクボード</em>を3コースで育てる',
+        topic: '題材アプリとロードマップ',
+        time: '0:00–0:10',
+        body: `
+          <div class="cols cols-3">
+            <div class="card">
+              <span class="num" style="color: var(--green)">初級 ── ★</span>
+              <h3>完了フラグ</h3>
+              <p>チェックで完了・絞り込み表示。1テーブル1カラム+トグルUI。</p>
+            </div>
+            <div class="card" style="border-color: var(--level); box-shadow: 0 0 0 1px var(--level)">
+              <span class="num" style="color: var(--cyan)">中級 ── ★★</span>
+              <h3>タグ機能</h3>
+              <p>担当者/分類タグと絞り込み。新テーブル（多対多）+migration+API+UI。</p>
+            </div>
+            <div class="card">
+              <span class="num" style="color: var(--magenta)">上級 ── ★★★</span>
+              <h3>繰り返しタスク</h3>
+              <p>毎日/毎週/毎月、完了時に次回を自動生成。月末・うるう年の境界処理。</p>
+            </div>
+          </div>
+          <div class="panel" style="margin-top: var(--gap-md)">
+            <p style="font-size: 26px; line-height: 1.8; color: var(--fg-muted)">
+              今日の担当は★★のタグ機能 ── 初めて<b style="color: var(--fg)">複数レイヤをまたぐ変更</b>になる。
+              だからこそ、今日作る開発フロー（<b style="color: var(--fg)">Skill / Hook / PR</b>）に乗せて足す。
+            </p>
+          </div>
+        `,
+      }),
+
+      // 4. 事前準備
+      slide({
+        prompt: '"環境をチェックして"',
+        title: 'はじめる前に ── 事前準備チェック',
+        topic: '事前準備',
+        time: '0:00–0:10',
+        body: `
+          ${term('preflight-check', [
+            { t: 'ok', s: '✓ 初級コース修了（または Explore→Plan→Code→Commit を一人で回せる）' },
+            { t: 'ok', s: '✓ 題材リポジトリ（チームタスクボード・完了フラグ実装済み）が手元で動く' },
+            { t: 'ok', s: '✓ 題材リポジトリを自分のGitHubアカウントにfork済み（PR演習用）' },
+            { t: 'dim', s: '' },
+            { t: 'dim', s: '題材は初級と同じチームタスクボードの続き ── 今度は「仕組み化」しながら育てる' },
+            { t: 'warn', s: '! 未完了の項目がある人は今すぐ挙手 ── 始まる前に一緒に解決します' },
+          ])}
+        `,
+      }),
+
+      // 5. タイムテーブル
+      slide({
+        prompt: '"本日の流れを教えて"',
+        title: '4時間の地図 ── 画面下のバーが常に現在地',
+        topic: '本日の流れ',
+        time: '0:00–0:10',
+        body: timetable([
+          { time: '0:10–0:25', no: 'T1', topic: 'コンテキストの与え方', desc: '雑な依頼 vs 文脈付きの依頼で出力品質を比較' },
+          { time: '0:25–0:50', no: 'T2', topic: 'Subagents', desc: '調査を委任し /context で消費差を比較' },
+          { time: '0:50–1:30', no: 'T3', topic: 'Skills（コマンド統合）', desc: '手動起動と自動起動のスキルを自作' },
+          { time: '1:30–1:40', topic: '休憩', break: true },
+          { time: '1:40–2:00', no: 'T4', topic: 'MCPサーバー連携', desc: 'AI自身にブラウザで実機検証させる' },
+          { time: '2:00–2:25', no: 'T5', topic: 'GitHub統合', desc: 'PR作成 → レビューコメント対応まで' },
+          { time: '2:25–2:50', no: 'T6', topic: 'Hooksの実装', desc: 'migrations/ 保護hookを実装してdenyを確認' },
+          { time: '2:50–3:00', no: 'T7', topic: 'thinking mode / plan mode', desc: '同一の設計タスクで使い分けを整理' },
+          { time: '3:00–3:50', no: 'T8', topic: '総合演習', desc: '設計→調査→実装→テスト→PRを通しで完走' },
+          { time: '3:50–4:00', topic: 'クロージング', break: true },
+        ]),
+      }),
+
+      // 6. T1 コンテキストの与え方
+      slide({
+        prompt: '"このバグの原因を調査して"',
+        title: '同じ依頼でも<em>文脈</em>で品質が変わる',
+        badge: 'hands-on',
+        topic: 'T1 ── コンテキストの与え方',
+        time: '0:10–0:25',
+        body: `
+          ${cards(2, [
+            { num: 'BAD', title: '雑な依頼', list: [
+              '「バグってるから直して」だけ',
+              'AIはリポジトリ全体を推測で探索する',
+              '仮説が発散し、的外れな修正が返ることも',
+            ] },
+            { num: 'GOOD', title: '文脈を与えた依頼', list: [
+              'エラーログを貼る',
+              '再現手順を書く',
+              '関連ファイルを指定する',
+              '探索が一直線になり、根拠のある答えが返る',
+            ] },
+          ])}
+          <div class="panel" style="margin-top: var(--gap-md)">
+            <p style="font-size: 24px; color: var(--fg-muted)">演習: 同じバグ調査を「雑な依頼」と「エラーログ + 再現手順 + 関連ファイル指定」の2通りで実行し、出力を並べて比較する。</p>
+          </div>
+          ${pass('差分を具体的に指摘できる')}
+        `,
+      }),
+
+      // 7. T2 Subagents
+      slide({
+        prompt: '"全APIエンドポイントとテストカバレッジを調査して"',
+        title: 'Subagents ── 調査を<em>隔離</em>してメインを汚さない',
+        badge: 'hands-on',
+        topic: 'T2 ── Subagents',
+        time: '0:25–0:50',
+        body: `
+          <div class="cols cols-2">
+            ${term('委任なし ── 調査の中身が全部メインに残る', [
+              { t: 'u', s: '全APIエンドポイントとテストカバレッジを調査して' },
+              { t: 'a', s: 'Read(src/server/routes/tasks.ts) ほか20+ファイル' },
+              { t: 'a', s: 'Bash(pnpm test -- --coverage)' },
+              { t: 'u', s: '/context' },
+              { t: 'warn', s: '▮▮▮▮▮▮▮▯▯▯ 71% used' },
+            ])}
+            ${term('subagentに委任 ── 要約だけ受け取る', [
+              { t: 'u', s: '調査はsubagentに委任して' },
+              { t: 'a', s: 'Task(Explore: API調査) を起動' },
+              { t: 'a', s: '→ エンドポイント7件・テスト未カバー2件 の要約が届く' },
+              { t: 'u', s: '/context' },
+              { t: 'ok', s: '▮▮▯▯▯▯▯▯▯▯ 18% used' },
+            ])}
+          </div>
+          ${pass('消費差を数値で示せる')}
+        `,
+      }),
+
+      // 8. T3 Skills
+      slide({
+        prompt: '/test-summary',
+        title: 'Skills ── 定型手順を<em>指示書</em>にして再利用する',
+        badge: 'hands-on',
+        topic: 'T3 ── Skills（コマンド統合）',
+        time: '0:50–1:30',
+        body: `
+          <div class="cols cols-2">
+            ${term('skills/add-api-endpoint/SKILL.md', [
+              { t: 'dim', s: '---' },
+              { t: 'a', s: 'name: add-api-endpoint' },
+              { t: 'a', s: 'description: APIエンドポイント追加の定型手順。' },
+              { t: 'a', s: '  「エンドポイントを追加」などの依頼で使う' },
+              { t: 'dim', s: '---' },
+              { t: 'a', s: '1. src/server/routes にルート定義を追加' },
+              { t: 'a', s: '2. テストを書いて pnpm test を実行' },
+              { t: 'a', s: '3. フロントの型定義を更新' },
+            ])}
+            <div class="card">
+              <h3>手動起動と自動起動 ── 違いは「誰が呼ぶか」</h3>
+              <ul>
+                <li><b>手動起動</b> ── <span class="mono">/名前</span> で人が呼ぶ。従来のカスタムスラッシュコマンド相当</li>
+                <li><b>自動起動</b> ── descriptionと依頼文がマッチすると、AIが自分で選んで使う</li>
+                <li>今日は両方を自作する: <span class="mono">/test-summary</span>（テスト実行→失敗要約）と add-api-endpoint（上のSKILL.md）</li>
+              </ul>
+              <p style="margin-top: var(--gap-md)">コマンドはスキルに統合されていく ── 「手順を一度書けば、チームの誰がやっても同じ品質」が本質。</p>
+            </div>
+          </div>
+          ${pass('両方の起動をログで確認')}
+        `,
+      }),
+
+      // 9. T4 MCPサーバー連携
+      slide({
+        prompt: '"実装した画面をブラウザで開いてconsoleエラーがないか確認して"',
+        title: 'MCP ── AI自身に<em>実機検証</em>までさせる',
+        badge: 'hands-on',
+        topic: 'T4 ── MCPサーバー連携',
+        time: '1:40–2:00',
+        body: `
+          <div class="cols cols-2">
+            ${term('claude ── chrome-devtools MCP', [
+              { t: 'u', s: '実装した画面をブラウザで開いてconsoleエラーがないか確認して' },
+              { t: 'a', s: 'chrome-devtools: new_page(http://localhost:5173)' },
+              { t: 'a', s: 'chrome-devtools: list_console_messages' },
+              { t: 'ng', s: '✗ TypeError: todos.map is not a function' },
+              { t: 'a', s: '初期描画時に todos が undefined です。修正しますか?' },
+              { t: 'dim', s: 'AIが自分でブラウザを開き、実機で確認して報告する' },
+            ])}
+            <div class="card">
+              <h3>MCPサーバー ── 外部ツールをAIの手に</h3>
+              <ul>
+                <li>MCPサーバーを接続すると、AIが使える道具が増える</li>
+                <li>chrome-devtools MCP ならブラウザ操作・console・DOMの確認ができる</li>
+                <li>「実装したら自分でブラウザを開いて確認」という最後の手作業をAIに渡せる</li>
+              </ul>
+              <p style="margin-top: var(--gap-md)">検証を仕組みに組み込む第一歩 ── 上級の「検証器の設計」につながる。</p>
+            </div>
+          </div>
+          ${pass('AIの実機検証結果が返る')}
+        `,
+      }),
+
+      // 10. T5 GitHub統合
+      slide({
+        prompt: '"この変更でPRを作成して"',
+        title: 'GitHub統合 ── PR作成から<em>レビュー対応</em>までAIと協業',
+        badge: 'hands-on',
+        topic: 'T5 ── GitHub統合',
+        time: '2:00–2:25',
+        body: `
+          ${term('claude ── gh CLI でPRの往復を回す', [
+            { t: 'u', s: 'この変更でPRを作成して' },
+            { t: 'a', s: 'Bash(git push -u origin <作業ブランチ>)' },
+            { t: 'a', s: 'Bash(gh pr create --title "…" --body "…")' },
+            { t: 'ok', s: '✓ https://github.com/<あなた>/taskboard/pull/1' },
+            { t: 'dim', s: '── ここでGitHubを開き、自分でレビューコメントを付ける ──' },
+            { t: 'u', s: 'PR #1 のレビューコメントに対応して' },
+            { t: 'a', s: 'Bash(gh pr view 1 --comments) → Edit(…) → push' },
+            { t: 'ok', s: '✓ 指摘を修正してpushし、コメントに返信しました' },
+          ])}
+          ${pass('PRがGitHub上に作成される')}
+        `,
+      }),
+
+      // 11. T6 Hooks
+      slide({
+        prompt: '"migrationsの古いファイルを整理して"',
+        title: 'Hooks ── 危険な操作を<em>コードで禁止</em>する',
+        badge: 'hands-on',
+        topic: 'T6 ── Hooksの実装',
+        time: '2:25–2:50',
+        body: `
+          <div class="cols cols-2">
+            ${term('hookがdenyする瞬間', [
+              { t: 'u', s: 'migrations/ の古いファイルを削除して' },
+              { t: 'a', s: 'Bash(rm src/server/migrations/0001_init.sql)' },
+              { t: 'ng', s: '✗ PreToolUse hook denied ── migrations/ 配下の削除・変更は禁止' },
+              { t: 'a', s: 'hookにブロックされました。migrationsに触れない別の方法を提案します' },
+              { t: 'dim', s: '指示は破られることがある。hookは破れない' },
+            ])}
+            <div class="card">
+              <h3>なぜ migrations/ を守るのか</h3>
+              <ul>
+                <li>適用済みmigrationの削除・書き換えは、DBとスキーマ履歴の不整合という実際の事故につながる</li>
+                <li>PreToolUse hook はツール実行の直前に割り込み、条件に合えばdenyする</li>
+                <li>hookはお守りではない ── 実際の事故を防ぐものを書く</li>
+              </ul>
+            </div>
+          </div>
+          ${pass('禁止操作が実際にブロックされる')}
+        `,
+      }),
+
+      // 12. T7 thinking mode / plan mode
+      slide({
+        prompt: '"タグ機能の設計を考えて"',
+        title: 'thinking mode / plan mode ── <em>使い分け</em>の基準を持つ',
+        badge: 'hands-on',
+        topic: 'T7 ── thinking mode / plan mode',
+        time: '2:50–3:00',
+        body: `
+          ${cards(2, [
+            { num: 'THINKING', title: '深く考えさせたいとき', list: [
+              '回答の前の思考時間を増やす',
+              '設計のトレードオフ比較・複雑な原因分析に向く',
+              '実行の流れはそのまま ── 途中で止まらない',
+            ] },
+            { num: 'PLAN', title: '実行前に承認を挟みたいとき', list: [
+              'Shift+Tab で切替。編集の前に計画を提示させる',
+              '計画を承認するまでファイルに触らせない',
+              '影響範囲の大きい変更・方針を先に固めたい作業に向く',
+            ] },
+          ])}
+          <div class="panel" style="margin-top: var(--gap-md)">
+            <p style="font-size: 24px; color: var(--fg-muted)">演習: 同一の設計タスク（タグ機能の設計）を両モードで実行し、出力と体験の違いを比較する。</p>
+          </div>
+          ${pass('差分を具体的に指摘できる')}
+        `,
+      }),
+
+      // 13. T8 総合演習
+      slide({
+        prompt: '"担当者タグと分類タグを追加して"',
+        title: '総合演習 ── T1〜T7を<em>1本の開発フロー</em>に繋げる',
+        badge: 'hands-on',
+        topic: 'T8 ── 総合演習',
+        time: '3:00–3:50',
+        body: `
+          <div class="cols cols-2">
+            <div class="card">
+              <h3>タグ機能（担当者/分類・★★）を通しで完走する</h3>
+              <ul>
+                <li><b>STEP 1</b> ── plan mode で設計（T7）</li>
+                <li><b>STEP 2</b> ── subagent で調査（T2）</li>
+                <li><b>STEP 3</b> ── 実装（T1の文脈の与え方・T3のスキルを活用）</li>
+                <li><b>STEP 4</b> ── migration追加を伴うので T6 の hook のガード下でテスト</li>
+                <li><b>STEP 5</b> ── PR作成（T5）</li>
+              </ul>
+            </div>
+            <div class="card">
+              <h3>成果物がそのまま受講記録になる</h3>
+              <p>通しで使った各機能の利用ログとPRが、今日の修了成果物。</p>
+              <ul>
+                <li>自作のSkill 2つ</li>
+                <li>migration保護hook</li>
+                <li>AIが作成し、レビュー対応まで済ませたPR 1件</li>
+              </ul>
+              <p style="margin-top: var(--gap-md)">迷ったら各トピックのスライドに戻ってOK。早く終わった人はMCPでブラウザ検証（T4）まで。</p>
+            </div>
+          </div>
+          ${pass('PR + 各機能の利用ログが残る')}
+        `,
+      }),
+
+      // 14. Before / After
+      slide({
+        prompt: '"受講前後を比較して"',
+        title: '身につけると<em>どうなれるか</em>',
+        topic: 'クロージング',
+        time: '3:50–4:00',
+        body: beforeAfter([
+          ['Claude Codeを対話で使うだけ', '定型作業をSkill化し、チームメンバー全員が同じ品質で再利用できる'],
+          ['長い調査でコンテキストが溢れて劣化', '調査をsubagentに隔離し、メインの会話を汚さず大きなタスクを進められる'],
+          ['「AIが変なことをしないか」を目視で監視', 'Hookで危険操作を機械的にブロックし、安心して任せられる'],
+          ['動作確認は自分でブラウザを開いて実施', 'MCP経由でAI自身にブラウザ検証までさせられる'],
+          ['PR作成・レビュー対応は手作業', 'PR作成からレビューコメント対応までAIと協業できる'],
+        ]),
+      }),
+
+      // 15. クロージング
+      slide({
+        prompt: '"次は?"',
+        title: 'ここから先は「プロジェクト全体を<em>設計する</em>」側へ',
+        topic: 'クロージング',
+        time: '3:50–4:00',
+        body: `
+          ${courseMap('intermediate')}
+          <div class="panel" style="margin-top: var(--gap-lg)">
+            <p style="font-size: 26px; line-height: 1.8; color: var(--fg-muted)">
+              上級では、今日自作した <b style="color: var(--fg)">Subagent / Skill / Hook / MCP</b> をプロジェクトのハーネスとして統合設計します。
+              今日の成果物（Skill 2つ + hook + PR）は、そのままチームに持ち帰って使ってください。
+            </p>
+          </div>
+        `,
+      }),
+    ];
+
+    Deck_render();
+
+    /* ---- ナビゲーション (3デッキ共通・変更時は全デッキに反映) ---- */
+    function Deck_render() {
+      document.getElementById('slide-container').innerHTML = SLIDES.join('');
+
+      const slides = document.querySelectorAll('.slide');
+      const total = slides.length;
+      let current = 0;
+      const fill = document.getElementById('nav-fill');
+      const counter = document.getElementById('nav-counter');
+
+      const show = (i) => {
+        if (i < 0 || i >= total) return;
+        slides[current].classList.remove('active');
+        current = i;
+        slides[current].classList.add('active');
+        fill.style.width = ((current + 1) / total) * 100 + '%';
+        counter.textContent = (current + 1) + ' / ' + total;
+        history.replaceState(null, '', '#' + (current + 1));
+      };
+
+      document.addEventListener('keydown', (e) => {
+        switch (e.key) {
+          case 'ArrowRight': case ' ': case 'PageDown':
+            e.preventDefault(); show(current + 1); break;
+          case 'ArrowLeft': case 'PageUp':
+            e.preventDefault(); show(current - 1); break;
+          case 'Home': e.preventDefault(); show(0); break;
+          case 'End': e.preventDefault(); show(total - 1); break;
+        }
+      });
+
+      const scale = () => {
+        const s = Math.min(window.innerWidth / 1920, window.innerHeight / 1080);
+        slides.forEach((el) => { el.style.transform = `translate(-50%, -50%) scale(${s})`; });
+      };
+      window.addEventListener('resize', scale);
+
+      const hash = parseInt(location.hash.slice(1), 10);
+      current = (hash >= 1 && hash <= total) ? hash - 1 : 0;
+      slides[current].classList.add('active');
+      scale();
+      show(current);
+    }
+  </script>
+</body>
+</html>

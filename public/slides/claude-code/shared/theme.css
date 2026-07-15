@@ -1,0 +1,253 @@
+/* =============================================================
+   Claude Code 研修スライド 共通テーマ
+   コンセプト: ターミナルセッション。濃紺インクの地に ANSI 由来の
+   セマンティックカラー。レベル色は各デッキが --level で上書きする。
+   ============================================================= */
+
+:root {
+  /* 地と面 */
+  --bg: #14151f;
+  --bg-panel: #1d1f2e;
+  --bg-inset: #10111a;
+  --border: #33364d;
+
+  /* 文字 */
+  --fg: #e6e9f5;
+  --fg-muted: #9aa1c0;
+  --fg-faint: #666d8f;
+
+  /* ブランド + ANSI セマンティック */
+  --claude: #d97757;
+  --green: #9ece6a;
+  --red: #f7768e;
+  --yellow: #e0af68;
+  --blue: #7aa2f7;
+  --cyan: #7dcfff;
+  --magenta: #bb9af7;
+
+  /* コースレベル色 (各デッキの index.html が上書き) */
+  --level: var(--green);
+
+  --font-mono: "JetBrains Mono", "Menlo", monospace;
+  --font-body: "IBM Plex Sans JP", "Hiragino Sans", sans-serif;
+
+  --pad-slide: 96px;
+  --gap-lg: 48px;
+  --gap-md: 24px;
+  --gap-sm: 12px;
+  --radius: 10px;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html, body { width: 100vw; height: 100vh; overflow: hidden; }
+body { font-family: var(--font-body); background: #000; }
+
+#slide-container { position: relative; width: 100vw; height: 100vh; overflow: hidden; }
+
+.slide {
+  width: 1920px; height: 1080px; position: absolute;
+  top: 50%; left: 50%; transform-origin: center center;
+  overflow: hidden; display: none;
+  background: var(--bg); color: var(--fg);
+}
+.slide.active { display: block; }
+
+/* ---- スライド骨格 ---- */
+.slide-inner {
+  position: relative; width: 100%; height: 100%;
+  padding: var(--pad-slide) var(--pad-slide) 140px;
+  display: flex; flex-direction: column;
+}
+
+/* プロンプト見出し: ❯ claude "..." */
+.prompt-line {
+  font-family: var(--font-mono);
+  font-size: 26px; font-weight: 700;
+  color: var(--fg-faint);
+  margin-bottom: var(--gap-sm);
+}
+.prompt-line .caret { color: var(--level); }
+.prompt-line .cmd { color: var(--claude); }
+.prompt-line .arg { color: var(--fg-muted); font-weight: 400; }
+
+.slide-title {
+  font-size: 64px; font-weight: 700; line-height: 1.25;
+  color: var(--fg);
+  margin-bottom: var(--gap-lg);
+}
+.slide-title em { font-style: normal; color: var(--level); }
+
+.slide-body { flex: 1; display: flex; flex-direction: column; min-height: 0; }
+
+/* ---- tmux 風ステータスバー (シグネチャ) ---- */
+.status-bar {
+  position: absolute; left: 0; right: 0; bottom: 0;
+  height: 64px;
+  background: var(--bg-inset);
+  border-top: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 48px;
+  font-family: var(--font-mono); font-size: 22px;
+}
+.status-bar .seg-left { color: var(--bg); background: var(--level); font-weight: 800; padding: 4px 20px; border-radius: 4px; }
+.status-bar .seg-mid { color: var(--fg-muted); }
+.status-bar .seg-right { color: var(--fg-faint); }
+
+/* ---- 汎用パネル ---- */
+.panel {
+  background: var(--bg-panel);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: var(--gap-md) var(--gap-lg);
+}
+
+/* ターミナルウィンドウ (transcript) */
+.term {
+  background: var(--bg-inset);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+.term-head {
+  display: flex; align-items: center; gap: 10px;
+  padding: 14px 20px;
+  border-bottom: 1px solid var(--border);
+}
+.term-head .dot { width: 14px; height: 14px; border-radius: 50%; background: var(--border); }
+.term-head .term-title { font-family: var(--font-mono); font-size: 18px; color: var(--fg-faint); margin-left: 10px; }
+.term-body {
+  font-family: var(--font-mono); font-size: 25px; line-height: 1.8;
+  padding: var(--gap-md) var(--gap-lg);
+  white-space: pre-wrap;
+}
+.term-body .u { color: var(--fg); font-weight: 700; }          /* ユーザー入力 */
+.term-body .u::before { content: "❯ "; color: var(--level); }
+.term-body .a { color: var(--fg-muted); }                       /* エージェント動作 */
+.term-body .ok { color: var(--green); }
+.term-body .ng { color: var(--red); }
+.term-body .warn { color: var(--yellow); }
+.term-body .dim { color: var(--fg-faint); }
+
+/* 完了確認チップ: テストアサーション風 */
+.pass-chip {
+  display: inline-flex; align-items: center; gap: 14px;
+  font-family: var(--font-mono); font-size: 24px; font-weight: 700;
+  color: var(--green);
+  background: color-mix(in srgb, var(--green) 12%, transparent);
+  border: 1px solid color-mix(in srgb, var(--green) 45%, transparent);
+  border-radius: 6px;
+  padding: 12px 24px;
+  margin-top: var(--gap-md);
+}
+.pass-chip::before { content: "✓ PASS"; background: var(--green); color: var(--bg); padding: 2px 12px; border-radius: 4px; font-size: 20px; }
+
+/* デモ/ワーク種別バッジ */
+.mode-badge {
+  display: inline-block;
+  align-self: flex-start;
+  font-family: var(--font-mono); font-size: 20px; font-weight: 700;
+  letter-spacing: 0.08em;
+  padding: 6px 18px; border-radius: 4px;
+  margin-bottom: var(--gap-md);
+}
+.mode-badge.hands-on { color: var(--bg); background: var(--level); }
+.mode-badge.demo { color: var(--cyan); border: 1px solid var(--cyan); }
+
+/* ---- グリッド ---- */
+.cols { display: grid; gap: var(--gap-md); flex: 1; min-height: 0; }
+.cols-2 { grid-template-columns: 1fr 1fr; }
+.cols-3 { grid-template-columns: 1fr 1fr 1fr; }
+
+/* カード */
+.card { background: var(--bg-panel); border: 1px solid var(--border); border-radius: var(--radius); padding: var(--gap-md) var(--gap-lg); }
+.card h3 { font-size: 30px; font-weight: 700; color: var(--fg); margin-bottom: var(--gap-sm); }
+.card h3 .mono { font-family: var(--font-mono); }
+.card p, .card li { font-size: 24px; line-height: 1.7; color: var(--fg-muted); }
+.card ul { list-style: none; }
+.card li::before { content: "· "; color: var(--level); font-weight: 700; }
+.card .num { font-family: var(--font-mono); font-size: 22px; font-weight: 800; color: var(--level); display: block; margin-bottom: 8px; }
+
+/* ---- タイムテーブル ---- */
+.timetable { width: 100%; border-collapse: collapse; font-size: 25px; }
+.timetable th {
+  font-family: var(--font-mono); font-size: 20px; font-weight: 700;
+  color: var(--fg-faint); text-align: left;
+  padding: 10px 20px; border-bottom: 1px solid var(--border);
+}
+.timetable td { padding: 13px 20px; border-bottom: 1px solid color-mix(in srgb, var(--border) 50%, transparent); color: var(--fg-muted); }
+.timetable td.time { font-family: var(--font-mono); font-size: 22px; color: var(--fg-faint); white-space: nowrap; }
+.timetable td.topic { color: var(--fg); font-weight: 500; }
+.timetable td.tno { font-family: var(--font-mono); font-weight: 800; color: var(--level); white-space: nowrap; }
+.timetable tr.break td { color: var(--fg-faint); font-style: italic; }
+
+/* ---- Before / After ---- */
+.ba-grid { display: grid; grid-template-columns: 1fr 60px 1fr; gap: 0 0; align-items: stretch; flex: 1; min-height: 0; }
+.ba-col { display: flex; flex-direction: column; gap: var(--gap-sm); }
+.ba-col-head { font-family: var(--font-mono); font-size: 24px; font-weight: 800; margin-bottom: 6px; }
+.ba-col-head.before { color: var(--red); }
+.ba-col-head.after { color: var(--green); }
+.ba-item { border-radius: var(--radius); padding: 18px 28px; font-size: 24px; line-height: 1.55; flex: 1; display: flex; align-items: center; }
+.ba-item.before { background: color-mix(in srgb, var(--red) 8%, var(--bg-panel)); border: 1px solid color-mix(in srgb, var(--red) 25%, transparent); color: var(--fg-muted); }
+.ba-item.after { background: color-mix(in srgb, var(--green) 8%, var(--bg-panel)); border: 1px solid color-mix(in srgb, var(--green) 25%, transparent); color: var(--fg); }
+.ba-arrows { display: flex; flex-direction: column; gap: var(--gap-sm); justify-content: space-around; align-items: center; padding-top: 40px; }
+.ba-arrows span { color: var(--fg-faint); font-family: var(--font-mono); font-size: 26px; }
+
+/* ---- ヒーロー ---- */
+.hero-inner {
+  width: 100%; height: 100%;
+  display: flex; flex-direction: column; justify-content: center;
+  padding: var(--pad-slide);
+  position: relative;
+}
+.hero-prompt { font-family: var(--font-mono); font-size: 40px; color: var(--fg-faint); margin-bottom: var(--gap-md); }
+.hero-prompt .caret { color: var(--level); }
+.hero-prompt .cmd { color: var(--claude); font-weight: 700; }
+.hero-title { font-size: 110px; font-weight: 700; line-height: 1.15; letter-spacing: 0.01em; }
+.hero-title .accent { color: var(--level); }
+.hero-sub { font-size: 36px; color: var(--fg-muted); margin-top: var(--gap-md); line-height: 1.6; }
+.hero-meta { display: flex; gap: var(--gap-sm); margin-top: var(--gap-lg); }
+.hero-meta span {
+  font-family: var(--font-mono); font-size: 22px;
+  color: var(--fg-muted); border: 1px solid var(--border); border-radius: 999px;
+  padding: 8px 24px;
+}
+.cursor-blink {
+  display: inline-block; width: 0.55em; height: 1.05em;
+  background: var(--level); vertical-align: text-bottom; margin-left: 8px;
+  animation: blink 1.1s steps(1) infinite;
+}
+@keyframes blink { 50% { opacity: 0; } }
+@media (prefers-reduced-motion: reduce) { .cursor-blink { animation: none; } }
+
+/* コースマップ (初級→中級→上級) */
+.course-map { display: flex; align-items: stretch; gap: var(--gap-sm); }
+.course-map .stage { flex: 1; }
+.course-map .arrow { align-self: center; font-family: var(--font-mono); font-size: 34px; color: var(--fg-faint); }
+.course-map .stage.current { border-color: var(--level); box-shadow: 0 0 0 1px var(--level); }
+.course-map .stage .lv { font-family: var(--font-mono); font-size: 20px; font-weight: 800; letter-spacing: 0.1em; display: block; margin-bottom: 10px; }
+
+/* ---- ナビゲーション UI ---- */
+#slide-nav { position: fixed; bottom: 0; left: 0; right: 0; z-index: 50; opacity: 0.55; transition: opacity 0.2s; }
+#slide-nav:hover { opacity: 1; }
+#slide-nav .rail { width: 100%; height: 3px; background: #000; }
+#slide-nav .fill { height: 100%; background: var(--level); width: 0%; transition: width 0.25s; }
+#slide-nav .counter {
+  position: fixed; right: 16px; top: 12px;
+  font-family: var(--font-mono); font-size: 13px; color: #9aa1c0;
+  background: rgba(0, 0, 0, 0.55); border-radius: 4px; padding: 2px 10px;
+}
+
+/* ---- 印刷 ---- */
+@media print {
+  body { background: white; overflow: visible; }
+  #slide-container { width: auto; height: auto; overflow: visible; }
+  .slide {
+    position: relative; top: auto; left: auto;
+    transform: none !important; display: block !important;
+    break-after: page; page-break-after: always;
+  }
+  * { box-shadow: none !important; }
+  #slide-nav { display: none !important; }
+  .cursor-blink { animation: none; }
+  @page { size: 1920px 1080px; margin: 0; }
+}

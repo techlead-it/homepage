@@ -1,0 +1,765 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>営業向け AI 研修</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&family=Zen+Kaku+Gothic+New:wght@400;500;700;900&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --color-primary: #16243f;
+      --color-secondary: #3a5278;
+      --color-accent: #e8803a;
+      --color-bg: #fbf9f5;
+      --color-bg-alt: #f0ebe1;
+      --color-text: #1b2a47;
+      --color-text-muted: #5e6b82;
+      --color-border: #e2dccf;
+
+      --color-ok: #2f9e6a;
+      --color-ng: #d1493f;
+      --color-maybe: #dca12c;
+
+      --font-heading: 'Outfit', 'Zen Kaku Gothic New', sans-serif;
+      --font-body: 'Outfit', 'Zen Kaku Gothic New', sans-serif;
+
+      --spacing-slide-padding: 5rem;
+      --spacing-gap-lg: 3rem;
+      --spacing-gap-md: 1.5rem;
+      --spacing-gap-sm: 0.75rem;
+
+      --radius-sm: 0.5rem;
+      --radius-md: 1rem;
+      --radius-lg: 1.5rem;
+      --radius-full: 9999px;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body { width: 100vw; height: 100vh; overflow: hidden; }
+    body { font-family: var(--font-body); background: #000; }
+
+    #slide-container { position: relative; width: 100vw; height: 100vh; overflow: hidden; }
+
+    .slide {
+      width: 1920px; height: 1080px; position: absolute;
+      top: 50%; left: 50%; transform-origin: center center;
+      overflow: hidden; display: none;
+    }
+    .slide.active { display: block; }
+
+    @media print {
+      body { background: white; overflow: visible; }
+      #slide-container { width: auto; height: auto; overflow: visible; }
+      .slide {
+        position: relative; top: auto; left: auto;
+        transform: none !important; display: block !important;
+        break-after: page; page-break-after: always;
+      }
+      * { box-shadow: none !important; }
+      #slide-nav, #slide-progress { display: none !important; }
+      @page { size: 1920px 1080px; margin: 0; }
+    }
+  </style>
+</head>
+<body>
+  <div id="slide-container"></div>
+
+  <div id="slide-nav"
+       class="fixed bottom-0 left-0 right-0 z-50 transition-opacity duration-300"
+       style="opacity: 0.6;"
+       onmouseenter="this.style.opacity='1'"
+       onmouseleave="this.style.opacity='0.6'">
+    <div class="w-full h-1" style="background: var(--color-border)">
+      <div id="slide-progress-bar" class="h-full transition-all duration-300"
+           style="background: var(--color-accent); width: 0%"></div>
+    </div>
+    <div class="flex justify-end px-6 py-2" style="background: rgba(0,0,0,0.03)">
+      <span id="slide-counter" class="text-sm font-mono" style="color: var(--color-text-muted)">1 / 1</span>
+    </div>
+  </div>
+
+  <script>
+    /* ===== テンプレート関数 ===== */
+    const _TAG = 'AI研修 ｜ 営業向け';
+    let _slideNo = 0;
+
+    function Logo() {
+      return `<div class="absolute top-16 left-20 z-10"><span style="color: var(--color-text-muted); font-weight: 700; font-size: 18px; letter-spacing: 0.08em">${_TAG}</span></div>`;
+    }
+
+    function S(n, fam, v, content, o={}) {
+      const num = ++_slideNo;
+      const bg = o.bg || 'var(--color-bg)';
+      return `<section class="slide" data-slide="${num}" data-family="${fam}" data-variant="${v}">
+        <div class="w-[1920px] h-[1080px] relative overflow-hidden" style="background: ${bg}; padding: var(--spacing-slide-padding)">
+          ${Logo()}
+          <div style="margin-top: var(--spacing-gap-lg); display: flex; flex-direction: column; height: calc(100% - 3rem)">
+            ${content}
+          </div>
+        </div></section>`;
+    }
+
+    function D(n, v, content, o={}) {
+      const num = ++_slideNo;
+      const bg = o.bg || 'linear-gradient(135deg, var(--color-primary), var(--color-accent))';
+      return `<section class="slide" data-slide="${num}" data-family="hero" data-variant="${v}">
+        <div class="w-[1920px] h-[1080px] relative overflow-hidden" style="background: ${bg}">
+          ${content}
+        </div></section>`;
+    }
+
+    function SFlex(n, fam, v, content, o={}) {
+      const num = ++_slideNo;
+      const bg = o.bg || 'var(--color-bg)';
+      return `<section class="slide" data-slide="${num}" data-family="${fam}" data-variant="${v}">
+        <div class="w-[1920px] h-[1080px] relative overflow-hidden flex" style="background: ${bg}">
+          ${Logo()}
+          ${content}
+        </div></section>`;
+    }
+
+    function H(t) {
+      return `<h2 class="text-[52px] font-bold" style="color: var(--color-accent); margin-bottom: var(--spacing-gap-sm)">${t}</h2>`;
+    }
+    function Sub(t) {
+      return `<p class="text-[24px]" style="color: var(--color-text-muted); margin-bottom: var(--spacing-gap-lg)">${t}</p>`;
+    }
+    function VC(c) {
+      return `<div style="margin-top: auto; margin-bottom: auto">${c}</div>`;
+    }
+
+    function Points(items) {
+      return `<ul style="display: flex; flex-direction: column; gap: 1.25rem">
+        ${items.map(function(it){return '<li style="display: flex; gap: 0.9rem; align-items: flex-start"><span style="color: var(--color-accent); font-weight: 900; font-size: 26px; line-height: 1.3">▸</span><span style="font-size: 27px; color: var(--color-text); line-height: 1.55">'+it+'</span></li>';}).join('')}
+      </ul>`;
+    }
+
+    // テキスト + 図解画像（左テキスト / 右画像 contain）
+    function Diagram(n, sec, heading, items, img, alt) {
+      return SFlex(n, 'split', 'text-image', `
+        <div class="w-[42%] flex flex-col justify-center" style="padding: var(--spacing-slide-padding); padding-top: 9rem">
+          <p class="text-[20px] font-bold" style="color: var(--color-accent); letter-spacing: 0.1em; margin-bottom: var(--spacing-gap-sm)">${sec}</p>
+          <h2 class="text-[46px] font-bold" style="color: var(--color-text); margin-bottom: var(--spacing-gap-lg); line-height: 1.3">${heading}</h2>
+          ${Points(items)}
+        </div>
+        <div class="w-[58%] relative flex items-center justify-center" style="background: var(--color-bg-alt)">
+          <img src="${img}" alt="${alt}" class="object-contain rounded-xl" style="max-width: 90%; max-height: 82%; box-shadow: 0 18px 50px rgba(22,36,63,0.18)" />
+        </div>
+      `);
+    }
+
+    // ヒアリング記入例（できる / 持ち帰る / できない の共通フォーマット）
+    function HearingExample(label, who, ask, qaItems, memoItems, verdict, vColor, note) {
+      return S(0, 'split', 'qa', `
+        ${H('テンプレの使い方：相談に当てはめてみる')}
+        ${Sub(label)}
+        ${VC(`
+          <div class="rounded-2xl" style="background: var(--color-primary); padding: 1.1rem 1.5rem; margin-bottom: var(--spacing-gap-md); display: flex; align-items: center; gap: 1.2rem">
+            <span style="font-size: 36px; line-height: 1">💬</span>
+            <div>
+              <span class="text-[18px]" style="color: rgba(255,255,255,0.7)">${who}</span><br>
+              <span class="text-[26px] font-bold text-white">${ask}</span>
+            </div>
+          </div>
+          <div class="flex" style="gap: var(--spacing-gap-lg)">
+            <div class="flex-1">
+              <p class="text-[20px] font-bold" style="color: var(--color-accent); margin-bottom: var(--spacing-gap-sm)">STEP 1　6項目を聞く</p>
+              <ul class="text-[21px]" style="color: var(--color-text); display: flex; flex-direction: column; gap: 0.7rem">
+                ${qaItems.map(function(t){return '<li>'+t+'</li>';}).join('')}
+              </ul>
+            </div>
+            <div class="flex-1 rounded-2xl" style="background: var(--color-bg-alt); padding: var(--spacing-gap-md)">
+              <p class="text-[20px] font-bold" style="color: var(--color-text-muted); margin-bottom: var(--spacing-gap-sm)">STEP 2　持ち帰りメモが埋まる</p>
+              <ul class="text-[20px]" style="color: var(--color-text); display: flex; flex-direction: column; gap: 0.45rem">
+                ${memoItems.map(function(t){return '<li>'+t+'</li>';}).join('')}
+              </ul>
+              <div class="rounded-xl" style="background: ${vColor}; color: #fff; padding: 0.6rem 1rem; margin-top: var(--spacing-gap-sm); font-weight: 700; font-size: 21px">判断：${verdict}</div>
+              <p class="text-[19px]" style="color: var(--color-text-muted); margin-top: 0.6rem">${note}</p>
+            </div>
+          </div>
+        `)}
+      `);
+    }
+
+    /* ===== スライド生成 ===== */
+    document.getElementById('slide-container').innerHTML = [
+
+      // 1. 表紙
+      D(1, 'cover', `
+        <div class="absolute top-0 right-0 w-[900px] h-full pointer-events-none opacity-10">
+          <svg viewBox="0 0 900 1080" fill="none">
+            <circle cx="560" cy="220" r="380" fill="#ffffff" />
+            <circle cx="720" cy="760" r="260" fill="#ffffff" />
+          </svg>
+        </div>
+        <div class="absolute top-20 left-20">
+          <span class="text-[24px] font-bold text-white/70" style="letter-spacing: 0.1em">SALES AI TRAINING</span>
+        </div>
+        <div class="absolute bottom-40 left-20 max-w-[1300px]">
+          <h1 class="text-[104px] font-black leading-[1.08] tracking-tight text-white">営業のための<br>AI 研修</h1>
+          <p class="text-[34px] font-medium text-white/70" style="margin-top: var(--spacing-gap-md)">「できる・できない」を見抜き、要件を引き出す</p>
+        </div>
+      `),
+
+      // 2. このコースについて
+      S(2, 'grid', 'cards', `
+        ${H('このコースについて')}
+        ${Sub('AI を使った開発の相談に、その場で適切に応えられるようになる')}
+        ${VC(`
+          <div class="grid grid-cols-3" style="gap: var(--spacing-gap-md)">
+            <div class="rounded-2xl" style="background: var(--color-bg-alt); padding: var(--spacing-gap-lg); border-top: 6px solid var(--color-accent)">
+              <p class="text-[22px] font-bold" style="color: var(--color-accent); margin-bottom: var(--spacing-gap-sm)">対象</p>
+              <h3 class="text-[32px] font-bold" style="color: var(--color-text); margin-bottom: var(--spacing-gap-sm)">自社の営業</h3>
+              <p class="text-[22px] leading-relaxed" style="color: var(--color-text-muted)">AI 開発の相談を受ける立場の方</p>
+            </div>
+            <div class="rounded-2xl" style="background: var(--color-bg-alt); padding: var(--spacing-gap-lg); border-top: 6px solid var(--color-accent)">
+              <p class="text-[22px] font-bold" style="color: var(--color-accent); margin-bottom: var(--spacing-gap-sm)">ゴール</p>
+              <h3 class="text-[32px] font-bold" style="color: var(--color-text); margin-bottom: var(--spacing-gap-sm)">仕分け・聞き出す</h3>
+              <p class="text-[22px] leading-relaxed" style="color: var(--color-text-muted)">即仕分け／要件ヒアリング／安請け合い防止</p>
+            </div>
+            <div class="rounded-2xl" style="background: var(--color-bg-alt); padding: var(--spacing-gap-lg); border-top: 6px solid var(--color-accent)">
+              <p class="text-[22px] font-bold" style="color: var(--color-accent); margin-bottom: var(--spacing-gap-sm)">時間</p>
+              <h3 class="text-[32px] font-bold" style="color: var(--color-text); margin-bottom: var(--spacing-gap-sm)">約 90 分</h3>
+              <p class="text-[22px] leading-relaxed" style="color: var(--color-text-muted)">全 7 章（章0〜章6）</p>
+            </div>
+          </div>
+        `)}
+      `),
+
+      // 3. 目次
+      S(3, 'toc', 'grouped', `
+        ${H('本日の流れ')}
+        ${VC(`
+          <div class="flex max-w-[1500px] mx-auto" style="gap: var(--spacing-gap-lg)">
+            <div class="flex-1">
+              <p class="text-[26px] font-bold" style="color: var(--color-accent); margin-bottom: var(--spacing-gap-md)">Part 1 — まず AI を知る</p>
+              <div style="display: flex; flex-direction: column; gap: 1rem; padding-left: var(--spacing-gap-md)">
+                <div class="flex items-baseline" style="gap: var(--spacing-gap-md)"><span class="text-[22px] font-bold" style="color: var(--color-text-muted)">00</span><span class="text-[26px]" style="color: var(--color-text)">AI の現在地</span></div>
+                <div class="flex items-baseline" style="gap: var(--spacing-gap-md)"><span class="text-[22px] font-bold" style="color: var(--color-text-muted)">01</span><span class="text-[26px]" style="color: var(--color-text)">AI の地図（チャット / エージェント）</span></div>
+                <div class="flex items-baseline" style="gap: var(--spacing-gap-md)"><span class="text-[22px] font-bold" style="color: var(--color-text-muted)">02</span><span class="text-[26px]" style="color: var(--color-text)">タスク別の適性マップ</span></div>
+              </div>
+            </div>
+            <div class="flex-1">
+              <p class="text-[26px] font-bold" style="color: var(--color-accent); margin-bottom: var(--spacing-gap-md)">Part 2 — 判断とヒアリング</p>
+              <div style="display: flex; flex-direction: column; gap: 1rem; padding-left: var(--spacing-gap-md)">
+                <div class="flex items-baseline" style="gap: var(--spacing-gap-md)"><span class="text-[22px] font-bold" style="color: var(--color-text-muted)">03</span><span class="text-[26px]" style="color: var(--color-text)">AI の限界・ハルシネーション</span></div>
+                <div class="flex items-baseline" style="gap: var(--spacing-gap-md)"><span class="text-[22px] font-bold" style="color: var(--color-accent)">04</span><span class="text-[26px] font-bold" style="color: var(--color-text)">できる / できない 判断フロー</span></div>
+                <div class="flex items-baseline" style="gap: var(--spacing-gap-md)"><span class="text-[22px] font-bold" style="color: var(--color-accent)">05</span><span class="text-[26px] font-bold" style="color: var(--color-text)">要件ヒアリングのテンプレ</span></div>
+                <div class="flex items-baseline" style="gap: var(--spacing-gap-md)"><span class="text-[22px] font-bold" style="color: var(--color-text-muted)">06</span><span class="text-[26px]" style="color: var(--color-text)">まとめ</span></div>
+              </div>
+            </div>
+          </div>
+        `)}
+      `),
+
+      // 4. 章0 区切り
+      D(4, 'section-divider', `
+        <div class="absolute top-12 right-20"><span class="text-[280px] font-black text-white/20 leading-none">00</span></div>
+        <div class="absolute bottom-32 left-20">
+          <p class="text-[28px] font-bold text-white/60" style="margin-bottom: 1rem; letter-spacing: 0.1em">CHAPTER 00</p>
+          <h2 class="text-[100px] font-black text-white leading-none">AI の現在地</h2>
+          <p class="text-[26px] text-white/70" style="margin-top: 1.5rem">これが分かると：今の AI で「何ができる時代か」が分かる</p>
+        </div>
+      `),
+
+      // 5. AI進化の3つの波
+      Diagram(5, 'CHAPTER 00 ｜ つかみ', 'AI は「3つの波」で進化してきた', [
+        '<b>〜2022</b>　チャット AI ＝ 質問に答える',
+        '<b>2023〜</b>　マルチモーダル（画像・音声も）＋<b>ツール接続</b>（検索などに繋がる）',
+        '<b>2024〜</b>　エージェント ＝ 代わりに作業する',
+        '「答える → 作る → 動く」へ。今は3段目の入り口',
+      ], 'assets/images/ai-evolution-timeline.webp', 'AI 進化の3つの波'),
+
+      // 6. 章1 区切り
+      D(6, 'section-divider', `
+        <div class="absolute top-12 right-20"><span class="text-[280px] font-black text-white/20 leading-none">01</span></div>
+        <div class="absolute bottom-32 left-20">
+          <p class="text-[28px] font-bold text-white/60" style="margin-bottom: 1rem; letter-spacing: 0.1em">CHAPTER 01</p>
+          <h2 class="text-[100px] font-black text-white leading-none">AI の地図</h2>
+          <p class="text-[26px] text-white/70" style="margin-top: 1.5rem">これが分かると：お客様が AI の名前を出しても慌てず話せる</p>
+        </div>
+      `),
+
+      // 7. メタファー：AI = 脳 + 五感・手足
+      Diagram(7, 'CHAPTER 01 ｜ 大前提', 'AI は「脳」と「五感・手足」でできている', [
+        '<b>LLM</b> ＝ ChatGPT などの対話 AI の「頭脳」のこと',
+        'AI も人間と同じ：<b>ツール</b>で取り込み → <b>LLM（脳）</b>で処理 → 出力',
+        'RAG・検索・OCR・音声・API は、脳に与える<b>「ツール」（道具）</b>',
+        '＋ ツールを足すほど、AI にできることが広がる',
+      ], 'assets/images/brain-and-tools.webp', 'AI ＝ 脳 ＋ 五感・手足'),
+
+      // 8. スペクトル：チャット → エージェント
+      Diagram(8, 'CHAPTER 01 ｜ 連続性', 'チャットからエージェントへは「地続き」', [
+        '<b>① LLM 単体（チャット）</b>：学習済みの知識だけで答える',
+        '<b>② ＋ ツール</b>：検索・社内文書・計算に接続（RAG もこれ）',
+        '<b>③ ＋ 自律 ＝ エージェント</b>：自分でツールを選び多段実行',
+        '違いは「ツールの数」と「自律性」だけ。自由度が高いほど確認設計が重要',
+      ], 'assets/images/chat-to-agent-spectrum.webp', 'チャットからエージェントへは地続き'),
+
+      // 9. 主要サービスの地図
+      S(9, 'table', 'data-table', `
+        ${H('主要サービスの地図')}
+        ${Sub('名前が出ても慌てない程度に立ち位置を押さえる')}
+        ${VC(`
+          <table class="w-full text-[24px]" style="border-collapse: collapse; max-width: 1400px; margin: 0 auto">
+            <tbody>
+              <tr style="border-bottom: 1px solid var(--color-border)">
+                <td class="font-bold" style="color: var(--color-text); background: var(--color-bg-alt); width: 30%; padding: 1.1rem var(--spacing-gap-md)">ChatGPT <span style="color: var(--color-text-muted); font-weight: 400; font-size: 18px">/ OpenAI</span></td>
+                <td style="color: var(--color-text); padding: 1.1rem var(--spacing-gap-md)">最も有名な万能チャット。画像生成も強い</td>
+              </tr>
+              <tr style="border-bottom: 1px solid var(--color-border)">
+                <td class="font-bold" style="color: var(--color-text); background: var(--color-bg-alt); padding: 1.1rem var(--spacing-gap-md)">Claude <span style="color: var(--color-text-muted); font-weight: 400; font-size: 18px">/ Anthropic</span></td>
+                <td style="color: var(--color-text); padding: 1.1rem var(--spacing-gap-md)">文章・<b>コーディングに強い</b>。Claude Code が有名</td>
+              </tr>
+              <tr style="border-bottom: 1px solid var(--color-border)">
+                <td class="font-bold" style="color: var(--color-text); background: var(--color-bg-alt); padding: 1.1rem var(--spacing-gap-md)">Gemini <span style="color: var(--color-text-muted); font-weight: 400; font-size: 18px">/ Google</span></td>
+                <td style="color: var(--color-text); padding: 1.1rem var(--spacing-gap-md)">Google サービス連携・マルチモーダル（画像・音声も）に強い</td>
+              </tr>
+              <tr style="border-bottom: 1px solid var(--color-border)">
+                <td class="font-bold" style="color: var(--color-text); background: var(--color-bg-alt); padding: 1.1rem var(--spacing-gap-md)">Genspark</td>
+                <td style="color: var(--color-text); padding: 1.1rem var(--spacing-gap-md)">調査・資料作成系のエージェント</td>
+              </tr>
+              <tr style="border-bottom: 1px solid var(--color-border)">
+                <td class="font-bold" style="color: var(--color-text); background: var(--color-bg-alt); padding: 1.1rem var(--spacing-gap-md)">Manus</td>
+                <td style="color: var(--color-text); padding: 1.1rem var(--spacing-gap-md)">自律的に作業するエージェント型</td>
+              </tr>
+            </tbody>
+          </table>
+          <p class="text-[22px]" style="color: var(--color-text-muted); text-align: center; margin-top: var(--spacing-gap-md)">覚え方：万能なら ChatGPT、コーディングなら Claude、Google 圏なら Gemini</p>
+        `)}
+      `),
+
+      // 10. 章2 区切り
+      D(10, 'section-divider', `
+        <div class="absolute top-12 right-20"><span class="text-[280px] font-black text-white/20 leading-none">02</span></div>
+        <div class="absolute bottom-32 left-20">
+          <p class="text-[28px] font-bold text-white/60" style="margin-bottom: 1rem; letter-spacing: 0.1em">CHAPTER 02</p>
+          <h2 class="text-[100px] font-black text-white leading-none">タスク別の適性</h2>
+          <p class="text-[26px] text-white/70" style="margin-top: 1.5rem">これが分かると：相談を「どの種類の仕事か」で仕分けられる</p>
+        </div>
+      `),
+
+      // 11. タスクの6つの型
+      Diagram(11, 'CHAPTER 02 ｜ 分類', '相談は「6つの型」で見抜く', [
+        '①書く・直す　②読む・仕分ける　③調べて答える',
+        '④作る（画像/動画）　⑤コードを書く　⑥自動で動く',
+        'ツール名でなく<b>「型」</b>で覚える（型は古びない）',
+        '③④⑥は「脳」に<b>ツール</b>を繋いで実現する（→ 章4）',
+      ], 'assets/images/task-type-map.webp', 'AI タスクの6つの型'),
+
+      // 12. 適性マップ
+      S(12, 'table', 'feature-comparison', `
+        ${H('タスク別の適性マップ')}
+        ${VC(`
+          <table class="w-full text-[23px]" style="border-collapse: collapse; max-width: 1560px; margin: 0 auto">
+            <thead>
+              <tr style="border-bottom: 2px solid var(--color-border)">
+                <th class="text-left font-bold" style="color: var(--color-text); width: 26%; padding: var(--spacing-gap-sm) var(--spacing-gap-md)">タスクの型</th>
+                <th class="text-left font-bold" style="color: var(--color-text); width: 36%; padding: var(--spacing-gap-sm) var(--spacing-gap-md)">相談例</th>
+                <th class="text-left font-bold" style="color: var(--color-text); padding: var(--spacing-gap-sm) var(--spacing-gap-md)">注意点</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr style="border-bottom: 1px solid var(--color-border)">
+                <td class="font-bold" style="color: var(--color-text); padding: 0.9rem var(--spacing-gap-md)">① 書く・直す</td>
+                <td style="color: var(--color-text); padding: 0.9rem var(--spacing-gap-md)">メール下書き・議事録要約</td>
+                <td style="color: var(--color-text-muted); padding: 0.9rem var(--spacing-gap-md)">事実は要確認</td>
+              </tr>
+              <tr style="border-bottom: 1px solid var(--color-border)">
+                <td class="font-bold" style="color: var(--color-text); padding: 0.9rem var(--spacing-gap-md)">② 読む・仕分ける</td>
+                <td style="color: var(--color-text); padding: 0.9rem var(--spacing-gap-md)">問い合わせの自動振り分け</td>
+                <td style="color: var(--color-text-muted); padding: 0.9rem var(--spacing-gap-md)">ルールが曖昧だと精度が落ちる</td>
+              </tr>
+              <tr style="border-bottom: 1px solid var(--color-border)">
+                <td class="font-bold" style="color: var(--color-text); padding: 0.9rem var(--spacing-gap-md)">③ 調べて答える</td>
+                <td style="color: var(--color-text); padding: 0.9rem var(--spacing-gap-md)">社内 FAQ チャット</td>
+                <td style="color: var(--color-text-muted); padding: 0.9rem var(--spacing-gap-md)">社内データは RAG（社内文書を読む仕組み）が必要</td>
+              </tr>
+              <tr style="border-bottom: 1px solid var(--color-border)">
+                <td class="font-bold" style="color: var(--color-text); padding: 0.9rem var(--spacing-gap-md)">④ 作る（画像/動画）</td>
+                <td style="color: var(--color-text); padding: 0.9rem var(--spacing-gap-md)">バナー・商品画像</td>
+                <td style="color: var(--color-text-muted); padding: 0.9rem var(--spacing-gap-md)">細かい指定・文字入れは苦手</td>
+              </tr>
+              <tr style="border-bottom: 1px solid var(--color-border)">
+                <td class="font-bold" style="color: var(--color-text); padding: 0.9rem var(--spacing-gap-md)">⑤ コードを書く</td>
+                <td style="color: var(--color-text); padding: 0.9rem var(--spacing-gap-md)">社内ツール開発の効率化</td>
+                <td style="color: var(--color-text-muted); padding: 0.9rem var(--spacing-gap-md)">人のレビュー前提。丸投げは危険</td>
+              </tr>
+              <tr style="border-bottom: 1px solid var(--color-border)">
+                <td class="font-bold" style="color: var(--color-text); padding: 0.9rem var(--spacing-gap-md)">⑥ 自動で動く</td>
+                <td style="color: var(--color-text); padding: 0.9rem var(--spacing-gap-md)">調査→資料作成の自動化</td>
+                <td style="color: var(--color-text-muted); padding: 0.9rem var(--spacing-gap-md)">ガードレール設計が前提</td>
+              </tr>
+            </tbody>
+          </table>
+        `)}
+      `),
+
+      // 13. 章3 区切り
+      D(13, 'section-divider', `
+        <div class="absolute top-12 right-20"><span class="text-[280px] font-black text-white/20 leading-none">03</span></div>
+        <div class="absolute bottom-32 left-20">
+          <p class="text-[28px] font-bold text-white/60" style="margin-bottom: 1rem; letter-spacing: 0.1em">CHAPTER 03</p>
+          <h2 class="text-[100px] font-black text-white leading-none">AI の限界</h2>
+          <p class="text-[26px] text-white/70" style="margin-top: 1.5rem">これが分かると：「できない」を正しく説明でき、安請け合いを防げる</p>
+        </div>
+      `),
+
+      // 14. 予測マシン
+      Diagram(14, 'CHAPTER 03 ｜ 大原則', 'AI は「最もそれらしい言葉」を返すマシン', [
+        '膨大な文章（統計データ）から、質問に<b>"最もそれらしい言葉"</b>を予測して返す',
+        '正解を引いてくるのではなく、確率的に組み立てている',
+        'だから"それらしさ"優先で、無い情報も自信満々に作る＝<b>ハルシネーション</b>',
+        'これは「脳」単体の限界。苦手は<b>ツール</b>で補える（→ 章4）',
+      ], 'assets/images/llm-predict-hallucination.webp', 'AI が間違える理由：予測しているから'),
+
+      // 15. 苦手なこと
+      S(15, 'table', 'data-table', `
+        ${H('AI が苦手なこと')}
+        ${Sub('✅ は開発で補える　🛑 は仕組み上できない')}
+        ${VC(`
+          <table class="w-full text-[23px]" style="border-collapse: collapse; max-width: 1400px; margin: 0 auto">
+            <tbody>
+              <tr style="border-bottom: 1px solid var(--color-border)">
+                <td class="font-bold" style="color: var(--color-text); background: var(--color-bg-alt); width: 38%; padding: 0.9rem var(--spacing-gap-md)">正確な計算・集計</td>
+                <td style="padding: 0.9rem var(--spacing-gap-md)"><span style="color: var(--color-ok); font-weight: 700">✅ 計算ツール連携で補える</span></td>
+              </tr>
+              <tr style="border-bottom: 1px solid var(--color-border)">
+                <td class="font-bold" style="color: var(--color-text); background: var(--color-bg-alt); padding: 0.9rem var(--spacing-gap-md)">最新情報</td>
+                <td style="padding: 0.9rem var(--spacing-gap-md)"><span style="color: var(--color-ok); font-weight: 700">✅ 検索連携で補える</span></td>
+              </tr>
+              <tr style="border-bottom: 1px solid var(--color-border)">
+                <td class="font-bold" style="color: var(--color-text); background: var(--color-bg-alt); padding: 0.9rem var(--spacing-gap-md)">社内固有の情報</td>
+                <td style="padding: 0.9rem var(--spacing-gap-md)"><span style="color: var(--color-ok); font-weight: 700">✅ データを読ませる（RAG）で補える</span></td>
+              </tr>
+              <tr style="border-bottom: 1px solid var(--color-border)">
+                <td class="font-bold" style="color: var(--color-text); background: var(--color-bg-alt); padding: 0.9rem var(--spacing-gap-md)">事実の正確性 100%</td>
+                <td style="padding: 0.9rem var(--spacing-gap-md)"><span style="color: var(--color-ng); font-weight: 700">🛑 原理的に保証できない</span></td>
+              </tr>
+              <tr style="border-bottom: 1px solid var(--color-border)">
+                <td class="font-bold" style="color: var(--color-text); background: var(--color-bg-alt); padding: 0.9rem var(--spacing-gap-md)">責任ある最終判断</td>
+                <td style="padding: 0.9rem var(--spacing-gap-md)"><span style="color: var(--color-ng); font-weight: 700">🛑 仕組み上できない（人が決める）</span></td>
+              </tr>
+            </tbody>
+          </table>
+        `)}
+      `),
+
+      // 16. RAG
+      Diagram(16, 'CHAPTER 03 ｜ 補い方', '社内データは「RAG」で補える', [
+        '素の AI は社内固有の情報を知らない',
+        '関連文書を検索して読ませる仕組み＝<b>RAG</b>',
+        '「開発すればできる」案件の代表例',
+        'データ整備とアクセス制御がポイント',
+      ], 'assets/images/rag-ai.webp', 'RAG・社内ナレッジ AI のしくみ'),
+
+      // 17. 章4 区切り
+      D(17, 'section-divider', `
+        <div class="absolute top-12 right-20"><span class="text-[280px] font-black text-white/20 leading-none">04</span></div>
+        <div class="absolute bottom-32 left-20">
+          <p class="text-[28px] font-bold text-white/60" style="margin-bottom: 1rem; letter-spacing: 0.1em">CHAPTER 04 ｜ コア</p>
+          <h2 class="text-[100px] font-black text-white leading-none">判断フロー</h2>
+          <p class="text-[26px] text-white/70" style="margin-top: 1.5rem">これが分かると：相談をその場で「できる / 持ち帰る / 断る」に仕分けられる</p>
+        </div>
+      `),
+
+      // 18. 判断の3分類
+      S(18, 'grid', 'cards', `
+        ${H('相談は「3つ」に仕分ける')}
+        ${Sub('即答できる範囲を増やし、迷ったものだけ持ち帰る')}
+        ${VC(`
+          <div class="grid grid-cols-3" style="gap: var(--spacing-gap-md)">
+            <div class="rounded-2xl" style="background: var(--color-bg-alt); padding: var(--spacing-gap-lg); border-top: 8px solid var(--color-ok)">
+              <div style="font-size: 60px; line-height: 1; margin-bottom: var(--spacing-gap-sm)">✅</div>
+              <h3 class="text-[30px] font-bold" style="color: var(--color-ok); margin-bottom: var(--spacing-gap-sm)">開発すればできる</h3>
+              <p class="text-[22px] leading-relaxed" style="color: var(--color-text)">技術的には可能。<br>「実現できます。詰めさせてください」</p>
+            </div>
+            <div class="rounded-2xl" style="background: var(--color-bg-alt); padding: var(--spacing-gap-lg); border-top: 8px solid var(--color-ng)">
+              <div style="font-size: 60px; line-height: 1; margin-bottom: var(--spacing-gap-sm)">🛑</div>
+              <h3 class="text-[30px] font-bold" style="color: var(--color-ng); margin-bottom: var(--spacing-gap-sm)">仕組み上できない</h3>
+              <p class="text-[22px] leading-relaxed" style="color: var(--color-text)"><b>ツールを足しても</b>解決しない。<br>「その形だと難しいです」と即答で断れる</p>
+            </div>
+            <div class="rounded-2xl" style="background: var(--color-bg-alt); padding: var(--spacing-gap-lg); border-top: 8px solid var(--color-maybe)">
+              <div style="font-size: 60px; line-height: 1; margin-bottom: var(--spacing-gap-sm)">❓</div>
+              <h3 class="text-[30px] font-bold" style="color: var(--color-maybe); margin-bottom: var(--spacing-gap-sm)">わからない</h3>
+              <p class="text-[22px] leading-relaxed" style="color: var(--color-text)">判断がつかない。<br>「持ち帰ります」← <b>これだけ持ち帰る</b></p>
+            </div>
+          </div>
+        `)}
+      `),
+
+      // 19. 「できない」は開発で化ける
+      Diagram(19, 'CHAPTER 04 ｜ カギ', '「開発」＝脳にツールを足すこと', [
+        '「開発する」＝「脳」に<b>ツール（五感・手足）</b>を足すこと',
+        '社内マニュアルに回答 → <b>RAG</b>（読む目）で ✅',
+        '最新情報・正確な集計 → <b>検索・計算ツール</b>で ✅',
+        '「ChatGPT でダメ」＝「できない」ではない',
+      ], 'assets/images/llm-external-tools.webp', 'LLM 単体と外部連携の違い'),
+
+      // 20. 判断フロー図
+      Diagram(20, 'CHAPTER 04 ｜ フロー', '3ステップで仕分ける', [
+        '<b>Step1</b> 100%保証・最終判断を AI 単独で？ → 🛑',
+        '<b>Step2</b> データ/ツール/人の確認で補える？ → ✅',
+        '<b>Step3</b> 判断がつかない → ❓ 持ち帰る',
+        '即答していいのは ✅ と 🛑。迷った ❓ だけ持ち帰る',
+      ], 'assets/images/can-cannot-flow.webp', 'できる / できない 判断フロー'),
+
+      // 21. ケース① できる系・基本編
+      S(21, 'table', 'data-table', `
+        ${H('ケース①：これは「開発すればできる」（基本編）')}
+        ${Sub('身近な相談ほど、"手段"を足せばすでに実現できる')}
+        ${VC(`
+          <table class="w-full text-[22px]" style="border-collapse: collapse; max-width: 1560px; margin: 0 auto">
+            <thead>
+              <tr style="border-bottom: 2px solid var(--color-border)">
+                <th class="text-left font-bold" style="color: var(--color-text); width: 46%; padding: var(--spacing-gap-sm) var(--spacing-gap-md)">よくある相談</th>
+                <th class="text-left font-bold" style="color: var(--color-text); width: 16%; padding: var(--spacing-gap-sm) var(--spacing-gap-md)">型</th>
+                <th class="text-left font-bold" style="color: var(--color-text); padding: var(--spacing-gap-sm) var(--spacing-gap-md)">どう実現する？</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr style="border-bottom: 1px solid var(--color-border)">
+                <td style="color: var(--color-text); padding: 0.8rem var(--spacing-gap-md)">問い合わせメールの返信文を自動で作りたい</td>
+                <td style="color: var(--color-text-muted); padding: 0.8rem var(--spacing-gap-md)">① 書く</td>
+                <td style="padding: 0.8rem var(--spacing-gap-md)"><span style="color: var(--color-accent); font-weight: 700">素の LLM ＋ 定型テンプレ</span></td>
+              </tr>
+              <tr style="border-bottom: 1px solid var(--color-border)">
+                <td style="color: var(--color-text); padding: 0.8rem var(--spacing-gap-md)">社内規定を聞くと答えるチャットがほしい</td>
+                <td style="color: var(--color-text-muted); padding: 0.8rem var(--spacing-gap-md)">③ 調べる</td>
+                <td style="padding: 0.8rem var(--spacing-gap-md)"><span style="color: var(--color-accent); font-weight: 700">RAG</span>（社内文書を読ませる）</td>
+              </tr>
+              <tr style="border-bottom: 1px solid var(--color-border)">
+                <td style="color: var(--color-text); padding: 0.8rem var(--spacing-gap-md)">競合の最新ニュースを毎朝まとめてほしい</td>
+                <td style="color: var(--color-text-muted); padding: 0.8rem var(--spacing-gap-md)">③ 調べる</td>
+                <td style="padding: 0.8rem var(--spacing-gap-md)"><span style="color: var(--color-accent); font-weight: 700">検索連携</span></td>
+              </tr>
+              <tr style="border-bottom: 1px solid var(--color-border)">
+                <td style="color: var(--color-text); padding: 0.8rem var(--spacing-gap-md)">請求書 PDF から金額を抜き出して集計したい</td>
+                <td style="color: var(--color-text-muted); padding: 0.8rem var(--spacing-gap-md)">② 抽出＋計算</td>
+                <td style="padding: 0.8rem var(--spacing-gap-md)"><span style="color: var(--color-accent); font-weight: 700">OCR（文字の読み取り）＋ 計算ツール</span></td>
+              </tr>
+              <tr style="border-bottom: 1px solid var(--color-border)">
+                <td style="color: var(--color-text); padding: 0.8rem var(--spacing-gap-md)">基幹システムで在庫更新を自動化したい</td>
+                <td style="color: var(--color-text-muted); padding: 0.8rem var(--spacing-gap-md)">⑥ 自動</td>
+                <td style="padding: 0.8rem var(--spacing-gap-md)"><span style="color: var(--color-accent); font-weight: 700">エージェント＋API（システム連携）</span><span style="color: var(--color-text-muted); font-size: 18px"> ※要件詰め</span></td>
+              </tr>
+            </tbody>
+          </table>
+        `)}
+      `),
+
+      // 22. ケース② できる系・応用編
+      S(22, 'table', 'data-table', `
+        ${H('ケース②：手段を増やせば、ここまでできる（応用編）')}
+        ${Sub('音声・データ・画像まで——足す手段で AI の幅が広がる')}
+        ${VC(`
+          <table class="w-full text-[22px]" style="border-collapse: collapse; max-width: 1560px; margin: 0 auto">
+            <thead>
+              <tr style="border-bottom: 2px solid var(--color-border)">
+                <th class="text-left font-bold" style="color: var(--color-text); width: 46%; padding: var(--spacing-gap-sm) var(--spacing-gap-md)">よくある相談</th>
+                <th class="text-left font-bold" style="color: var(--color-text); width: 16%; padding: var(--spacing-gap-sm) var(--spacing-gap-md)">型</th>
+                <th class="text-left font-bold" style="color: var(--color-text); padding: var(--spacing-gap-sm) var(--spacing-gap-md)">どう実現する？</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr style="border-bottom: 1px solid var(--color-border)">
+                <td style="color: var(--color-text); padding: 0.8rem var(--spacing-gap-md)">商談の録音から議事録とネクストアクションを作る</td>
+                <td style="color: var(--color-text-muted); padding: 0.8rem var(--spacing-gap-md)">① 書く</td>
+                <td style="padding: 0.8rem var(--spacing-gap-md)"><span style="color: var(--color-accent); font-weight: 700">音声認識（録音を文字に）＋ LLM</span></td>
+              </tr>
+              <tr style="border-bottom: 1px solid var(--color-border)">
+                <td style="color: var(--color-text); padding: 0.8rem var(--spacing-gap-md)">売上データについて聞くと、言葉で答えてくれる</td>
+                <td style="color: var(--color-text-muted); padding: 0.8rem var(--spacing-gap-md)">③ 調べる</td>
+                <td style="padding: 0.8rem var(--spacing-gap-md)"><span style="color: var(--color-accent); font-weight: 700">DB 連携（データに日本語で質問）</span></td>
+              </tr>
+              <tr style="border-bottom: 1px solid var(--color-border)">
+                <td style="color: var(--color-text); padding: 0.8rem var(--spacing-gap-md)">問い合わせを内容で自動分類してトリアージ</td>
+                <td style="color: var(--color-text-muted); padding: 0.8rem var(--spacing-gap-md)">② 仕分け</td>
+                <td style="padding: 0.8rem var(--spacing-gap-md)"><span style="color: var(--color-accent); font-weight: 700">分類（内容で振り分け）</span></td>
+              </tr>
+              <tr style="border-bottom: 1px solid var(--color-border)">
+                <td style="color: var(--color-text); padding: 0.8rem var(--spacing-gap-md)">大量の商品説明文を自動で生成する</td>
+                <td style="color: var(--color-text-muted); padding: 0.8rem var(--spacing-gap-md)">① 書く</td>
+                <td style="padding: 0.8rem var(--spacing-gap-md)"><span style="color: var(--color-accent); font-weight: 700">商品 DB 連携（商品データを参照）＋ LLM</span></td>
+              </tr>
+              <tr style="border-bottom: 1px solid var(--color-border)">
+                <td style="color: var(--color-text); padding: 0.8rem var(--spacing-gap-md)">広告バナーのコピーと画像案を量産する</td>
+                <td style="color: var(--color-text-muted); padding: 0.8rem var(--spacing-gap-md)">④ 作る</td>
+                <td style="padding: 0.8rem var(--spacing-gap-md)"><span style="color: var(--color-accent); font-weight: 700">画像生成（指示から画像を作る）＋ LLM</span></td>
+              </tr>
+            </tbody>
+          </table>
+        `)}
+      `),
+
+      // 23. ケース③ 断る・持ち帰る系
+      S(23, 'grid', 'cards', `
+        ${H('ケース③：これは「断る」か「持ち帰る」')}
+        ${Sub('即答で断る・持ち帰るのも、営業の価値になる')}
+        ${VC(`
+          <div class="grid grid-cols-2" style="gap: var(--spacing-gap-lg)">
+            <div class="rounded-2xl" style="background: var(--color-bg-alt); padding: var(--spacing-gap-lg); border-top: 8px solid var(--color-ng)">
+              <div class="flex items-center" style="gap: 0.75rem; margin-bottom: var(--spacing-gap-md)">
+                <span style="font-size: 40px; line-height: 1">🛑</span>
+                <h3 class="text-[30px] font-bold" style="color: var(--color-ng)">仕組み上できない（断る）</h3>
+              </div>
+              <ul style="display: flex; flex-direction: column; gap: 0.9rem">
+                <li class="text-[23px]" style="color: var(--color-text)">契約書を AI <b>だけ</b>で最終法務チェック</li>
+                <li class="text-[23px]" style="color: var(--color-text)">受注を <b>100%</b> 正確に予測したい</li>
+                <li class="text-[23px]" style="color: var(--color-text)">人を介さず<b>ミスゼロ</b>を保証したい</li>
+              </ul>
+              <p class="text-[20px]" style="color: var(--color-text-muted); margin-top: var(--spacing-gap-md)">→ 責任ある最終判断・100%保証は原理的に不可</p>
+            </div>
+            <div class="rounded-2xl" style="background: var(--color-bg-alt); padding: var(--spacing-gap-lg); border-top: 8px solid var(--color-maybe)">
+              <div class="flex items-center" style="gap: 0.75rem; margin-bottom: var(--spacing-gap-md)">
+                <span style="font-size: 40px; line-height: 1">❓</span>
+                <h3 class="text-[30px] font-bold" style="color: var(--color-maybe)">わからない（持ち帰る）</h3>
+              </div>
+              <ul style="display: flex; flex-direction: column; gap: 0.9rem">
+                <li class="text-[23px]" style="color: var(--color-text)">社内データを使うが<b>量も形式も不明</b></li>
+                <li class="text-[23px]" style="color: var(--color-text)">必要な<b>精度</b>が顧客も曖昧</li>
+                <li class="text-[23px]" style="color: var(--color-text)">RAG か検索か<b>手段の判断がつかない</b></li>
+              </ul>
+              <p class="text-[20px]" style="color: var(--color-text-muted); margin-top: var(--spacing-gap-md)">→ 技術と要件を確認してから回答する</p>
+            </div>
+          </div>
+        `)}
+      `),
+
+      // 24. 章5 区切り
+      D(24, 'section-divider', `
+        <div class="absolute top-12 right-20"><span class="text-[280px] font-black text-white/20 leading-none">05</span></div>
+        <div class="absolute bottom-32 left-20">
+          <p class="text-[28px] font-bold text-white/60" style="margin-bottom: 1rem; letter-spacing: 0.1em">CHAPTER 05 ｜ コア</p>
+          <h2 class="text-[100px] font-black text-white leading-none">ヒアリング</h2>
+          <p class="text-[26px] text-white/70" style="margin-top: 1.5rem">これが分かると：開発に渡せる情報を、その場で聞き出せる</p>
+        </div>
+      `),
+
+      // 25. ヒアリング6項目
+      Diagram(25, 'CHAPTER 05 ｜ テンプレ', '持ち帰る前に「6つ」だけ聞く', [
+        '<b>目的</b>／<b>人の関与</b>／<b>データ</b>',
+        '<b>精度</b>／<b>連携先</b>／<b>規模・頻度</b>',
+        '覚え方は「目・人・デ・精・連・量」',
+        '地雷ワードが出たら必ず持ち帰る',
+      ], 'assets/images/hearing-template.webp', '要件ヒアリングの6項目'),
+
+      // 26. 記入例 ① できる
+      HearingExample(
+        'できる例 ✅', '人事部からの相談', '「社内規定を質問したら答えるチャットを作れない？」',
+        ['<b>目的</b>：問い合わせ対応の工数を減らしたい', '<b>人の関与</b>：一次回答を AI、最終は人が確認', '<b>データ</b>：就業規則・社内規定（社外秘あり）', '<b>精度</b>：多少の誤り OK・出典は必須', '<b>連携先</b>：なし（まずは単体チャット）', '<b>規模</b>：1日約30件・社員200名が利用'],
+        ['タスク種別：<b>③ 調べて答える</b>', '人の確認：あり', 'データ：社内規定（社外秘含む）', '精度：多少の誤り OK・出典必須', '連携：なし／規模：30件・200名'],
+        '✅ 開発すればできる（RAG）', 'var(--color-ok)', '確認事項：アクセス権の範囲（その場で顧客に確認すれば OK）'
+      ),
+
+      // 27. 記入例 ② 持ち帰る
+      HearingExample(
+        '持ち帰る例 ❓（技術的にできるか不明）', '営業企画からの相談', '「商談履歴から "受注できるか" を高精度に予測したい」',
+        ['<b>目的</b>：受注確度を見極めて営業リソースを配分したい', '<b>人の関与</b>：予測を参考に人が最終判断', '<b>データ</b>：過去の商談履歴・成約/失注（CRM）', '<b>精度</b>：外れると困る。<b>できるだけ高精度に</b>', '<b>連携先</b>：CRM（商談データ）', '<b>規模</b>：営業50名・月数百件'],
+        ['タスク種別：<b>③ 調べる/予測</b>', '人の確認：あり', 'データ：商談履歴（社内）', '精度：<b>高精度を要求</b>', '連携：CRM／規模：月数百件'],
+        '❓ 技術と要件を確認（持ち帰る）', 'var(--color-maybe)', '決め手：その精度が出せるか技術的に前例がなく不明 → 技術に相談'
+      ),
+
+      // 28. 記入例 ③ できない
+      HearingExample(
+        'できない例 🛑（仕組み上できない）', '審査部からの相談', '「契約の可否を AI だけで最終判断し、人のチェックを無くしたい」',
+        ['<b>目的</b>：契約審査の人手をゼロにしたい', '<b>人の関与</b>：<b>なし（AI が最終決定）</b>', '<b>データ</b>：申込情報・与信データ', '<b>精度</b>：<b>100% 正確が必須</b>', '<b>連携先</b>：基幹システム', '<b>規模</b>：1日約100件'],
+        ['タスク種別：<b>② 判定</b>', '人の確認：<b>なし（AI 単独で最終決定）</b>', 'データ：与信データ', '精度：<b>100% 必須</b>', '連携：基幹システム／規模：100件・日'],
+        '🛑 仕組み上できない', 'var(--color-ng)', '決め手：責任ある最終判断を AI 単独で・100%保証は原理的に不可 → 目的を変える提案'
+      ),
+
+      // 29. まとめ
+      S(29, 'grid', 'cards', `
+        ${H('今日持ち帰る「3つ」')}
+        ${VC(`
+          <div class="grid grid-cols-3" style="gap: var(--spacing-gap-md)">
+            <div class="rounded-2xl" style="background: var(--color-bg-alt); padding: var(--spacing-gap-lg)">
+              <p class="text-[44px] font-black" style="color: var(--color-accent); margin-bottom: var(--spacing-gap-sm)">01</p>
+              <h3 class="text-[28px] font-bold" style="color: var(--color-text); margin-bottom: var(--spacing-gap-sm)">AI は予測マシン</h3>
+              <p class="text-[21px] leading-relaxed" style="color: var(--color-text-muted)">賢いが間違える。人の確認が前提</p>
+            </div>
+            <div class="rounded-2xl" style="background: var(--color-bg-alt); padding: var(--spacing-gap-lg)">
+              <p class="text-[44px] font-black" style="color: var(--color-accent); margin-bottom: var(--spacing-gap-sm)">02</p>
+              <h3 class="text-[28px] font-bold" style="color: var(--color-text); margin-bottom: var(--spacing-gap-sm)">できる/できないは3分類</h3>
+              <p class="text-[21px] leading-relaxed" style="color: var(--color-text-muted)">✅ / 🛑 / ❓。迷ったものだけ持ち帰る</p>
+            </div>
+            <div class="rounded-2xl" style="background: var(--color-bg-alt); padding: var(--spacing-gap-lg)">
+              <p class="text-[44px] font-black" style="color: var(--color-accent); margin-bottom: var(--spacing-gap-sm)">03</p>
+              <h3 class="text-[28px] font-bold" style="color: var(--color-text); margin-bottom: var(--spacing-gap-sm)">ヒアリングは型で</h3>
+              <p class="text-[21px] leading-relaxed" style="color: var(--color-text-muted)">目的・人・データ・精度・連携・規模</p>
+            </div>
+          </div>
+        `)}
+      `),
+
+    ].join('');
+  </script>
+
+  <script>
+    /* ===== ナビゲーション ===== */
+    (function() {
+      'use strict';
+      const slides = document.querySelectorAll('.slide');
+      const totalSlides = slides.length;
+      let currentSlide = 0;
+      const progressBar = document.getElementById('slide-progress-bar');
+      const slideCounter = document.getElementById('slide-counter');
+
+      function showSlide(index) {
+        if (index < 0 || index >= totalSlides) return;
+        slides[currentSlide].classList.remove('active');
+        currentSlide = index;
+        slides[currentSlide].classList.add('active');
+        updateUI();
+      }
+      function updateUI() {
+        const progress = ((currentSlide + 1) / totalSlides) * 100;
+        progressBar.style.width = progress + '%';
+        slideCounter.textContent = (currentSlide + 1) + ' / ' + totalSlides;
+        history.replaceState(null, '', '#' + (currentSlide + 1));
+      }
+      function nextSlide() { showSlide(currentSlide + 1); }
+      function prevSlide() { showSlide(currentSlide - 1); }
+      window.navigateToSlide = function(n) { showSlide(n - 1); };
+
+      document.addEventListener('keydown', function(e) {
+        switch(e.key) {
+          case 'ArrowRight': case ' ': case 'PageDown':
+            e.preventDefault(); nextSlide(); break;
+          case 'ArrowLeft': case 'PageUp':
+            e.preventDefault(); prevSlide(); break;
+          case 'Home': e.preventDefault(); showSlide(0); break;
+          case 'End': e.preventDefault(); showSlide(totalSlides - 1); break;
+        }
+      });
+
+      function scaleSlides() {
+        const scaleX = window.innerWidth / 1920;
+        const scaleY = window.innerHeight / 1080;
+        const scale = Math.min(scaleX, scaleY);
+        slides.forEach(function(slide) {
+          slide.style.transform = 'translate(-50%, -50%) scale(' + scale + ')';
+        });
+      }
+      window.addEventListener('resize', scaleSlides);
+
+      function getInitialSlide() {
+        const hash = window.location.hash;
+        if (hash) {
+          const num = parseInt(hash.substring(1), 10);
+          if (num >= 1 && num <= totalSlides) return num - 1;
+        }
+        return 0;
+      }
+
+      currentSlide = getInitialSlide();
+      slides[currentSlide].classList.add('active');
+      scaleSlides();
+      updateUI();
+    })();
+  </script>
+</body>
+</html>

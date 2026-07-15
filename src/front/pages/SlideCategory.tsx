@@ -36,8 +36,8 @@ export default function SlideCategory({
       <Section background="white">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {category.docs.map((doc) => (
-            <a key={doc.id} href={doc.path} className="block">
-              <Card hover>
+            <a key={doc.id} href={doc.path} className="block h-full">
+              <Card hover className="h-full">
                 <h2 className="text-xl font-bold mb-2 text-gray-900 hover:text-blue-600 transition-colors">
                   {doc.title}
                 </h2>

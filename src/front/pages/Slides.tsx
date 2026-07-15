@@ -35,9 +35,9 @@ export default function Slides({
               <Link
                 key={category.id}
                 to={`/slides/${category.id}`}
-                className="block"
+                className="block h-full"
               >
-                <Card hover>
+                <Card hover className="h-full">
                   <h2 className="text-xl font-bold mb-2 text-gray-900 hover:text-blue-600 transition-colors">
                     {category.name}
                   </h2>

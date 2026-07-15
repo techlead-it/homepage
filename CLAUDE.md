@@ -12,7 +12,7 @@ This is a corporate homepage for 株式会社テックリード (TechLead Inc.),
 homepage/
 ├── index.html               # SPA entry HTML
 ├── public/                  # Static assets (company intro slides, etc.)
-├── plugins/                 # Vite plugins (OGP generation, slide listing)
+├── plugins/                 # Vite plugins (OGP generation)
 ├── scripts/                 # OGP image generation scripts
 ├── src/
 │   ├── front/                # React SPA
@@ -96,34 +96,19 @@ Client-side routing via react-router-dom with BrowserRouter. Routes defined in `
 - `/recruitment` - Job listings
 - `/contact` - Contact form
 - `/contact/thanks` - Form submission success page
-- `/slides` - Company intro slide gallery (see Company Slides below)
+- `/slides` - Slide category cards (see Company Slides below)
+- `/slides/:categoryId` - Slide doc list for a category
 
 ### Company Slides
 
-会社紹介スライド（Claude Design 等で作った単一 HTML）を業界・文脈ごとに配信する仕組み。
+会社紹介・研修スライド（Claude Design 等で作った単一 HTML）をカテゴリごとに配信する仕組み。
 
-**配置方法**: HTML を `public/slides/{id}.html` に置くだけ。手動で `slides.ts` を編集する必要はない。
+**配置方法**: HTML を `public/slides/` 配下（フラット、または `sales/` のようなサブディレクトリ）に置き、`src/front/data/slides.ts` の `slideCategories` に手動でカテゴリ・資料（`id` / `title` / `description` / `path`）を追記する。ビルド時の動的走査は行わない。
 
-- 実体は `techlead-it.com/slides/{id}.html` としてそのまま配信される（Vite の `public/` は無変換でコピーされ、`wrangler.jsonc` の `assets.html_handling = "none"` を指定しているため `.html` 拡張子付きで exact match 配信される）
-- ビルド時に `plugins/vite-plugin-slides.ts` が `public/slides/*.html` を走査し、一覧ページ `/slides` に自動反映する（`virtual:slides` として `Slide[]` を供給）
-- `assets.run_worker_first` に含まれない `/slides/*.html` は asset 一致が SPA fallback (`not_found_handling = "single-page-application"`) より優先されるため、BrowserRouter のルーティングと衝突しない
-
-**メタデータ**は各 HTML の `<head>` から抽出する。`id` はファイル名。
-
-```html
-<head>
-  <title>DX推進のご提案</title>
-  <meta name="description" content="現場の業務をどう変えるか" />
-  <meta name="slide-context" content="DX" />
-</head>
-```
-
-- `<title>` 無し → `id`（ファイル名）
-- `<meta name="description">` 無し → 空文字
-- `<meta name="slide-context">` 無し → `"その他"` グループ
-- 一覧の並び順はファイル名の昇順（`01-dx.html` のように接頭辞で制御可能）
-
-メタ抽出の純粋関数は `src/front/data/slideParser.ts`（`parseSlideEntry`）。
+- 実体は `techlead-it.com/slides/...` としてそのまま配信される（Vite の `public/` は無変換でコピーされ、`wrangler.jsonc` の `assets.html_handling = "none"` を指定しているため実ファイルパスで exact match 配信される）
+- `assets.run_worker_first` に含まれない `/slides/*` は asset 一致が SPA fallback (`not_found_handling = "single-page-application"`) より優先されるため、BrowserRouter のルーティング（`/slides`, `/slides/:categoryId`）と衝突しない
+- `slides.ts` の `path` は拡張子（`.html`）まで含むフルパスで指定する（`/slides/sales/` のような拡張子省略パスは index.html に解決されず SPA fallback に落ちる）
+- カテゴリ一覧は `Slides.tsx`、資料一覧は `SlideCategory.tsx`（未知の `categoryId` は `/slides` へ redirect）。型定義は `src/front/types/index.ts` の `SlideCategory` / `SlideDoc`
 
 ### Styling
 

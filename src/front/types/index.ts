@@ -79,9 +79,16 @@ export interface NewsArticle {
   content: string; // Markdown本文
 }
 
-export interface Slide {
-  id: string; // ファイル名。/slides/{id}.html として配信される
+export interface SlideDoc {
+  id: string;
   title: string;
   description: string;
-  context: string; // "DX" などの文脈タグ。一覧のグルーピングに使う
+  path: string; // 配信パス（例: "/slides/dx.html"）
+}
+
+export interface SlideCategory {
+  id: string;
+  name: string;
+  description: string;
+  docs: SlideDoc[];
 }

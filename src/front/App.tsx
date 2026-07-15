@@ -8,6 +8,7 @@ import Home from "./pages/Home";
 import Introduction from "./pages/Introduction";
 import News from "./pages/News";
 import NewsDetail from "./pages/NewsDetail";
+import SlideCategory from "./pages/SlideCategory";
 import Slides from "./pages/Slides";
 
 function App() {
@@ -20,6 +21,7 @@ function App() {
         <Route path="/news" element={<News />} />
         <Route path="/news/:id" element={<NewsDetail />} />
         <Route path="/slides" element={<Slides />} />
+        <Route path="/slides/:categoryId" element={<SlideCategory />} />
         <Route path="/contact" element={<Contact />} />
         <Route path="/contact/thanks" element={<ContactThanks />} />
       </Routes>

@@ -1,29 +1,43 @@
-import { cleanup, render, screen, within } from "@testing-library/react";
+import { cleanup, render, screen } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
 import { afterEach, describe, expect, it } from "vite-plus/test";
-import type { Slide } from "../types";
+import type { SlideCategory } from "../types";
 import Slides from "./Slides";
 
-function renderSlides(slides: Slide[]) {
+function renderSlides(categories: SlideCategory[]) {
   return render(
     <MemoryRouter initialEntries={["/slides"]}>
-      <Slides slides={slides} />
+      <Slides categories={categories} />
     </MemoryRouter>
   );
 }
 
-const dxSlide: Slide = {
-  id: "dx",
-  title: "DX推進のご提案",
-  description: "現場の業務をどう変えるか",
-  context: "DX",
+const companyCategory: SlideCategory = {
+  id: "company",
+  name: "会社紹介",
+  description: "会社紹介資料です",
+  docs: [
+    {
+      id: "dx",
+      title: "作って終わりにしない。現場に根付くDXを、一緒に。",
+      description: "DXで、日本の競争力を底上げする",
+      path: "/slides/dx.html",
+    },
+  ],
 };
 
-const efficiencySlide: Slide = {
-  id: "efficiency",
-  title: "業務効率化のご提案",
-  description: "手作業を自動化して工数を削減",
-  context: "業務効率化",
+const aiTrainingCategory: SlideCategory = {
+  id: "ai-training",
+  name: "AI研修",
+  description: "AI研修資料です",
+  docs: [
+    {
+      id: "sales",
+      title: "営業向け AI 研修",
+      description: "AIの現在地から要件ヒアリングの実践までを扱う研修スライド",
+      path: "/slides/sales/index.html",
+    },
+  ],
 };
 
 afterEach(() => {
@@ -31,7 +45,7 @@ afterEach(() => {
 });
 
 describe("Slides", () => {
-  it("shows empty state message when there are no slides", () => {
+  it("shows empty state message when there are no categories", () => {
     renderSlides([]);
 
     expect(
@@ -39,43 +53,19 @@ describe("Slides", () => {
     ).toBeInTheDocument();
   });
 
-  it("shows the title of each slide", () => {
-    renderSlides([dxSlide, efficiencySlide]);
+  it("shows the name and description of each category as a card", () => {
+    renderSlides([companyCategory, aiTrainingCategory]);
 
-    expect(screen.getByText("DX推進のご提案")).toBeInTheDocument();
-    expect(screen.getByText("業務効率化のご提案")).toBeInTheDocument();
+    expect(screen.getByText("会社紹介")).toBeInTheDocument();
+    expect(screen.getByText("会社紹介資料です")).toBeInTheDocument();
+    expect(screen.getByText("AI研修")).toBeInTheDocument();
+    expect(screen.getByText("AI研修資料です")).toBeInTheDocument();
   });
 
-  it("links each slide card to its html file under /slides", () => {
-    renderSlides([dxSlide]);
+  it("links each category card to its category page", () => {
+    renderSlides([companyCategory]);
 
-    const link = screen.getByRole("link", { name: /DX推進のご提案/ });
-    expect(link).toHaveAttribute("href", "/slides/dx.html");
-  });
-
-  it("groups slides by context and shows a heading per context", () => {
-    renderSlides([dxSlide, efficiencySlide]);
-
-    const dxHeading = screen.getByRole("heading", { name: "DX" });
-    const efficiencyHeading = screen.getByRole("heading", {
-      name: "業務効率化",
-    });
-
-    expect(dxHeading).toBeInTheDocument();
-    expect(efficiencyHeading).toBeInTheDocument();
-  });
-
-  it("shows slides with the same context under one heading group", () => {
-    const dxSlide2: Slide = {
-      id: "dx-detail",
-      title: "DX事例集",
-      description: "導入事例のまとめ",
-      context: "DX",
-    };
-    renderSlides([dxSlide, dxSlide2]);
-
-    const dxGroup = screen.getByRole("group", { name: "DX" });
-    expect(within(dxGroup).getByText("DX推進のご提案")).toBeInTheDocument();
-    expect(within(dxGroup).getByText("DX事例集")).toBeInTheDocument();
+    const link = screen.getByRole("link", { name: /会社紹介/ });
+    expect(link).toHaveAttribute("href", "/slides/company");
   });
 });

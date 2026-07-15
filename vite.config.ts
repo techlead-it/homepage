@@ -3,7 +3,6 @@ import tailwindcss from "@tailwindcss/vite";
 import react from "@vitejs/plugin-react";
 import { defineConfig } from "vite-plus";
 import { vitePluginOgp } from "./plugins/vite-plugin-ogp";
-import { vitePluginSlides } from "./plugins/vite-plugin-slides";
 
 export default defineConfig({
   // VITEST 実行時は jsdom environment と Workers environment が競合するため cloudflare() を無効化
@@ -11,7 +10,6 @@ export default defineConfig({
     tailwindcss(),
     react(),
     vitePluginOgp(),
-    vitePluginSlides(),
     !process.env.VITEST && cloudflare(),
   ],
   test: {
@@ -21,6 +19,8 @@ export default defineConfig({
     exclude: ["**/node_modules/**", "**/dist/**"],
   },
   fmt: {
+    // 他リポジトリからのコピーで元ファイルを変更しない方針のため対象外
+    ignorePatterns: ["public/slides/**"],
     printWidth: 80,
     tabWidth: 2,
     useTabs: false,

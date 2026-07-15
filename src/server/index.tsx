@@ -48,6 +48,7 @@ app.post(
       }
       return c.json({ errors }, 400);
     }
+    return undefined;
   }),
   async (c) => {
     try {

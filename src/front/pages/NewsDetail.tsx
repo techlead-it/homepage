@@ -6,29 +6,27 @@ import Section from "../components/ui/Section";
 import { getNewsArticleById } from "../data/news";
 import type { NewsCategory } from "../types";
 
+const categoryLabels: Record<NewsCategory, string> = {
+  announcement: "お知らせ",
+  "tech-blog": "技術ブログ",
+};
+
+const categoryStyles: Record<NewsCategory, string> = {
+  announcement: "bg-blue-100 text-blue-800",
+  "tech-blog": "bg-green-100 text-green-800",
+};
+
 /**
  * カテゴリーラベルを日本語で返す
  */
-const getCategoryLabel = (category: NewsCategory): string => {
-  switch (category) {
-    case "announcement":
-      return "お知らせ";
-    case "tech-blog":
-      return "技術ブログ";
-  }
-};
+const getCategoryLabel = (category: NewsCategory): string =>
+  categoryLabels[category];
 
 /**
  * カテゴリーバッジのスタイルを返す
  */
-const getCategoryStyle = (category: NewsCategory): string => {
-  switch (category) {
-    case "announcement":
-      return "bg-blue-100 text-blue-800";
-    case "tech-blog":
-      return "bg-green-100 text-green-800";
-  }
-};
+const getCategoryStyle = (category: NewsCategory): string =>
+  categoryStyles[category];
 
 /**
  * 日付をフォーマット（YYYY-MM-DD → YYYY年MM月DD日）

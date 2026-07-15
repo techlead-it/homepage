@@ -6,17 +6,16 @@ import Card from "../ui/Card";
 import Section from "../ui/Section";
 import type { SectionProps } from "./types";
 
+const categoryLabels: Record<NewsCategory, string> = {
+  announcement: "お知らせ",
+  "tech-blog": "技術ブログ",
+};
+
 /**
  * カテゴリーラベルを日本語で返す
  */
-const getCategoryLabel = (category: NewsCategory): string => {
-  switch (category) {
-    case "announcement":
-      return "お知らせ";
-    case "tech-blog":
-      return "技術ブログ";
-  }
-};
+const getCategoryLabel = (category: NewsCategory): string =>
+  categoryLabels[category];
 
 export default function NewsSection({ background }: SectionProps) {
   return (

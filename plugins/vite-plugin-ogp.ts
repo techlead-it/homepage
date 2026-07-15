@@ -6,6 +6,18 @@ import {
   OGP_NEWS_DIR,
 } from "../scripts/ogp-generator";
 
+const onNewsFileChange = async (changedPath: string) => {
+  if (!changedPath.startsWith(OGP_NEWS_DIR) || !changedPath.endsWith(".md")) {
+    return;
+  }
+  try {
+    await generateOgpForArticle(changedPath);
+  } catch (error) {
+    // eslint-disable-next-line no-console
+    console.error("[OGP] Error generating image:", error);
+  }
+};
+
 export function vitePluginOgp(): Plugin {
   return {
     name: "vite-plugin-ogp",
@@ -16,23 +28,8 @@ export function vitePluginOgp(): Plugin {
 
     configureServer(server) {
       server.watcher.add(path.join(OGP_NEWS_DIR, "*.md"));
-
-      const onChange = async (changedPath: string) => {
-        if (
-          !changedPath.startsWith(OGP_NEWS_DIR) ||
-          !changedPath.endsWith(".md")
-        ) {
-          return;
-        }
-        try {
-          await generateOgpForArticle(changedPath);
-        } catch (error) {
-          console.error("[OGP] Error generating image:", error);
-        }
-      };
-
-      server.watcher.on("change", onChange);
-      server.watcher.on("add", onChange);
+      server.watcher.on("change", onNewsFileChange);
+      server.watcher.on("add", onNewsFileChange);
     },
   };
 }

@@ -4,15 +4,24 @@ import path from "node:path";
 import { fromJsx } from "takumi-js/helpers/jsx";
 import { Renderer } from "takumi-js/node";
 import matter from "gray-matter";
+import * as v from "valibot";
 import { OgpCard, type OgpCardProps } from "./ogp-card";
 
-type NewsCategory = "announcement" | "tech-blog";
+const newsArticleFrontmatterSchema = v.object({
+  title: v.string(),
+  date: v.string(),
+  category: v.picklist(["announcement", "tech-blog"]),
+  summary: v.optional(v.string()),
+});
 
-interface NewsArticleFrontmatter {
-  title: string;
-  date: string;
-  category: NewsCategory;
-  summary?: string;
+type NewsArticleFrontmatter = v.InferOutput<
+  typeof newsArticleFrontmatterSchema
+>;
+
+export function parseNewsArticleFrontmatter(
+  data: unknown
+): NewsArticleFrontmatter {
+  return v.parse(newsArticleFrontmatterSchema, data);
 }
 
 const NEWS_DIR = path.join(process.cwd(), "src", "front", "content", "news");
@@ -35,6 +44,7 @@ async function loadFont(): Promise<Buffer> {
   try {
     return await fs.readFile(FONT_PATH);
   } catch {
+    // eslint-disable-next-line no-console
     console.log("[OGP] Downloading Noto Sans JP font...");
     const response = await fetch(NOTO_SANS_JP_BOLD_URL);
     const fontData = Buffer.from(await response.arrayBuffer());
@@ -94,7 +104,7 @@ async function exists(filePath: string): Promise<boolean> {
 export async function generateOgpForArticle(filePath: string): Promise<void> {
   const content = await fs.readFile(filePath, "utf-8");
   const { data } = matter(content);
-  const frontmatter = data as NewsArticleFrontmatter;
+  const frontmatter = parseNewsArticleFrontmatter(data);
 
   const articleId = path.basename(filePath, ".md");
   const cachePath = getCachePath(articleId, content);
@@ -103,11 +113,13 @@ export async function generateOgpForArticle(filePath: string): Promise<void> {
   await fs.mkdir(OUTPUT_DIR, { recursive: true });
 
   if (await exists(cachePath)) {
+    // eslint-disable-next-line no-console
     console.log(`[OGP] Skip: ${articleId} (cached)`);
     await fs.copyFile(cachePath, outputPath);
     return;
   }
 
+  // eslint-disable-next-line no-console
   console.log(`[OGP] Generate: ${articleId}`);
 
   const buffer = await generateOgpImage({
@@ -126,12 +138,14 @@ export async function generateAllOgpImages(): Promise<void> {
   const files = await fs.readdir(NEWS_DIR);
   const mdFiles = files.filter((file) => file.endsWith(".md"));
 
+  // eslint-disable-next-line no-console
   console.log(`[OGP] Found ${mdFiles.length} news articles`);
 
   for (const file of mdFiles) {
     await generateOgpForArticle(path.join(NEWS_DIR, file));
   }
 
+  // eslint-disable-next-line no-console
   console.log("[OGP] Done!");
 }
 

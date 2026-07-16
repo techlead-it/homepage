@@ -480,6 +480,26 @@
         }
       });
 
+      /* タッチ操作: タップ=右側2/3で次へ・左側1/3で前へ / スワイプ=左で次へ・右で前へ */
+      const container = document.getElementById('slide-container');
+      let touchStartX = 0, touchStartY = 0;
+      container.addEventListener('touchstart', (e) => {
+        touchStartX = e.changedTouches[0].clientX;
+        touchStartY = e.changedTouches[0].clientY;
+      }, { passive: true });
+      container.addEventListener('touchend', (e) => {
+        if (e.target.closest('a')) return;
+        if (String(window.getSelection())) return;
+        const endX = e.changedTouches[0].clientX;
+        const dx = endX - touchStartX;
+        const dy = e.changedTouches[0].clientY - touchStartY;
+        if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy)) {
+          show(dx < 0 ? current + 1 : current - 1);
+        } else if (Math.abs(dx) < 10 && Math.abs(dy) < 10) {
+          show(endX < window.innerWidth / 3 ? current - 1 : current + 1);
+        }
+      }, { passive: true });
+
       const scale = () => {
         const s = Math.min(window.innerWidth / 1920, window.innerHeight / 1080);
         slides.forEach((el) => { el.style.transform = `translate(-50%, -50%) scale(${s})`; });

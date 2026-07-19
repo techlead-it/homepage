@@ -2,6 +2,8 @@ import { Navigate, Route, Routes } from "react-router-dom";
 import "./App.css";
 import Layout from "./components/Layout";
 import About from "./pages/About";
+import CaseDetail from "./pages/CaseDetail";
+import Cases from "./pages/Cases";
 import Contact from "./pages/Contact";
 import ContactThanks from "./pages/ContactThanks";
 import Engineers from "./pages/Engineers";
@@ -17,6 +19,8 @@ function App() {
     <Layout>
       <Routes>
         <Route path="/" element={<Home />} />
+        <Route path="/cases" element={<Cases />} />
+        <Route path="/cases/:id" element={<CaseDetail />} />
         <Route path="/about" element={<About />} />
         <Route
           path="/introduction"

@@ -19,8 +19,6 @@ describe("App のルーティング", () => {
   it("/introduction にアクセスすると /engineers/philosophy の理念コンテンツが表示される", () => {
     renderAppAt("/introduction");
 
-    expect(
-      screen.getByText(/ギークなエンジニアの楽園/)
-    ).toBeInTheDocument();
+    expect(screen.getByText(/ギークなエンジニアの楽園/)).toBeInTheDocument();
   });
 });

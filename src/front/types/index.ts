@@ -92,3 +92,23 @@ export interface SlideCategory {
   description: string;
   docs: SlideDoc[];
 }
+
+export interface CaseMetric {
+  label: string;
+  value: string;
+  note?: string;
+}
+
+export interface CaseStudy {
+  id: string;
+  industry: string;
+  scale: string;
+  supportScope: string;
+  title: string;
+  problem: string;
+  approach: string;
+  outcome: string;
+  metrics: CaseMetric[];
+  flowBefore: string[];
+  flowAfter: string[];
+}

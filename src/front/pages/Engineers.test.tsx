@@ -22,7 +22,9 @@ describe("Engineers ページ", () => {
     expect(screen.getByText("実績紹介")).toBeInTheDocument();
     expect(screen.getByText("技術スタック")).toBeInTheDocument();
     expect(screen.getByText("開発プロセス")).toBeInTheDocument();
-    expect(screen.getByText(/kanehira\.sho@techlead-it\.com/)).toBeInTheDocument();
+    expect(
+      screen.getByText(/kanehira\.sho@techlead-it\.com/)
+    ).toBeInTheDocument();
 
     const philosophyLink = screen.getByRole("link", { name: /企業理念|理念/ });
     expect(philosophyLink).toHaveAttribute("href", "/engineers/philosophy");

@@ -62,6 +62,12 @@ export default function CaseDetail() {
 
       <Section background="white">
         <div className="max-w-4xl mx-auto">
+          <img
+            src={caseStudy.image.src}
+            alt={caseStudy.image.alt}
+            className="w-full rounded-lg shadow-md mb-8"
+          />
+
           <Card className="mb-8">
             <dl className="grid grid-cols-1 md:grid-cols-3 gap-6">
               <div>

@@ -48,4 +48,23 @@ describe("Cases ページ", () => {
 
     expect(document.title).toBe("導入事例 | 株式会社テックリード");
   });
+
+  it("各カードにデモ画面の画像を表示する", () => {
+    renderCases();
+
+    const resortImage = screen.getByAltText(
+      "Resort DX 業務管理システム デモ画面"
+    );
+    expect(resortImage).toHaveAttribute(
+      "src",
+      "/images/cases/resort-hotel.png"
+    );
+
+    expect(
+      screen.getByAltText("アレルゲンチェックシステム デモ画面")
+    ).toBeInTheDocument();
+    expect(
+      screen.getByAltText("元請ダイレクト 書類提出DX デモ画面")
+    ).toBeInTheDocument();
+  });
 });

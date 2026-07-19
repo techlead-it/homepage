@@ -116,6 +116,11 @@ export interface CaseMetric {
   note?: string;
 }
 
+export interface CaseImage {
+  src: string;
+  alt: string;
+}
+
 export interface CaseStudy {
   id: string;
   industry: string;
@@ -128,4 +133,5 @@ export interface CaseStudy {
   metrics: CaseMetric[];
   flowBefore: string[];
   flowAfter: string[];
+  image: CaseImage;
 }

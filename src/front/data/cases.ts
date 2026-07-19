@@ -30,6 +30,10 @@ export const cases: CaseStudy[] = [
       "5つの業務をリアルタイム共有",
       "多言語対応でインバウンド対応",
     ],
+    image: {
+      src: "/images/cases/resort-hotel.png",
+      alt: "Resort DX 業務管理システム デモ画面",
+    },
   },
   {
     id: "allergen-check",
@@ -60,6 +64,10 @@ export const cases: CaseStudy[] = [
       "特定原材料8品目+準特定20品目を自動判定",
       "確認作業が大幅に効率化",
     ],
+    image: {
+      src: "/images/cases/allergen-check.png",
+      alt: "アレルゲンチェックシステム デモ画面",
+    },
   },
   {
     id: "transport-documents",
@@ -90,5 +98,9 @@ export const cases: CaseStudy[] = [
       "元請6社への提出書類をボタン1つで自動作成",
       "更新リマインドで提出漏れを防止",
     ],
+    image: {
+      src: "/images/cases/transport-documents.png",
+      alt: "元請ダイレクト 書類提出DX デモ画面",
+    },
   },
 ];

@@ -53,6 +53,20 @@ describe("Home ページ (経営者向けトップ)", () => {
     expect(hrefs).toContain("/cases/transport-documents");
   });
 
+  it("事例サマリの各カードにデモ画面の画像を表示する", () => {
+    renderHome();
+
+    expect(
+      screen.getByAltText("Resort DX 業務管理システム デモ画面")
+    ).toBeInTheDocument();
+    expect(
+      screen.getByAltText("アレルゲンチェックシステム デモ画面")
+    ).toBeInTheDocument();
+    expect(
+      screen.getByAltText("元請ダイレクト 書類提出DX デモ画面")
+    ).toBeInTheDocument();
+  });
+
   it("支援の進め方(段階的定着プロセス)を表示する", () => {
     renderHome();
 

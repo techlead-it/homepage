@@ -66,4 +66,11 @@ describe("CaseDetail ページ", () => {
       "紙と口頭に頼った引き継ぎで、情報の取りこぼしが起きていた | 株式会社テックリード"
     );
   });
+
+  it("デモ画面の画像を表示する", () => {
+    renderCaseDetail("resort-hotel");
+
+    const image = screen.getByAltText("Resort DX 業務管理システム デモ画面");
+    expect(image).toHaveAttribute("src", "/images/cases/resort-hotel.png");
+  });
 });

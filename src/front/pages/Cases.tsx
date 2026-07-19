@@ -23,6 +23,11 @@ export default function Cases() {
           {cases.map((caseStudy) => (
             <Link key={caseStudy.id} to={`/cases/${caseStudy.id}`}>
               <Card hover className="h-full">
+                <img
+                  src={caseStudy.image.src}
+                  alt={caseStudy.image.alt}
+                  className="w-full h-40 object-cover object-top rounded-md mb-4"
+                />
                 <p className="text-sm font-semibold text-blue-600 mb-2">
                   {caseStudy.industry}
                 </p>

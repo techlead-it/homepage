@@ -90,19 +90,21 @@
 
 ### `/cases` (事例一覧) / `/cases/:id` (事例詳細)
 
-一覧: 事例カード 3 枚 (業種+規模感 / 課題起点の見出し (= `title`) / 削減数値ハイライト)。
+一覧: 事例カード 3 枚 (デモ画面画像 / 業種+規模感 / 課題起点の見出し (= `title`) / 削減数値ハイライト)。
 
 詳細 (3 件共通の型):
 
-| #   | セクション            | 含める要素                                                                                |
-| --- | --------------------- | ----------------------------------------------------------------------------------------- |
-| 1   | ヘッダ                | 課題起点の見出し (`title`) / 業種+規模感 (`industry` + `scale`)                           |
-| 2   | 概要表                | 業種 (`industry`) / 規模感 (`scale`) / 支援範囲 (`supportScope`)。金額・期間は掲載しない  |
-| 3   | 導入前の課題 (before) | 現場で何が起きていたか (`problem`。紙・Excel・属人運用の具体描写)                         |
-| 4   | 支援内容              | 何を作り、どう定着させたか (`approach`。段階的プロセスとの対応)                           |
-| 5   | 現場の変化 (after)    | 「現場がどう変わったか」の物語 (`outcome`) + 削減数値ハイライト (`metrics`)               |
-| 6   | before/after 図解     | 業務フローの図解 (`flowBefore` / `flowAfter` から描画。実物スクショ・デモ URL は使わない) |
-| 7   | CTA                   | 「同じような悩みがあれば 30分無料相談」+ `/contact`                                       |
+| #   | セクション            | 含める要素                                                                               |
+| --- | --------------------- | ---------------------------------------------------------------------------------------- |
+| 1   | ヘッダ                | 課題起点の見出し (`title`) / 業種+規模感 (`industry` + `scale`)                          |
+| 2   | 概要表                | 業種 (`industry`) / 規模感 (`scale`) / 支援範囲 (`supportScope`)。金額・期間は掲載しない |
+| 3   | 導入前の課題 (before) | 現場で何が起きていたか (`problem`。紙・Excel・属人運用の具体描写)                        |
+| 4   | 支援内容              | 何を作り、どう定着させたか (`approach`。段階的プロセスとの対応)                          |
+| 5   | 現場の変化 (after)    | 「現場がどう変わったか」の物語 (`outcome`) + 削減数値ハイライト (`metrics`)              |
+| 6   | before/after 図解     | 業務フローの図解 (`flowBefore` / `flowAfter` から描画)                                   |
+| 7   | CTA                   | 「同じような悩みがあれば 30分無料相談」+ `/contact`                                      |
+
+概要表の直前にデモ画面のスクリーンショット画像 (`image.src` / `image.alt`) を掲載する。公開デモサイトの画面のため実クライアントの機密・実データを含まない。一覧カードにも同じ画像をサムネイル表示する。
 
 事例 3 件と数値 (dx.html 突合済み)。数値の正式文字列は「約50%削減」のように「削減」まで含める:
 
@@ -161,6 +163,11 @@ export interface CaseMetric {
   note?: string; // 例: "取りこぼしも減少"
 }
 
+export interface CaseImage {
+  src: string; // 配信パス。例: "/images/cases/resort-hotel.png"
+  alt: string; // 例: "Resort DX 業務管理システム デモ画面"
+}
+
 export interface CaseStudy {
   id: string; // 例: "resort-hotel"
   industry: string; // 業種。例: "リゾートホテル"
@@ -173,10 +180,12 @@ export interface CaseStudy {
   metrics: CaseMetric[]; // 数値ハイライト
   flowBefore: string[]; // 図解用: 導入前の業務ステップ
   flowAfter: string[]; // 図解用: 導入後の業務ステップ
+  image: CaseImage; // デモ画面のスクリーンショット (公開デモサイトの画面)
 }
 ```
 
 - 配置: `src/front/data/cases.ts` に 3 件 (データ駆動コンテンツモデル踏襲)
+- 画像実体: `public/images/cases/{id}.png`。正本は `public/slides/company/dx.html` に base64 PNG として埋め込まれたデモ画面キャプチャで、実装時に抽出・配置した (`resort-hotel.png` / `allergen-check.png` / `transport-documents.png`)
 - before/after 図解は `flowBefore` / `flowAfter` からコンポーネントで描画する (画像アセット不要、匿名性を構造的に担保)
 
 ### トップ用データ (新設・改修)
@@ -218,7 +227,8 @@ export interface CaseStudy {
 
 | 固有名                                                                | 定義箇所                                       | 生成者                                                   | 消費者                                                                 |
 | --------------------------------------------------------------------- | ---------------------------------------------- | -------------------------------------------------------- | ---------------------------------------------------------------------- |
-| `CaseStudy` / `CaseMetric` 型                                         | 本書「データ設計」→ `src/front/types/index.ts` | 実装フェーズ                                             | `cases.ts` / `Cases.tsx` / `CaseDetail.tsx` / `Home.tsx` (事例サマリ)  |
+| `CaseStudy` / `CaseMetric` / `CaseImage` 型                           | 本書「データ設計」→ `src/front/types/index.ts` | 実装フェーズ                                             | `cases.ts` / `Cases.tsx` / `CaseDetail.tsx` / `Home.tsx` (事例サマリ)  |
+| `public/images/cases/{id}.png`                                        | 本書「データ設計」                             | 実装フェーズ (正本は dx.html 埋め込み base64 PNG)        | `Cases.tsx` / `CaseDetail.tsx` / `CaseSummarySection.tsx`              |
 | `PainPoint` / `DxProcessStep` / `PricingTier` 型                      | 本書「データ設計」→ `src/front/types/index.ts` | 実装フェーズ                                             | `painPoints.ts` / `dxProcess.ts` / `pricing.ts` とトップの各セクション |
 | `src/front/data/cases.ts` `painPoints.ts` `dxProcess.ts` `pricing.ts` | 本書「データ設計」                             | 実装フェーズ (内容の正本は dx.html)                      | トップ・事例ページ                                                     |
 | `subject` 選択肢「30分無料相談」                                      | 本書「問い合わせフォーム変更」                 | 実装フェーズ (`Contact.tsx`)                             | 通知メール (既存表示) / KPI 月次目視集計                               |

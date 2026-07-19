@@ -1,342 +1,738 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ja">
-<head>
-<meta charset="UTF-8">
-<title>dev-impl report 20260719-202003</title>
-<script src="https://cdn.tailwindcss.com"></script>
-<style>
-:root {
-  --bg: #fafafa;
-  --bg-card: #ffffff;
-  --fg: #1a1a1a;
-  --fg-muted: #6b7280;
-  --border: #e5e7eb;
+  <head>
+    <meta charset="UTF-8" />
+    <title>dev-impl report 20260719-202003</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+      :root {
+        --bg: #fafafa;
+        --bg-card: #ffffff;
+        --fg: #1a1a1a;
+        --fg-muted: #6b7280;
+        --border: #e5e7eb;
 
-  --severity-info: #3b82f6;
-  --severity-warn: #f59e0b;
-  --severity-error: #ef4444;
+        --severity-info: #3b82f6;
+        --severity-warn: #f59e0b;
+        --severity-error: #ef4444;
 
-  --p1-bg: #fef3c7;
-  --p1-fg: #92400e;
-  --p2-bg: #fed7aa;
-  --p2-fg: #9a3412;
-  --p3-bg: #fecaca;
-  --p3-fg: #991b1b;
-  --poc-bg: #dbeafe;
-  --poc-fg: #1e40af;
-  --goal-met: #16a34a;
-  --goal-unmet: #dc2626;
-  --goal-pending: #6b7280;
+        --p1-bg: #fef3c7;
+        --p1-fg: #92400e;
+        --p2-bg: #fed7aa;
+        --p2-fg: #9a3412;
+        --p3-bg: #fecaca;
+        --p3-fg: #991b1b;
+        --poc-bg: #dbeafe;
+        --poc-fg: #1e40af;
+        --goal-met: #16a34a;
+        --goal-unmet: #dc2626;
+        --goal-pending: #6b7280;
 
-  --note-bg: #e0e7ff;
-  --note-fg: #3730a3;
-}
-</style>
-</head>
-<body class="min-h-screen" style="background: var(--bg); color: var(--fg);">
-
-<main class="max-w-5xl mx-auto p-8 space-y-8">
-
-  <header class="border-b pb-6" style="border-color: var(--border);">
-    <h1 class="text-2xl font-semibold">dev-impl report</h1>
-    <p class="mt-1 text-sm" style="color: var(--fg-muted);">ホームページ刷新 (DX特化) — feature/dx-homepage-redesign</p>
-    <dl class="mt-3 grid grid-cols-2 gap-x-6 gap-y-1 text-sm" style="color: var(--fg-muted);">
-      <dt>run_id</dt><dd class="font-mono">20260719-202003</dd>
-      <dt>開始</dt><dd class="font-mono">2026-07-19T11:20:03Z</dd>
-      <dt>終了</dt><dd class="font-mono">2026-07-19T12:55:21Z (約1時間35分)</dd>
-      <dt>SHA</dt><dd class="font-mono">9245e84 → 3618724</dd>
-    </dl>
-  </header>
-
-  <section class="grid grid-cols-2 md:grid-cols-4 gap-4">
-    <div class="rounded border p-4" style="border-color: var(--border); background: var(--bg-card);">
-      <div class="text-xs" style="color: var(--fg-muted);">フェーズ完了</div>
-      <div class="text-2xl font-semibold" style="color: var(--severity-info);">7 / 7</div>
-    </div>
-    <div class="rounded border p-4" style="border-color: var(--border); background: var(--p1-bg); color: var(--p1-fg);">
-      <div class="text-xs">P1 修正</div>
-      <div class="text-2xl font-semibold">2 回</div>
-    </div>
-    <div class="rounded border p-4" style="border-color: var(--border); background: var(--bg-card);">
-      <div class="text-xs" style="color: var(--fg-muted);">P2 修正 / P3 停止</div>
-      <div class="text-2xl font-semibold">0 回 / 0 回</div>
-    </div>
-    <div class="rounded border p-4" style="border-color: var(--border); background: var(--bg-card);">
-      <div class="text-xs" style="color: var(--fg-muted);">ゴール達成</div>
-      <div class="text-2xl font-semibold"><span style="color: var(--goal-met);">5</span> / 6 <span class="text-sm font-normal" style="color: var(--goal-pending);">(手動待 1)</span></div>
-    </div>
-    <div class="rounded border p-4" style="border-color: var(--border); background: var(--note-bg); color: var(--note-fg);">
-      <div class="text-xs">設計判断</div>
-      <div class="text-2xl font-semibold">4 件</div>
-    </div>
-    <div class="rounded border p-4" style="border-color: var(--border); background: #fef3c7; color: #92400e;">
-      <div class="text-xs">未解決の質問</div>
-      <div class="text-2xl font-semibold">1 件</div>
-    </div>
-    <div class="rounded border p-4 col-span-2" style="border-color: var(--border); background: var(--bg-card);">
-      <div class="text-xs" style="color: var(--fg-muted);">最終ステータス</div>
-      <div class="text-2xl font-semibold" style="color: var(--severity-warn);">partial</div>
-      <div class="text-xs mt-1" style="color: var(--fg-muted);">UI/UX gap あり (docs/POST_MVP.md 参照)。G5 手動確認待ち</div>
-    </div>
-  </section>
-
-  <section class="space-y-2">
-    <h2 class="text-lg font-semibold">フェーズタイムライン</h2>
-    <table class="w-full text-sm">
-      <thead class="text-left" style="color: var(--fg-muted);">
-        <tr><th class="pb-2">phase</th><th>時間帯 (UTC)</th><th>self-fix loops</th><th>commit</th><th>status</th></tr>
-      </thead>
-      <tbody>
-        <tr class="border-t" style="border-color: var(--border);">
-          <td class="py-2 font-mono">phase-1: Philosophy移設+/engineersハブ</td>
-          <td class="py-2 font-mono text-xs">11:20–11:32</td>
-          <td class="py-2 font-mono">0/3</td>
-          <td class="py-2 font-mono text-xs">e3f953c</td>
-          <td class="py-2"><span class="px-2 py-0.5 rounded text-xs" style="background:#dcfce7;color:#166534;">green</span></td>
-        </tr>
-        <tr class="border-t" style="border-color: var(--border);">
-          <td class="py-2 font-mono">phase-2: 匿名事例ページ /cases</td>
-          <td class="py-2 font-mono text-xs">11:34–11:49</td>
-          <td class="py-2 font-mono">0/3</td>
-          <td class="py-2 font-mono text-xs">958bc08, 8b7a26a</td>
-          <td class="py-2"><span class="px-2 py-0.5 rounded text-xs" style="background:#dcfce7;color:#166534;">green</span></td>
-        </tr>
-        <tr class="border-t" style="border-color: var(--border);">
-          <td class="py-2 font-mono">phase-3: トップページ全面改修</td>
-          <td class="py-2 font-mono text-xs">11:51–12:06</td>
-          <td class="py-2 font-mono">0/3</td>
-          <td class="py-2 font-mono text-xs">9010f27</td>
-          <td class="py-2"><span class="px-2 py-0.5 rounded text-xs" style="background:#dcfce7;color:#166534;">green</span></td>
-        </tr>
-        <tr class="border-t" style="border-color: var(--border);">
-          <td class="py-2 font-mono">phase-4: 問い合わせフォーム改修</td>
-          <td class="py-2 font-mono text-xs">12:15–12:16</td>
-          <td class="py-2 font-mono">0/3</td>
-          <td class="py-2 font-mono text-xs">8247de2</td>
-          <td class="py-2"><span class="px-2 py-0.5 rounded text-xs" style="background:#dcfce7;color:#166534;">green</span></td>
-        </tr>
-        <tr class="border-t" style="border-color: var(--border);">
-          <td class="py-2 font-mono">phase-5: ヘッダー・フッター刷新</td>
-          <td class="py-2 font-mono text-xs">12:16–12:32</td>
-          <td class="py-2 font-mono" style="color: var(--p1-fg);">1/3</td>
-          <td class="py-2 font-mono text-xs">041942d</td>
-          <td class="py-2"><span class="px-2 py-0.5 rounded text-xs" style="background:#dcfce7;color:#166534;">green (self-fix後)</span></td>
-        </tr>
-        <tr class="border-t" style="border-color: var(--border);">
-          <td class="py-2 font-mono">phase-6: ページ別title設定</td>
-          <td class="py-2 font-mono text-xs">12:33–12:44</td>
-          <td class="py-2 font-mono">0/3</td>
-          <td class="py-2 font-mono text-xs">c89d64b</td>
-          <td class="py-2"><span class="px-2 py-0.5 rounded text-xs" style="background:#dcfce7;color:#166534;">green</span></td>
-        </tr>
-        <tr class="border-t" style="border-color: var(--border);">
-          <td class="py-2 font-mono">phase-7: 品質保証・G_E2E確認</td>
-          <td class="py-2 font-mono text-xs">12:45–12:48</td>
-          <td class="py-2 font-mono">—</td>
-          <td class="py-2 font-mono text-xs">(差分なし)</td>
-          <td class="py-2"><span class="px-2 py-0.5 rounded text-xs" style="background:#dcfce7;color:#166534;">検証のみ</span></td>
-        </tr>
-        <tr class="border-t" style="border-color: var(--border);">
-          <td class="py-2 font-mono">goal-audit: 受入監査</td>
-          <td class="py-2 font-mono text-xs">12:50–12:55</td>
-          <td class="py-2 font-mono">—</td>
-          <td class="py-2 font-mono text-xs">3618724</td>
-          <td class="py-2"><span class="px-2 py-0.5 rounded text-xs" style="background:#fef3c7;color:#92400e;">high 1件 (G5)</span></td>
-        </tr>
-      </tbody>
-    </table>
-  </section>
-
-  <section class="space-y-2">
-    <h2 class="text-lg font-semibold">動的修正の詳細 (P1)</h2>
-    <article class="rounded border p-4" style="border-color: var(--border); background: var(--p1-bg); color: var(--p1-fg);">
-      <header class="flex items-center justify-between text-sm">
-        <span class="font-mono">2026-07-19T12:25:28Z / phase-5</span>
-        <span class="px-2 py-0.5 rounded text-xs uppercase font-semibold">p1_fix (review self-fix loop 1/3)</span>
+        --note-bg: #e0e7ff;
+        --note-fg: #3730a3;
+      }
+    </style>
+  </head>
+  <body class="min-h-screen" style="background: var(--bg); color: var(--fg)">
+    <main class="max-w-5xl mx-auto p-8 space-y-8">
+      <header class="border-b pb-6" style="border-color: var(--border)">
+        <h1 class="text-2xl font-semibold">dev-impl report</h1>
+        <p class="mt-1 text-sm" style="color: var(--fg-muted)">
+          ホームページ刷新 (DX特化) — feature/dx-homepage-redesign
+        </p>
+        <dl
+          class="mt-3 grid grid-cols-2 gap-x-6 gap-y-1 text-sm"
+          style="color: var(--fg-muted)"
+        >
+          <dt>run_id</dt>
+          <dd class="font-mono">20260719-202003</dd>
+          <dt>開始</dt>
+          <dd class="font-mono">2026-07-19T11:20:03Z</dd>
+          <dt>終了</dt>
+          <dd class="font-mono">2026-07-19T12:55:21Z (約1時間35分)</dd>
+          <dt>SHA</dt>
+          <dd class="font-mono">9245e84 → 3618724</dd>
+        </dl>
       </header>
-      <p class="mt-2">review-product-readiness の fatal (high) finding「ヘッダーのアンカーリンク (/#services 等) をクリックしても対象セクションへスクロールしない」を修正。react-router のクライアントサイド遷移はブラウザ標準の hash スクロールを発火しないため、Layout.tsx を useEffect ベースの hash 対応スクロール制御に書き換え、対象 Section に scroll-mt-16 を追加した。</p>
-      <dl class="mt-3 grid grid-cols-[auto_1fr] gap-x-3 gap-y-1 text-xs">
-        <dt>修正対象</dt><dd>src/front/components/Layout.tsx, src/front/components/ui/Section.tsx, src/front/components/Layout.test.tsx</dd>
-        <dt>判断根拠</dt><dd>react-router のクライアントサイド遷移はブラウザ標準のhashスクロールを発火しないため、Layoutで明示的にscrollIntoViewする実装が必要だった</dd>
-      </dl>
-      <p class="mt-2 text-xs" style="color: var(--fg-muted);">再検査 (architecture-guard-2 / review-tdd-2 / review-product-readiness-2 / review-adversarial-2) は全て fatal 0件で収束。実機ブラウザ (Playwright) でアンカースクロールの動作を実証確認済み。</p>
-    </article>
-    <article class="rounded border p-4" style="border-color: var(--border); background: var(--p1-bg); color: var(--p1-fg);">
-      <header class="flex items-center justify-between text-sm">
-        <span class="font-mono">2026-07-19T12:55:21Z / goal-audit</span>
-        <span class="px-2 py-0.5 rounded text-xs uppercase font-semibold">disposition</span>
-      </header>
-      <p class="mt-2">受入監査 (review-spec-compliance) が G5 の検証コマンドを vacuous_verification (high) と判定。スキルの規定により実装者による自動修正は行わず、docs/POST_MVP.md に手動確認事項として記録し、dev-impl の最終ステータスを partial に設定した。</p>
-    </article>
-  </section>
 
-  <section class="space-y-2">
-    <h2 class="text-lg font-semibold">レビュー残課題 (low/medium) — フェーズ別サマリ</h2>
-    <details class="rounded border p-3" style="border-color: var(--border);">
-      <summary class="cursor-pointer text-sm font-mono">phase-1 — medium 4 / low 5</summary>
-      <div class="mt-2 text-xs space-y-1">
-        <div>[tdd] App.test.tsx:18 — /engineers ルート登録がrouting経由で未テスト</div>
-        <div>[tdd] Engineers.test.tsx:22 — ヒーロー文言・データ由来描画のアサート欠落</div>
-        <div>[tdd] Engineers.test.tsx:25 — email正規表現部分一致</div>
-        <div>[product_readiness] ErrorBoundary不在 (既存状態、フェーズ7候補) / 404 catch-all不在</div>
-        <div>[adversarial] Engineers.test.tsx:22 — vacuous_assertion: データ由来描画が壊れてもgreenのまま</div>
-      </div>
-    </details>
-    <details class="rounded border p-3" style="border-color: var(--border);">
-      <summary class="cursor-pointer text-sm font-mono">phase-2 — medium 6 / low 6</summary>
-      <div class="mt-2 text-xs space-y-1">
-        <div>[tdd] Cases.test.tsx — カード⇄データ帰属未検証 / CaseDetail.test.tsx:48 — flowBefore/After列帰属未検証 / 詳細検証がresort-hotel1件のみ / App.tsx — /casesルートRED無し</div>
-        <div>[adversarial] Cases.tsx:21 — Link に block h-full 無くCard の h-full が無効 (既存パターンからの逸脱)</div>
-        <div>[adversarial] cases.ts — scaleが定量的規模でなく役割の言い換え (OI2、ユーザ裁定待ち)</div>
-      </div>
-    </details>
-    <details class="rounded border p-3" style="border-color: var(--border);">
-      <summary class="cursor-pointer text-sm font-mono">phase-3 — medium 4 / low 8</summary>
-      <div class="mt-2 text-xs space-y-1">
-        <div>[tdd] Home.test.tsx:26 — 課題語彙regexが帰属未検証 / Home.test.tsx:32 — CTAのhref未検証</div>
-        <div>[adversarial] CaseSummarySection.tsx — phase_task_unimplemented: 業種+規模感のうちscaleが未表示</div>
-        <div>[adversarial] pricing.ts — goal_refuted: 一括金額の下限が段ごとに不整合な導出 / painPoints.ts:6 — 正本の言い換えで完全一致でない</div>
-      </div>
-    </details>
-    <details class="rounded border p-3" style="border-color: var(--border);">
-      <summary class="cursor-pointer text-sm font-mono">phase-4 — medium 1 / low 7</summary>
-      <div class="mt-2 text-xs space-y-1">
-        <div>[tdd] Contact.test.tsx:197 — exact_match: stringContaining使用</div>
-        <div>[product_readiness] ErrorBoundary不在 (既存事象、継続)</div>
-        <div>[adversarial] Contact.tsx:110 — 説明文をTODOの「添える」に対し既存文言を置換</div>
-      </div>
-    </details>
-    <details class="rounded border p-3" style="border-color: var(--border);">
-      <summary class="cursor-pointer text-sm font-mono">phase-5 (self-fix後再検査) — medium 2 / low 3</summary>
-      <div class="mt-2 text-xs space-y-1">
-        <div>[tdd] Layout.test.tsx — test_isolation: vi.restoreAllMocksで復元されない / Header.test.tsx — behavior_assertion: ラベル→href対応未検証</div>
-        <div>[adversarial] Header.test.tsx — vacuous_assertion: 右端位置未検証 / Footer.test.tsx — ラベル⇄href対応未固定</div>
-      </div>
-    </details>
-    <details class="rounded border p-3" style="border-color: var(--border);">
-      <summary class="cursor-pointer text-sm font-mono">phase-6 — medium 1 (product-readiness/adversarialはユーザ指示によりスキップ)</summary>
-      <div class="mt-2 text-xs space-y-1">
-        <div>[tdd] NewsDetail.tsx:47 — 未知id時のusePageTitleフォールバックが未テスト</div>
-        <div class="italic" style="color: var(--fg-muted);">遅延到着した review-adversarial (フェーズ6): ok=true, low 2件 (news.ts frontmatter空title許容 / catch-allルート不在でtitle残留)</div>
-      </div>
-    </details>
-  </section>
-
-  <section class="space-y-2">
-    <h2 class="text-lg font-semibold">実装ノート — 設計判断</h2>
-    <article class="rounded border p-4" style="border-color: var(--border); background: var(--note-bg); color: var(--note-fg);">
-      <header class="flex items-center justify-between text-sm">
-        <span class="font-mono">phase-1</span>
-        <span class="px-2 py-0.5 rounded text-xs uppercase font-semibold">ambiguous</span>
-      </header>
-      <p class="mt-2">STRUCTURAL (リネーム) と BEHAVIORAL (ルーティング追加) を分離せず単一コミットにする</p>
-      <p class="mt-1 text-xs">根拠: リネームの単体テストが元々存在せず、動作保証はリダイレクト後の統合的な振る舞いテストでしか行えないため、構造変更単独の安全性をコミット単位で証明できない</p>
-    </article>
-    <article class="rounded border p-4" style="border-color: var(--border); background: var(--note-bg); color: var(--note-fg);">
-      <header class="flex items-center justify-between text-sm">
-        <span class="font-mono">phase-2</span>
-        <span class="px-2 py-0.5 rounded text-xs uppercase font-semibold">ambiguous</span>
-      </header>
-      <p class="mt-2">OI2 (規模感の具体値) を dx.html 記載の検証可能な事実で定性的に解決 (例: 「元請6社への提出書類を扱う運送会社」)</p>
-      <p class="mt-1 text-xs">根拠: 匿名事例の目的は自分事化であり、検証可能な事実に基づく定性的規模感でも課題への共感は成立する。数値の捏造よりも安全</p>
-    </article>
-    <article class="rounded border p-4" style="border-color: var(--border); background: var(--note-bg); color: var(--note-fg);">
-      <header class="flex items-center justify-between text-sm">
-        <span class="font-mono">phase-3</span>
-        <span class="px-2 py-0.5 rounded text-xs uppercase font-semibold">ambiguous</span>
-      </header>
-      <p class="mt-2">料金目安は dx.html の4サービス×3段階マトリクスを、PricingTier型に合わせて3段階の統合サマリに単純化</p>
-      <p class="mt-1 text-xs">根拠: dx.html自体が「4つのサービスを、状況に合わせて3段階から」と要約しており、桁感の提示という目的に対して3段階の統合サマリで十分</p>
-    </article>
-    <article class="rounded border p-4" style="border-color: var(--border); background: var(--note-bg); color: var(--note-fg);">
-      <header class="flex items-center justify-between text-sm">
-        <span class="font-mono">phase-4</span>
-        <span class="px-2 py-0.5 rounded text-xs uppercase font-semibold">test-weakening-check</span>
-      </header>
-      <p class="mt-2">subject未選択エラーのアサーション削除は正当な仕様追随と3観点全てで確認、test_weakening_detectedには該当しない</p>
-      <p class="mt-1 text-xs">根拠: defaultValues設定と空optionの削除によりUI経由でsubject空状態が到達不能になったため、残せば必ずfailする。サーバー側ガードは健在</p>
-    </article>
-  </section>
-
-  <section class="space-y-2">
-    <h2 class="text-lg font-semibold">実装ノート — 未解決の質問</h2>
-    <article class="rounded border p-4" style="border-color: var(--border);">
-      <header class="text-sm font-mono" style="color: var(--fg-muted);">phase-2</header>
-      <p class="mt-2 font-medium">事例3件 (resort-hotel/allergen-check/transport-documents) の正確な規模感 (客室数・従業員数等) を確認し、cases.ts の scale フィールドをより具体的にする必要があるか</p>
-      <dl class="mt-3 grid grid-cols-[auto_1fr] gap-x-3 gap-y-1 text-xs">
-        <dt>背景</dt><dd>dx.htmlに具体的な規模数値の記載がなく、創作を避けるため定性的記述 (対応業務数・原材料品目数・元請社数) で暫定対応した</dd>
-        <dt>確認後の対応</dt><dd>クライアントへの掲載確認と合わせて、可能なら具体的な規模感 (例: 客室数◯室規模) を確認し cases.ts を更新する</dd>
-        <dt>対象</dt><dd>src/front/data/cases.ts</dd>
-      </dl>
-    </article>
-  </section>
-
-  <section class="space-y-2">
-    <h2 class="text-lg font-semibold">ゴール達成判定</h2>
-    <ul class="space-y-2">
-      <li class="flex items-start gap-2">
-        <span class="mt-0.5 font-bold" style="color: var(--goal-met);">✓</span>
-        <div class="text-sm">
-          <div><span class="font-mono">G1</span> トップ (/) を開くと、課題特化コピー・業種不問の明記・料金目安・「30分無料相談」CTA が1ページ内で確認できる</div>
-          <div class="text-xs" style="color: var(--fg-muted);">検証: <code>vp test src/front/pages/Home.test.tsx</code> (5 passed)</div>
+      <section class="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <div
+          class="rounded border p-4"
+          style="border-color: var(--border); background: var(--bg-card)"
+        >
+          <div class="text-xs" style="color: var(--fg-muted)">フェーズ完了</div>
+          <div
+            class="text-2xl font-semibold"
+            style="color: var(--severity-info)"
+          >
+            7 / 7
+          </div>
         </div>
-      </li>
-      <li class="flex items-start gap-2">
-        <span class="mt-0.5 font-bold" style="color: var(--goal-met);">✓</span>
-        <div class="text-sm">
-          <div><span class="font-mono">G2</span> /cases から匿名事例3件の詳細ページへ遷移でき、各詳細に物語・削減数値・before/after図解・業種規模感が含まれる</div>
-          <div class="text-xs" style="color: var(--fg-muted);">検証: <code>vp test src/front/pages/Cases.test.tsx src/front/pages/CaseDetail.test.tsx</code> (5 passed)</div>
-          <div class="text-xs italic mt-1">注記: 詳細ページの自動検証は resort-hotel 1件のみ (3件中)。他2件は目視確認済みだが自動回帰検出はされない</div>
+        <div
+          class="rounded border p-4"
+          style="
+            border-color: var(--border);
+            background: var(--p1-bg);
+            color: var(--p1-fg);
+          "
+        >
+          <div class="text-xs">P1 修正</div>
+          <div class="text-2xl font-semibold">2 回</div>
         </div>
-      </li>
-      <li class="flex items-start gap-2">
-        <span class="mt-0.5 font-bold" style="color: var(--goal-met);">✓</span>
-        <div class="text-sm">
-          <div><span class="font-mono">G3</span> /contact で件名「30分無料相談」が初期選択され、そのまま送信すると成功画面に遷移し通知メールに件名が表示される</div>
-          <div class="text-xs" style="color: var(--fg-muted);">検証: <code>vp test src/front/pages/Contact.test.tsx</code> (9 passed)</div>
+        <div
+          class="rounded border p-4"
+          style="border-color: var(--border); background: var(--bg-card)"
+        >
+          <div class="text-xs" style="color: var(--fg-muted)">
+            P2 修正 / P3 停止
+          </div>
+          <div class="text-2xl font-semibold">0 回 / 0 回</div>
         </div>
-      </li>
-      <li class="flex items-start gap-2">
-        <span class="mt-0.5 font-bold" style="color: var(--goal-met);">✓</span>
-        <div class="text-sm">
-          <div><span class="font-mono">G4</span> /engineers で技術実績等、/engineers/philosophy で理念が閲覧でき、/introduction は /engineers/philosophy に到達する</div>
-          <div class="text-xs" style="color: var(--fg-muted);">検証: <code>vp test src/front/App.test.tsx</code> (exit 0) + ルート実在確認</div>
-          <div class="text-xs italic mt-1">注記: 検証コマンド自体はリダイレクトのみで、/engineers /engineers/philosophy のレンダリング内容を直接アサートしていない</div>
+        <div
+          class="rounded border p-4"
+          style="border-color: var(--border); background: var(--bg-card)"
+        >
+          <div class="text-xs" style="color: var(--fg-muted)">ゴール達成</div>
+          <div class="text-2xl font-semibold">
+            <span style="color: var(--goal-met)">5</span> / 6
+            <span class="text-sm font-normal" style="color: var(--goal-pending)"
+              >(手動待 1)</span
+            >
+          </div>
         </div>
-      </li>
-      <li class="flex items-start gap-2">
-        <span class="mt-0.5 font-bold" style="color: var(--goal-pending);">⋯</span>
-        <div class="text-sm">
-          <div><span class="font-mono">G5</span> 経営者向けページ (/・/cases・/cases/:id・/contact) にエンジニア向け採用訴求が表示されない</div>
-          <div class="text-xs" style="color: var(--fg-muted);">検証: <code>vp test src/front/App.test.tsx</code> — 受入監査により vacuous_verification (high) と判定</div>
-          <div class="text-xs italic">手動確認待ち: 検証コマンドが「ギークなエンジニアの楽園」の不在を4ルートで直接アサートしていない。監査エージェントの rg 事実確認では満たされている可能性が高いが、自動検証の弱さを実装者が「直す」形にはしていない (reward hacking 防止のためスキルが禁止)。詳細は docs/POST_MVP.md</div>
+        <div
+          class="rounded border p-4"
+          style="
+            border-color: var(--border);
+            background: var(--note-bg);
+            color: var(--note-fg);
+          "
+        >
+          <div class="text-xs">設計判断</div>
+          <div class="text-2xl font-semibold">4 件</div>
         </div>
-      </li>
-      <li class="flex items-start gap-2">
-        <span class="mt-0.5 font-bold" style="color: var(--goal-met);">✓</span>
-        <div class="text-sm">
-          <div><span class="font-mono">G_E2E</span> トップから UI操作のみで事例詳細→相談フォーム送信、およびヘッダー「エンジニアの方へ」→理念ページまで到達できる</div>
-          <div class="text-xs" style="color: var(--fg-muted);">検証: Playwright による実クリック検証 (URL直叩きなし)。nav_unreachable (high) 0件</div>
+        <div
+          class="rounded border p-4"
+          style="
+            border-color: var(--border);
+            background: #fef3c7;
+            color: #92400e;
+          "
+        >
+          <div class="text-xs">未解決の質問</div>
+          <div class="text-2xl font-semibold">1 件</div>
         </div>
-      </li>
-    </ul>
-    <p class="text-xs mt-2" style="color: var(--fg-muted);">goal_loop: 0/2 (未達対応ループは発生していない。G5 は vacuous_verification の専用ハンドリングで手動 pending に振り分け)</p>
-  </section>
+        <div
+          class="rounded border p-4 col-span-2"
+          style="border-color: var(--border); background: var(--bg-card)"
+        >
+          <div class="text-xs" style="color: var(--fg-muted)">
+            最終ステータス
+          </div>
+          <div
+            class="text-2xl font-semibold"
+            style="color: var(--severity-warn)"
+          >
+            partial
+          </div>
+          <div class="text-xs mt-1" style="color: var(--fg-muted)">
+            UI/UX gap あり (docs/POST_MVP.md 参照)。G5 手動確認待ち
+          </div>
+        </div>
+      </section>
 
-  <section class="space-y-2">
-    <h2 class="text-lg font-semibold">未検証・スキップされた項目</h2>
-    <article class="rounded border p-4" style="border-color: var(--border); background: #fef3c7; color: #92400e;">
-      <p class="text-sm">phase-6 の review-product-readiness と review-adversarial は、ユーザー指示 (「レビューフェーズはスキップしてOK」) により初回起動をスキップした。ただし review-adversarial は遅延して自発的に完了報告があり (ok=true, low 2件)、review-product-readiness は最終の G_E2E 監査 (goal-audit-e2e) で phase-6 の成果物 (全ページ title) を含めて実質的にカバーされている。</p>
-    </article>
-  </section>
+      <section class="space-y-2">
+        <h2 class="text-lg font-semibold">フェーズタイムライン</h2>
+        <table class="w-full text-sm">
+          <thead class="text-left" style="color: var(--fg-muted)">
+            <tr>
+              <th class="pb-2">phase</th>
+              <th>時間帯 (UTC)</th>
+              <th>self-fix loops</th>
+              <th>commit</th>
+              <th>status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="border-t" style="border-color: var(--border)">
+              <td class="py-2 font-mono">
+                phase-1: Philosophy移設+/engineersハブ
+              </td>
+              <td class="py-2 font-mono text-xs">11:20–11:32</td>
+              <td class="py-2 font-mono">0/3</td>
+              <td class="py-2 font-mono text-xs">e3f953c</td>
+              <td class="py-2">
+                <span
+                  class="px-2 py-0.5 rounded text-xs"
+                  style="background: #dcfce7; color: #166534"
+                  >green</span
+                >
+              </td>
+            </tr>
+            <tr class="border-t" style="border-color: var(--border)">
+              <td class="py-2 font-mono">phase-2: 匿名事例ページ /cases</td>
+              <td class="py-2 font-mono text-xs">11:34–11:49</td>
+              <td class="py-2 font-mono">0/3</td>
+              <td class="py-2 font-mono text-xs">958bc08, 8b7a26a</td>
+              <td class="py-2">
+                <span
+                  class="px-2 py-0.5 rounded text-xs"
+                  style="background: #dcfce7; color: #166534"
+                  >green</span
+                >
+              </td>
+            </tr>
+            <tr class="border-t" style="border-color: var(--border)">
+              <td class="py-2 font-mono">phase-3: トップページ全面改修</td>
+              <td class="py-2 font-mono text-xs">11:51–12:06</td>
+              <td class="py-2 font-mono">0/3</td>
+              <td class="py-2 font-mono text-xs">9010f27</td>
+              <td class="py-2">
+                <span
+                  class="px-2 py-0.5 rounded text-xs"
+                  style="background: #dcfce7; color: #166534"
+                  >green</span
+                >
+              </td>
+            </tr>
+            <tr class="border-t" style="border-color: var(--border)">
+              <td class="py-2 font-mono">phase-4: 問い合わせフォーム改修</td>
+              <td class="py-2 font-mono text-xs">12:15–12:16</td>
+              <td class="py-2 font-mono">0/3</td>
+              <td class="py-2 font-mono text-xs">8247de2</td>
+              <td class="py-2">
+                <span
+                  class="px-2 py-0.5 rounded text-xs"
+                  style="background: #dcfce7; color: #166534"
+                  >green</span
+                >
+              </td>
+            </tr>
+            <tr class="border-t" style="border-color: var(--border)">
+              <td class="py-2 font-mono">phase-5: ヘッダー・フッター刷新</td>
+              <td class="py-2 font-mono text-xs">12:16–12:32</td>
+              <td class="py-2 font-mono" style="color: var(--p1-fg)">1/3</td>
+              <td class="py-2 font-mono text-xs">041942d</td>
+              <td class="py-2">
+                <span
+                  class="px-2 py-0.5 rounded text-xs"
+                  style="background: #dcfce7; color: #166534"
+                  >green (self-fix後)</span
+                >
+              </td>
+            </tr>
+            <tr class="border-t" style="border-color: var(--border)">
+              <td class="py-2 font-mono">phase-6: ページ別title設定</td>
+              <td class="py-2 font-mono text-xs">12:33–12:44</td>
+              <td class="py-2 font-mono">0/3</td>
+              <td class="py-2 font-mono text-xs">c89d64b</td>
+              <td class="py-2">
+                <span
+                  class="px-2 py-0.5 rounded text-xs"
+                  style="background: #dcfce7; color: #166534"
+                  >green</span
+                >
+              </td>
+            </tr>
+            <tr class="border-t" style="border-color: var(--border)">
+              <td class="py-2 font-mono">phase-7: 品質保証・G_E2E確認</td>
+              <td class="py-2 font-mono text-xs">12:45–12:48</td>
+              <td class="py-2 font-mono">—</td>
+              <td class="py-2 font-mono text-xs">(差分なし)</td>
+              <td class="py-2">
+                <span
+                  class="px-2 py-0.5 rounded text-xs"
+                  style="background: #dcfce7; color: #166534"
+                  >検証のみ</span
+                >
+              </td>
+            </tr>
+            <tr class="border-t" style="border-color: var(--border)">
+              <td class="py-2 font-mono">goal-audit: 受入監査</td>
+              <td class="py-2 font-mono text-xs">12:50–12:55</td>
+              <td class="py-2 font-mono">—</td>
+              <td class="py-2 font-mono text-xs">3618724</td>
+              <td class="py-2">
+                <span
+                  class="px-2 py-0.5 rounded text-xs"
+                  style="background: #fef3c7; color: #92400e"
+                  >high 1件 (G5)</span
+                >
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
 
-  <footer class="border-t pt-6 text-xs space-y-1" style="border-color: var(--border); color: var(--fg-muted);">
-    <p>コミット範囲: <code>git log 9245e84..3618724</code> (8 コミット、うち STRUCTURAL 1 / BEHAVIORAL 6 / docs 1)</p>
-    <p>push はユーザ手動で実行してください</p>
-    <p>このレポートは <code>~/.claude/logs/dev-impl/20260719-202003/decisions.jsonl</code> から生成されました</p>
-  </footer>
+      <section class="space-y-2">
+        <h2 class="text-lg font-semibold">動的修正の詳細 (P1)</h2>
+        <article
+          class="rounded border p-4"
+          style="
+            border-color: var(--border);
+            background: var(--p1-bg);
+            color: var(--p1-fg);
+          "
+        >
+          <header class="flex items-center justify-between text-sm">
+            <span class="font-mono">2026-07-19T12:25:28Z / phase-5</span>
+            <span class="px-2 py-0.5 rounded text-xs uppercase font-semibold"
+              >p1_fix (review self-fix loop 1/3)</span
+            >
+          </header>
+          <p class="mt-2">
+            review-product-readiness の fatal (high)
+            finding「ヘッダーのアンカーリンク (/#services 等)
+            をクリックしても対象セクションへスクロールしない」を修正。react-router
+            のクライアントサイド遷移はブラウザ標準の hash
+            スクロールを発火しないため、Layout.tsx を useEffect ベースの hash
+            対応スクロール制御に書き換え、対象 Section に scroll-mt-16
+            を追加した。
+          </p>
+          <dl class="mt-3 grid grid-cols-[auto_1fr] gap-x-3 gap-y-1 text-xs">
+            <dt>修正対象</dt>
+            <dd>
+              src/front/components/Layout.tsx,
+              src/front/components/ui/Section.tsx,
+              src/front/components/Layout.test.tsx
+            </dd>
+            <dt>判断根拠</dt>
+            <dd>
+              react-router
+              のクライアントサイド遷移はブラウザ標準のhashスクロールを発火しないため、Layoutで明示的にscrollIntoViewする実装が必要だった
+            </dd>
+          </dl>
+          <p class="mt-2 text-xs" style="color: var(--fg-muted)">
+            再検査 (architecture-guard-2 / review-tdd-2 /
+            review-product-readiness-2 / review-adversarial-2) は全て fatal
+            0件で収束。実機ブラウザ (Playwright)
+            でアンカースクロールの動作を実証確認済み。
+          </p>
+        </article>
+        <article
+          class="rounded border p-4"
+          style="
+            border-color: var(--border);
+            background: var(--p1-bg);
+            color: var(--p1-fg);
+          "
+        >
+          <header class="flex items-center justify-between text-sm">
+            <span class="font-mono">2026-07-19T12:55:21Z / goal-audit</span>
+            <span class="px-2 py-0.5 rounded text-xs uppercase font-semibold"
+              >disposition</span
+            >
+          </header>
+          <p class="mt-2">
+            受入監査 (review-spec-compliance) が G5 の検証コマンドを
+            vacuous_verification (high)
+            と判定。スキルの規定により実装者による自動修正は行わず、docs/POST_MVP.md
+            に手動確認事項として記録し、dev-impl の最終ステータスを partial
+            に設定した。
+          </p>
+        </article>
+      </section>
 
-</main>
+      <section class="space-y-2">
+        <h2 class="text-lg font-semibold">
+          レビュー残課題 (low/medium) — フェーズ別サマリ
+        </h2>
+        <details class="rounded border p-3" style="border-color: var(--border)">
+          <summary class="cursor-pointer text-sm font-mono">
+            phase-1 — medium 4 / low 5
+          </summary>
+          <div class="mt-2 text-xs space-y-1">
+            <div>
+              [tdd] App.test.tsx:18 — /engineers
+              ルート登録がrouting経由で未テスト
+            </div>
+            <div>
+              [tdd] Engineers.test.tsx:22 —
+              ヒーロー文言・データ由来描画のアサート欠落
+            </div>
+            <div>[tdd] Engineers.test.tsx:25 — email正規表現部分一致</div>
+            <div>
+              [product_readiness] ErrorBoundary不在 (既存状態、フェーズ7候補) /
+              404 catch-all不在
+            </div>
+            <div>
+              [adversarial] Engineers.test.tsx:22 — vacuous_assertion:
+              データ由来描画が壊れてもgreenのまま
+            </div>
+          </div>
+        </details>
+        <details class="rounded border p-3" style="border-color: var(--border)">
+          <summary class="cursor-pointer text-sm font-mono">
+            phase-2 — medium 6 / low 6
+          </summary>
+          <div class="mt-2 text-xs space-y-1">
+            <div>
+              [tdd] Cases.test.tsx — カード⇄データ帰属未検証 /
+              CaseDetail.test.tsx:48 — flowBefore/After列帰属未検証 /
+              詳細検証がresort-hotel1件のみ / App.tsx — /casesルートRED無し
+            </div>
+            <div>
+              [adversarial] Cases.tsx:21 — Link に block h-full 無くCard の
+              h-full が無効 (既存パターンからの逸脱)
+            </div>
+            <div>
+              [adversarial] cases.ts — scaleが定量的規模でなく役割の言い換え
+              (OI2、ユーザ裁定待ち)
+            </div>
+          </div>
+        </details>
+        <details class="rounded border p-3" style="border-color: var(--border)">
+          <summary class="cursor-pointer text-sm font-mono">
+            phase-3 — medium 4 / low 8
+          </summary>
+          <div class="mt-2 text-xs space-y-1">
+            <div>
+              [tdd] Home.test.tsx:26 — 課題語彙regexが帰属未検証 /
+              Home.test.tsx:32 — CTAのhref未検証
+            </div>
+            <div>
+              [adversarial] CaseSummarySection.tsx — phase_task_unimplemented:
+              業種+規模感のうちscaleが未表示
+            </div>
+            <div>
+              [adversarial] pricing.ts — goal_refuted:
+              一括金額の下限が段ごとに不整合な導出 / painPoints.ts:6 —
+              正本の言い換えで完全一致でない
+            </div>
+          </div>
+        </details>
+        <details class="rounded border p-3" style="border-color: var(--border)">
+          <summary class="cursor-pointer text-sm font-mono">
+            phase-4 — medium 1 / low 7
+          </summary>
+          <div class="mt-2 text-xs space-y-1">
+            <div>
+              [tdd] Contact.test.tsx:197 — exact_match: stringContaining使用
+            </div>
+            <div>[product_readiness] ErrorBoundary不在 (既存事象、継続)</div>
+            <div>
+              [adversarial] Contact.tsx:110 —
+              説明文をTODOの「添える」に対し既存文言を置換
+            </div>
+          </div>
+        </details>
+        <details class="rounded border p-3" style="border-color: var(--border)">
+          <summary class="cursor-pointer text-sm font-mono">
+            phase-5 (self-fix後再検査) — medium 2 / low 3
+          </summary>
+          <div class="mt-2 text-xs space-y-1">
+            <div>
+              [tdd] Layout.test.tsx — test_isolation:
+              vi.restoreAllMocksで復元されない / Header.test.tsx —
+              behavior_assertion: ラベル→href対応未検証
+            </div>
+            <div>
+              [adversarial] Header.test.tsx — vacuous_assertion: 右端位置未検証
+              / Footer.test.tsx — ラベル⇄href対応未固定
+            </div>
+          </div>
+        </details>
+        <details class="rounded border p-3" style="border-color: var(--border)">
+          <summary class="cursor-pointer text-sm font-mono">
+            phase-6 — medium 1
+            (product-readiness/adversarialはユーザ指示によりスキップ)
+          </summary>
+          <div class="mt-2 text-xs space-y-1">
+            <div>
+              [tdd] NewsDetail.tsx:47 —
+              未知id時のusePageTitleフォールバックが未テスト
+            </div>
+            <div class="italic" style="color: var(--fg-muted)">
+              遅延到着した review-adversarial (フェーズ6): ok=true, low 2件
+              (news.ts frontmatter空title許容 / catch-allルート不在でtitle残留)
+            </div>
+          </div>
+        </details>
+      </section>
 
-</body>
+      <section class="space-y-2">
+        <h2 class="text-lg font-semibold">実装ノート — 設計判断</h2>
+        <article
+          class="rounded border p-4"
+          style="
+            border-color: var(--border);
+            background: var(--note-bg);
+            color: var(--note-fg);
+          "
+        >
+          <header class="flex items-center justify-between text-sm">
+            <span class="font-mono">phase-1</span>
+            <span class="px-2 py-0.5 rounded text-xs uppercase font-semibold"
+              >ambiguous</span
+            >
+          </header>
+          <p class="mt-2">
+            STRUCTURAL (リネーム) と BEHAVIORAL (ルーティング追加)
+            を分離せず単一コミットにする
+          </p>
+          <p class="mt-1 text-xs">
+            根拠:
+            リネームの単体テストが元々存在せず、動作保証はリダイレクト後の統合的な振る舞いテストでしか行えないため、構造変更単独の安全性をコミット単位で証明できない
+          </p>
+        </article>
+        <article
+          class="rounded border p-4"
+          style="
+            border-color: var(--border);
+            background: var(--note-bg);
+            color: var(--note-fg);
+          "
+        >
+          <header class="flex items-center justify-between text-sm">
+            <span class="font-mono">phase-2</span>
+            <span class="px-2 py-0.5 rounded text-xs uppercase font-semibold"
+              >ambiguous</span
+            >
+          </header>
+          <p class="mt-2">
+            OI2 (規模感の具体値) を dx.html 記載の検証可能な事実で定性的に解決
+            (例: 「元請6社への提出書類を扱う運送会社」)
+          </p>
+          <p class="mt-1 text-xs">
+            根拠:
+            匿名事例の目的は自分事化であり、検証可能な事実に基づく定性的規模感でも課題への共感は成立する。数値の捏造よりも安全
+          </p>
+        </article>
+        <article
+          class="rounded border p-4"
+          style="
+            border-color: var(--border);
+            background: var(--note-bg);
+            color: var(--note-fg);
+          "
+        >
+          <header class="flex items-center justify-between text-sm">
+            <span class="font-mono">phase-3</span>
+            <span class="px-2 py-0.5 rounded text-xs uppercase font-semibold"
+              >ambiguous</span
+            >
+          </header>
+          <p class="mt-2">
+            料金目安は dx.html
+            の4サービス×3段階マトリクスを、PricingTier型に合わせて3段階の統合サマリに単純化
+          </p>
+          <p class="mt-1 text-xs">
+            根拠:
+            dx.html自体が「4つのサービスを、状況に合わせて3段階から」と要約しており、桁感の提示という目的に対して3段階の統合サマリで十分
+          </p>
+        </article>
+        <article
+          class="rounded border p-4"
+          style="
+            border-color: var(--border);
+            background: var(--note-bg);
+            color: var(--note-fg);
+          "
+        >
+          <header class="flex items-center justify-between text-sm">
+            <span class="font-mono">phase-4</span>
+            <span class="px-2 py-0.5 rounded text-xs uppercase font-semibold"
+              >test-weakening-check</span
+            >
+          </header>
+          <p class="mt-2">
+            subject未選択エラーのアサーション削除は正当な仕様追随と3観点全てで確認、test_weakening_detectedには該当しない
+          </p>
+          <p class="mt-1 text-xs">
+            根拠:
+            defaultValues設定と空optionの削除によりUI経由でsubject空状態が到達不能になったため、残せば必ずfailする。サーバー側ガードは健在
+          </p>
+        </article>
+      </section>
+
+      <section class="space-y-2">
+        <h2 class="text-lg font-semibold">実装ノート — 未解決の質問</h2>
+        <article class="rounded border p-4" style="border-color: var(--border)">
+          <header class="text-sm font-mono" style="color: var(--fg-muted)">
+            phase-2
+          </header>
+          <p class="mt-2 font-medium">
+            事例3件 (resort-hotel/allergen-check/transport-documents)
+            の正確な規模感 (客室数・従業員数等) を確認し、cases.ts の scale
+            フィールドをより具体的にする必要があるか
+          </p>
+          <dl class="mt-3 grid grid-cols-[auto_1fr] gap-x-3 gap-y-1 text-xs">
+            <dt>背景</dt>
+            <dd>
+              dx.htmlに具体的な規模数値の記載がなく、創作を避けるため定性的記述
+              (対応業務数・原材料品目数・元請社数) で暫定対応した
+            </dd>
+            <dt>確認後の対応</dt>
+            <dd>
+              クライアントへの掲載確認と合わせて、可能なら具体的な規模感 (例:
+              客室数◯室規模) を確認し cases.ts を更新する
+            </dd>
+            <dt>対象</dt>
+            <dd>src/front/data/cases.ts</dd>
+          </dl>
+        </article>
+      </section>
+
+      <section class="space-y-2">
+        <h2 class="text-lg font-semibold">ゴール達成判定</h2>
+        <ul class="space-y-2">
+          <li class="flex items-start gap-2">
+            <span class="mt-0.5 font-bold" style="color: var(--goal-met)"
+              >✓</span
+            >
+            <div class="text-sm">
+              <div>
+                <span class="font-mono">G1</span> トップ (/)
+                を開くと、課題特化コピー・業種不問の明記・料金目安・「30分無料相談」CTA
+                が1ページ内で確認できる
+              </div>
+              <div class="text-xs" style="color: var(--fg-muted)">
+                検証: <code>vp test src/front/pages/Home.test.tsx</code> (5
+                passed)
+              </div>
+            </div>
+          </li>
+          <li class="flex items-start gap-2">
+            <span class="mt-0.5 font-bold" style="color: var(--goal-met)"
+              >✓</span
+            >
+            <div class="text-sm">
+              <div>
+                <span class="font-mono">G2</span> /cases
+                から匿名事例3件の詳細ページへ遷移でき、各詳細に物語・削減数値・before/after図解・業種規模感が含まれる
+              </div>
+              <div class="text-xs" style="color: var(--fg-muted)">
+                検証:
+                <code
+                  >vp test src/front/pages/Cases.test.tsx
+                  src/front/pages/CaseDetail.test.tsx</code
+                >
+                (5 passed)
+              </div>
+              <div class="text-xs italic mt-1">
+                注記: 詳細ページの自動検証は resort-hotel 1件のみ
+                (3件中)。他2件は目視確認済みだが自動回帰検出はされない
+              </div>
+            </div>
+          </li>
+          <li class="flex items-start gap-2">
+            <span class="mt-0.5 font-bold" style="color: var(--goal-met)"
+              >✓</span
+            >
+            <div class="text-sm">
+              <div>
+                <span class="font-mono">G3</span> /contact
+                で件名「30分無料相談」が初期選択され、そのまま送信すると成功画面に遷移し通知メールに件名が表示される
+              </div>
+              <div class="text-xs" style="color: var(--fg-muted)">
+                検証: <code>vp test src/front/pages/Contact.test.tsx</code> (9
+                passed)
+              </div>
+            </div>
+          </li>
+          <li class="flex items-start gap-2">
+            <span class="mt-0.5 font-bold" style="color: var(--goal-met)"
+              >✓</span
+            >
+            <div class="text-sm">
+              <div>
+                <span class="font-mono">G4</span> /engineers
+                で技術実績等、/engineers/philosophy
+                で理念が閲覧でき、/introduction は /engineers/philosophy
+                に到達する
+              </div>
+              <div class="text-xs" style="color: var(--fg-muted)">
+                検証: <code>vp test src/front/App.test.tsx</code> (exit 0) +
+                ルート実在確認
+              </div>
+              <div class="text-xs italic mt-1">
+                注記: 検証コマンド自体はリダイレクトのみで、/engineers
+                /engineers/philosophy のレンダリング内容を直接アサートしていない
+              </div>
+            </div>
+          </li>
+          <li class="flex items-start gap-2">
+            <span class="mt-0.5 font-bold" style="color: var(--goal-pending)"
+              >⋯</span
+            >
+            <div class="text-sm">
+              <div>
+                <span class="font-mono">G5</span> 経営者向けページ
+                (/・/cases・/cases/:id・/contact)
+                にエンジニア向け採用訴求が表示されない
+              </div>
+              <div class="text-xs" style="color: var(--fg-muted)">
+                検証: <code>vp test src/front/App.test.tsx</code> —
+                受入監査により vacuous_verification (high) と判定
+              </div>
+              <div class="text-xs italic">
+                手動確認待ち:
+                検証コマンドが「ギークなエンジニアの楽園」の不在を4ルートで直接アサートしていない。監査エージェントの
+                rg
+                事実確認では満たされている可能性が高いが、自動検証の弱さを実装者が「直す」形にはしていない
+                (reward hacking 防止のためスキルが禁止)。詳細は docs/POST_MVP.md
+              </div>
+            </div>
+          </li>
+          <li class="flex items-start gap-2">
+            <span class="mt-0.5 font-bold" style="color: var(--goal-met)"
+              >✓</span
+            >
+            <div class="text-sm">
+              <div>
+                <span class="font-mono">G_E2E</span> トップから
+                UI操作のみで事例詳細→相談フォーム送信、およびヘッダー「エンジニアの方へ」→理念ページまで到達できる
+              </div>
+              <div class="text-xs" style="color: var(--fg-muted)">
+                検証: Playwright による実クリック検証
+                (URL直叩きなし)。nav_unreachable (high) 0件
+              </div>
+            </div>
+          </li>
+        </ul>
+        <p class="text-xs mt-2" style="color: var(--fg-muted)">
+          goal_loop: 0/2 (未達対応ループは発生していない。G5 は
+          vacuous_verification の専用ハンドリングで手動 pending に振り分け)
+        </p>
+      </section>
+
+      <section class="space-y-2">
+        <h2 class="text-lg font-semibold">未検証・スキップされた項目</h2>
+        <article
+          class="rounded border p-4"
+          style="
+            border-color: var(--border);
+            background: #fef3c7;
+            color: #92400e;
+          "
+        >
+          <p class="text-sm">
+            phase-6 の review-product-readiness と review-adversarial
+            は、ユーザー指示 (「レビューフェーズはスキップしてOK」)
+            により初回起動をスキップした。ただし review-adversarial
+            は遅延して自発的に完了報告があり (ok=true, low
+            2件)、review-product-readiness は最終の G_E2E 監査 (goal-audit-e2e)
+            で phase-6 の成果物 (全ページ title)
+            を含めて実質的にカバーされている。
+          </p>
+        </article>
+      </section>
+
+      <footer
+        class="border-t pt-6 text-xs space-y-1"
+        style="border-color: var(--border); color: var(--fg-muted)"
+      >
+        <p>
+          コミット範囲: <code>git log 9245e84..3618724</code> (8 コミット、うち
+          STRUCTURAL 1 / BEHAVIORAL 6 / docs 1)
+        </p>
+        <p>push はユーザ手動で実行してください</p>
+        <p>
+          このレポートは
+          <code>~/.claude/logs/dev-impl/20260719-202003/decisions.jsonl</code>
+          から生成されました
+        </p>
+      </footer>
+    </main>
+  </body>
 </html>

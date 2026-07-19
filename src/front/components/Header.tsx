@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { HiMenu, HiX } from "react-icons/hi";
 import { Link } from "react-router-dom";
+import { navLinks } from "../data/navigation";
 
 export default function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -28,48 +29,27 @@ export default function Header() {
           </div>
 
           {/* デスクトップナビゲーション */}
-          <div className="hidden lg:flex items-center space-x-8">
-            <Link
-              to="/"
-              className="text-gray-700 hover:text-gray-900 px-3 py-2 text-sm font-medium"
-            >
-              トップ
-            </Link>
-            <Link
-              to="/about"
-              className="text-gray-700 hover:text-gray-900 px-3 py-2 text-sm font-medium"
-            >
-              会社概要
-            </Link>
-            <Link
-              to="/introduction"
-              className="text-gray-700 hover:text-gray-900 px-3 py-2 text-sm font-medium"
-            >
-              企業理念
-            </Link>
-            <Link
-              to="/news"
-              className="text-gray-700 hover:text-gray-900 px-3 py-2 text-sm font-medium"
-            >
-              ニュース
-            </Link>
-            <Link
-              to="/slides"
-              className="text-gray-700 hover:text-gray-900 px-3 py-2 text-sm font-medium"
-            >
-              資料
-            </Link>
-            <Link
-              to="https://zenn.dev/p/techlead"
-              className="text-gray-700 hover:text-gray-900 px-3 py-2 text-sm font-medium"
-            >
-              技術ブログ
-            </Link>
+          <div className="hidden lg:flex items-center space-x-6">
+            {navLinks.map((link) => (
+              <Link
+                key={link.to}
+                to={link.to}
+                className="text-gray-700 hover:text-gray-900 px-3 py-2 text-sm font-medium"
+              >
+                {link.label}
+              </Link>
+            ))}
             <Link
               to="/contact"
               className="bg-blue-600 text-white hover:bg-blue-700 px-4 py-2 rounded-md text-sm font-medium"
             >
-              お問い合わせ
+              30分無料相談
+            </Link>
+            <Link
+              to="/engineers"
+              className="text-gray-400 hover:text-gray-600 px-3 py-2 text-xs font-medium"
+            >
+              エンジニアの方へ
             </Link>
           </div>
 
@@ -96,54 +76,29 @@ export default function Header() {
       {mobileMenuOpen && (
         <div className="lg:hidden">
           <div className="px-2 pt-2 pb-3 space-y-1 bg-white border-t border-gray-200">
-            <Link
-              to="/"
-              onClick={closeMobileMenu}
-              className="block text-gray-700 hover:text-gray-900 hover:bg-gray-50 px-3 py-2 rounded-md text-base font-medium"
-            >
-              トップ
-            </Link>
-            <Link
-              to="/about"
-              onClick={closeMobileMenu}
-              className="block text-gray-700 hover:text-gray-900 hover:bg-gray-50 px-3 py-2 rounded-md text-base font-medium"
-            >
-              会社概要
-            </Link>
-            <Link
-              to="/introduction"
-              onClick={closeMobileMenu}
-              className="block text-gray-700 hover:text-gray-900 hover:bg-gray-50 px-3 py-2 rounded-md text-base font-medium"
-            >
-              企業理念
-            </Link>
-            <Link
-              to="/news"
-              onClick={closeMobileMenu}
-              className="block text-gray-700 hover:text-gray-900 hover:bg-gray-50 px-3 py-2 rounded-md text-base font-medium"
-            >
-              ニュース
-            </Link>
-            <Link
-              to="/slides"
-              onClick={closeMobileMenu}
-              className="block text-gray-700 hover:text-gray-900 hover:bg-gray-50 px-3 py-2 rounded-md text-base font-medium"
-            >
-              資料
-            </Link>
-            <Link
-              to="https://zenn.dev/p/techlead"
-              onClick={closeMobileMenu}
-              className="block text-gray-700 hover:text-gray-900 hover:bg-gray-50 px-3 py-2 rounded-md text-base font-medium"
-            >
-              技術ブログ
-            </Link>
+            {navLinks.map((link) => (
+              <Link
+                key={link.to}
+                to={link.to}
+                onClick={closeMobileMenu}
+                className="block text-gray-700 hover:text-gray-900 hover:bg-gray-50 px-3 py-2 rounded-md text-base font-medium"
+              >
+                {link.label}
+              </Link>
+            ))}
             <Link
               to="/contact"
               onClick={closeMobileMenu}
               className="block bg-blue-600 text-white hover:bg-blue-700 px-3 py-2 rounded-md text-base font-medium text-center"
             >
-              お問い合わせ
+              30分無料相談
+            </Link>
+            <Link
+              to="/engineers"
+              onClick={closeMobileMenu}
+              className="block text-gray-400 hover:text-gray-600 px-3 py-2 text-sm font-medium"
+            >
+              エンジニアの方へ
             </Link>
           </div>
         </div>

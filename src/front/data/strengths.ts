@@ -2,31 +2,30 @@ import type { Strength } from "../types";
 
 export const strengths: Strength[] = [
   {
-    id: "technical-expertise",
-    title: "高い技術力",
+    id: "proven-quality",
+    title: "実績に裏打ちされた品質",
     description:
-      "モダンな技術スタックに精通したエンジニアが、最適なソリューションを提供します。OSS開発や執筆、カンファレンスでの登壇など、技術コミュニティでも活躍しています。",
-    icon: "⚡",
+      "さまざまな業界のDXを手がけた経験を活かし、現場の運用に本当にフィットする形で提供します。",
+    icon: "✓",
   },
   {
-    id: "customer-focus",
-    title: "顧客に寄り添う姿勢",
+    id: "stable-technology",
+    title: "安定した技術で、長く使える",
     description:
-      "お客様のビジネスを深く理解し、真のニーズを引き出します。技術的な提案だけでなく、ビジネス価値の最大化を常に意識しています。",
-    icon: "🤝",
+      "流行りを追わず、実績のある安定した技術を選びます。壊れにくく、長く使い続けられるシステムに。",
+    icon: "◎",
   },
   {
-    id: "quality-commitment",
-    title: "品質へのこだわり",
+    id: "security-first",
+    title: "セキュリティを最初から",
     description:
-      "CI/CD、テスト駆動開発(TDD)による高品質かつ堅牢なシステム構築を実践しています。保守性と拡張性を重視した設計で、長期的な運用をサポートします。",
-    icon: "🎯",
+      "情報漏洩や不正アクセスを防ぐことを前提に設計します。大切な情報を安心して預けられます。",
+    icon: "⌾",
   },
   {
-    id: "agile-development",
-    title: "アジャイル開発",
-    description:
-      "小さく始めて素早く改善するアジャイル開発により、変化に強いシステムを構築します。定期的なフィードバックを通じて、お客様が真に必要としているシステムを構築します。",
-    icon: "🚀",
+    id: "no-build-and-forget",
+    title: "作って終わりにしない",
+    description: "導入後も一緒に改善し、現場に定着するまで伴走します。",
+    icon: "↻",
   },
 ];

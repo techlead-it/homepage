@@ -5,11 +5,13 @@ import type { SectionProps } from "./types";
 
 export default function ServicesSection({ background }: SectionProps) {
   return (
-    <Section background={background}>
+    <Section id="services" background={background}>
       <div className="text-center mb-12">
-        <h2 className="text-3xl font-bold text-gray-900 mb-4">提供サービス</h2>
+        <h2 className="text-3xl font-bold text-gray-900 mb-4">
+          支援できること
+        </h2>
         <p className="text-lg text-gray-600">
-          お客様のニーズに合わせた最適なソリューションを提供します
+          現場の課題整理から、定着・横展開まで一緒に伴走します
         </p>
       </div>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8">

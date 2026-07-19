@@ -93,6 +93,23 @@ export interface SlideCategory {
   docs: SlideDoc[];
 }
 
+export interface PainPoint {
+  title: string;
+  description: string;
+}
+
+export interface DxProcessStep {
+  step: string;
+  title: string;
+  description: string;
+}
+
+export interface PricingTier {
+  name: string;
+  priceRange: string;
+  description: string;
+}
+
 export interface CaseMetric {
   label: string;
   value: string;

@@ -74,6 +74,52 @@ describe("Home ページ (経営者向けトップ)", () => {
     expect(screen.getByText("育て続ける")).toBeInTheDocument();
   });
 
+  it("ヒーローセクションに現場の変化を表すイラストを表示する", () => {
+    renderHome();
+
+    expect(
+      screen.getByRole("img", {
+        name: "紙とExcelに頼った現場が、デジタルで定着する現場に変わるイメージ図",
+      })
+    ).toBeInTheDocument();
+  });
+
+  it("悩みカードのそれぞれにアイコンを表示する", () => {
+    renderHome();
+
+    const painPointTitles = [
+      "ツールは入れたが、現場で使われていない",
+      "業務が属人化している",
+      "データはあるが、改善に繋がっていない",
+      "試しに導入したが、そこで止まった",
+      "何から手をつければいいか分からない",
+    ];
+    for (const title of painPointTitles) {
+      const card = screen.getByText(title).parentElement;
+      expect(card?.querySelector("svg")).not.toBeNull();
+    }
+  });
+
+  it("支援できることの各カードにアイコンを表示する", () => {
+    renderHome();
+
+    const serviceTitles = ["DX伴走・相談", "AI活用・研修", "業務システム構築"];
+    for (const title of serviceTitles) {
+      const card = screen.getByText(title).parentElement;
+      expect(card?.querySelector("svg")).not.toBeNull();
+    }
+  });
+
+  it("支援の進め方の各ステップカードにアイコンを表示する", () => {
+    renderHome();
+
+    const stepTitles = ["小さく始める", "定着させる", "広げる", "育て続ける"];
+    for (const title of stepTitles) {
+      const card = screen.getByText(title).parentElement;
+      expect(card?.querySelector("svg")).not.toBeNull();
+    }
+  });
+
   it("ギークなエンジニアの楽園などエンジニア向け採用訴求を表示しない", () => {
     renderHome();
 

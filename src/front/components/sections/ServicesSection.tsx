@@ -15,19 +15,26 @@ export default function ServicesSection({ background }: SectionProps) {
         </p>
       </div>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-        {services.map((service) => (
-          <Card key={service.id} hover>
-            <h3 className="text-xl font-bold text-gray-900 mb-3">
-              {service.title}
-            </h3>
-            <p className="text-gray-600 mb-4">{service.description}</p>
-            <ul className="text-sm text-gray-500 space-y-1">
-              {service.features.map((feature) => (
-                <li key={feature}>• {feature}</li>
-              ))}
-            </ul>
-          </Card>
-        ))}
+        {services.map((service) => {
+          const Icon = service.icon;
+          return (
+            <Card key={service.id} hover>
+              <Icon
+                className="w-10 h-10 text-blue-600 mb-3"
+                aria-hidden="true"
+              />
+              <h3 className="text-xl font-bold text-gray-900 mb-3">
+                {service.title}
+              </h3>
+              <p className="text-gray-600 mb-4">{service.description}</p>
+              <ul className="text-sm text-gray-500 space-y-1">
+                {service.features.map((feature) => (
+                  <li key={feature}>• {feature}</li>
+                ))}
+              </ul>
+            </Card>
+          );
+        })}
       </div>
     </Section>
   );

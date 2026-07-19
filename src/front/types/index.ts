@@ -1,3 +1,5 @@
+import type { ComponentType, SVGProps } from "react";
+
 export interface CompanyInfo {
   name: string;
   ceo: string;
@@ -18,6 +20,7 @@ export interface Service {
   description: string;
   features: string[];
   technologies?: string[];
+  icon: ComponentType<SVGProps<SVGSVGElement>>;
 }
 
 export interface Project {
@@ -96,12 +99,14 @@ export interface SlideCategory {
 export interface PainPoint {
   title: string;
   description: string;
+  icon: ComponentType<SVGProps<SVGSVGElement>>;
 }
 
 export interface DxProcessStep {
   step: string;
   title: string;
   description: string;
+  icon: ComponentType<SVGProps<SVGSVGElement>>;
 }
 
 export interface PricingTier {

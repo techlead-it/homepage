@@ -22,10 +22,4 @@ export const services: Service[] = [
       "現場の業務に合わせた仕組みづくりを、要件の整理から運用・保守まで担います。",
     features: ["要件の整理", "現場に合わせた設計・開発", "運用・保守"],
   },
-  {
-    id: "web-app-development",
-    title: "Web・スマホアプリ開発",
-    description: "お客様や利用者が使うサービスの開発を行います。",
-    features: ["Webサービス開発", "スマホアプリ開発"],
-  },
 ];

@@ -42,4 +42,10 @@ describe("Cases ページ", () => {
     expect(hrefs).toContain("/cases/allergen-check");
     expect(hrefs).toContain("/cases/transport-documents");
   });
+
+  it("ページ別のdocument.titleを設定する", () => {
+    renderCases();
+
+    expect(document.title).toBe("導入事例 | 株式会社テックリード");
+  });
 });

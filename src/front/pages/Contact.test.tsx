@@ -42,6 +42,12 @@ afterEach(() => {
 });
 
 describe("Contact", () => {
+  it("ページ別のdocument.titleを設定する", () => {
+    renderContact();
+
+    expect(document.title).toBe("お問い合わせ | 株式会社テックリード");
+  });
+
   it("shows validation errors when required fields are empty on submit", async () => {
     const user = userEvent.setup();
     renderContact();

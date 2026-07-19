@@ -32,4 +32,10 @@ describe("Engineers ページ", () => {
     const zennLink = screen.getByRole("link", { name: /zenn|技術ブログ/i });
     expect(zennLink).toHaveAttribute("href", "https://zenn.dev/p/techlead");
   });
+
+  it("ページ別のdocument.titleを設定する", () => {
+    renderEngineers();
+
+    expect(document.title).toBe("エンジニアの方へ | 株式会社テックリード");
+  });
 });

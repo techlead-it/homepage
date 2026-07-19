@@ -2,8 +2,11 @@ import { Link } from "react-router-dom";
 import Card from "../components/ui/Card";
 import Section from "../components/ui/Section";
 import { cases } from "../data/cases";
+import { usePageTitle } from "../hooks/usePageTitle";
 
 export default function Cases() {
+  usePageTitle("導入事例");
+
   return (
     <div>
       <Section background="gray">

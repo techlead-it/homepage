@@ -7,6 +7,7 @@ import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import Card from "../components/ui/Card";
 import Section from "../components/ui/Section";
+import { usePageTitle } from "../hooks/usePageTitle";
 
 const fieldErrorsSchema = v.object({
   errors: v.record(v.string(), v.string()),
@@ -21,6 +22,7 @@ const contactFieldSchema = v.picklist([
 ] satisfies (keyof ContactFormData)[]);
 
 export default function Contact() {
+  usePageTitle("お問い合わせ");
   const navigate = useNavigate();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);

@@ -67,4 +67,10 @@ describe("Home ページ (経営者向けトップ)", () => {
       screen.queryByText(/ギークなエンジニアの楽園/)
     ).not.toBeInTheDocument();
   });
+
+  it("ページ別のdocument.titleを設定する", () => {
+    renderHome();
+
+    expect(document.title).toBe("現場に根付くDX支援 | 株式会社テックリード");
+  });
 });

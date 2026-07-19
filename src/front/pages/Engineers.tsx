@@ -4,8 +4,11 @@ import ProjectsSection from "../components/sections/ProjectsSection";
 import RecruitmentSection from "../components/sections/RecruitmentSection";
 import TechStackSection from "../components/sections/TechStackSection";
 import Section from "../components/ui/Section";
+import { usePageTitle } from "../hooks/usePageTitle";
 
 export default function Engineers() {
+  usePageTitle("エンジニアの方へ");
+
   return (
     <div>
       <Section background="gray">

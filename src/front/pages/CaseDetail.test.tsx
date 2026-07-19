@@ -58,4 +58,12 @@ describe("CaseDetail ページ", () => {
 
     expect(screen.getByText("事例一覧")).toBeInTheDocument();
   });
+
+  it("事例のtitleをdocument.titleに設定する", () => {
+    renderCaseDetail("resort-hotel");
+
+    expect(document.title).toBe(
+      "紙と口頭に頼った引き継ぎで、情報の取りこぼしが起きていた | 株式会社テックリード"
+    );
+  });
 });

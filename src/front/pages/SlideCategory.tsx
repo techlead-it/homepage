@@ -2,6 +2,7 @@ import { Navigate, useParams } from "react-router-dom";
 import Card from "../components/ui/Card";
 import Section from "../components/ui/Section";
 import { slideCategories as defaultCategories } from "../data/slides";
+import { usePageTitle } from "../hooks/usePageTitle";
 import type { SlideCategory as SlideCategoryType } from "../types";
 
 interface SlideCategoryProps {
@@ -13,6 +14,7 @@ export default function SlideCategory({
 }: SlideCategoryProps) {
   const { categoryId } = useParams<{ categoryId: string }>();
   const category = categories.find((c) => c.id === categoryId);
+  usePageTitle(category?.name ?? "資料");
 
   if (!category) {
     return <Navigate to="/slides" replace />;

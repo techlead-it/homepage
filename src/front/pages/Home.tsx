@@ -6,6 +6,7 @@ import PainPointSection from "../components/sections/PainPointSection";
 import PricingSection from "../components/sections/PricingSection";
 import ServicesSection from "../components/sections/ServicesSection";
 import StrengthsSection from "../components/sections/StrengthsSection";
+import { usePageTitle } from "../hooks/usePageTitle";
 
 const sections = [
   { name: "hero", Component: HeroSection },
@@ -19,6 +20,8 @@ const sections = [
 ];
 
 export default function Home() {
+  usePageTitle("現場に根付くDX支援");
+
   return (
     <div>
       {sections.map((section, index) => {

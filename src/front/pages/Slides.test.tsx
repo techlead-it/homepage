@@ -68,4 +68,10 @@ describe("Slides", () => {
     const link = screen.getByRole("link", { name: /会社紹介/ });
     expect(link).toHaveAttribute("href", "/slides/company");
   });
+
+  it("sets document.title", () => {
+    renderSlides([]);
+
+    expect(document.title).toBe("資料 | 株式会社テックリード");
+  });
 });

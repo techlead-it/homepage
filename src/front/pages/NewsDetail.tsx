@@ -4,6 +4,7 @@ import rehypeHighlight from "rehype-highlight";
 import remarkGfm from "remark-gfm";
 import Section from "../components/ui/Section";
 import { getNewsArticleById } from "../data/news";
+import { usePageTitle } from "../hooks/usePageTitle";
 import type { NewsCategory } from "../types";
 
 const categoryLabels: Record<NewsCategory, string> = {
@@ -43,6 +44,7 @@ const formatDate = (dateString: string): string => {
 export default function NewsDetail() {
   const { id } = useParams<{ id: string }>();
   const article = id ? getNewsArticleById(id) : undefined;
+  usePageTitle(article?.title ?? "記事が見つかりません");
 
   if (!article) {
     return (

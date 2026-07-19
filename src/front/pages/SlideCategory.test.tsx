@@ -82,4 +82,10 @@ describe("SlideCategory", () => {
     expect(screen.getByText("資料")).toBeInTheDocument();
     expect(screen.getByText("会社紹介")).toBeInTheDocument();
   });
+
+  it("sets document.title to the category name", () => {
+    renderAtPath("/slides/ai-training");
+
+    expect(document.title).toBe("AI研修 | 株式会社テックリード");
+  });
 });

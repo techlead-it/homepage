@@ -4,6 +4,7 @@
   "compatibility_date": "2026-07-01",
   "main": "./src/server/index.tsx",
   "routes": [{ "pattern": "techlead-it.com", "custom_domain": true }],
+  "preview_urls": true,
   "assets": {
     "directory": "./dist/client",
     "not_found_handling": "single-page-application",

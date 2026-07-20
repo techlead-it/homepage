@@ -38,7 +38,7 @@ describe("Footer", () => {
     const links = screen.getAllByRole("link");
     const hrefs = links.map((link) => link.getAttribute("href"));
 
-    expect(hrefs).toContain("/cases");
+    expect(hrefs).toContain("/#cases");
     expect(hrefs).toContain("/#services");
     expect(hrefs).toContain("/#process");
     expect(hrefs).toContain("/#pricing");

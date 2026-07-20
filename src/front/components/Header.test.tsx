@@ -22,7 +22,7 @@ describe("Header (経営者向けナビゲーション)", () => {
     const links = screen.getAllByRole("link");
     const hrefs = links.map((link) => link.getAttribute("href"));
 
-    expect(hrefs).toContain("/cases");
+    expect(hrefs).toContain("/#cases");
     expect(hrefs).toContain("/#services");
     expect(hrefs).toContain("/#process");
     expect(hrefs).toContain("/#pricing");
@@ -32,13 +32,13 @@ describe("Header (経営者向けナビゲーション)", () => {
     expect(hrefs).toContain("/engineers");
   });
 
-  it("/slides とzenn技術ブログへのリンクを含まない", () => {
+  it("研修・資料へのリンクを含み、zenn技術ブログへのリンクは含まない", () => {
     renderHeader();
 
     const links = screen.getAllByRole("link");
     const hrefs = links.map((link) => link.getAttribute("href"));
 
-    expect(hrefs).not.toContain("/slides");
+    expect(hrefs).toContain("/slides");
     expect(hrefs).not.toContain("https://zenn.dev/p/techlead");
   });
 });

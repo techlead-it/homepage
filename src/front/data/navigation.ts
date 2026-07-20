@@ -4,7 +4,7 @@ export interface NavLink {
 }
 
 export const navLinks: NavLink[] = [
-  { to: "/cases", label: "事例" },
+  { to: "/#cases", label: "事例" },
   { to: "/#services", label: "支援内容" },
   { to: "/#process", label: "支援の進め方" },
   { to: "/#pricing", label: "料金" },

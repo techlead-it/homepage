@@ -67,6 +67,12 @@ describe("Home ページ (経営者向けトップ)", () => {
     ).toBeInTheDocument();
   });
 
+  it("事例サマリのセクションにヘッダーからスクロールするためのidを持つ", () => {
+    renderHome();
+
+    expect(document.getElementById("cases")).not.toBeNull();
+  });
+
   it("支援の進め方(段階的定着プロセス)を表示する", () => {
     renderHome();
 

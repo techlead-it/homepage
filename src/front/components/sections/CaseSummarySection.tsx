@@ -6,7 +6,7 @@ import type { SectionProps } from "./types";
 
 export default function CaseSummarySection({ background }: SectionProps) {
   return (
-    <Section background={background}>
+    <Section id="cases" background={background}>
       <div className="text-center mb-12">
         <h2 className="text-3xl font-bold text-gray-900 mb-4">導入事例</h2>
         <p className="text-lg text-gray-600">

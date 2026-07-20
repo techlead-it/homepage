@@ -46,6 +46,12 @@ export default function Header() {
               30分無料相談
             </Link>
             <Link
+              to="/slides"
+              className="text-gray-400 hover:text-gray-600 px-3 py-2 text-xs font-medium"
+            >
+              研修・資料
+            </Link>
+            <Link
               to="/engineers"
               className="text-gray-400 hover:text-gray-600 px-3 py-2 text-xs font-medium"
             >
@@ -92,6 +98,13 @@ export default function Header() {
               className="block bg-blue-600 text-white hover:bg-blue-700 px-3 py-2 rounded-md text-base font-medium text-center"
             >
               30分無料相談
+            </Link>
+            <Link
+              to="/slides"
+              onClick={closeMobileMenu}
+              className="block text-gray-400 hover:text-gray-600 px-3 py-2 text-sm font-medium"
+            >
+              研修・資料
             </Link>
             <Link
               to="/engineers"

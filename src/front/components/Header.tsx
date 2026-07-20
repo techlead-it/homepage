@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { HiMenu, HiX } from "react-icons/hi";
 import { Link } from "react-router-dom";
-import { navLinks } from "../data/navigation";
+import { primaryNavLinks, secondaryNavLinks } from "../data/navigation";
 
 export default function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -29,8 +29,8 @@ export default function Header() {
           </div>
 
           {/* デスクトップナビゲーション */}
-          <div className="hidden lg:flex items-center space-x-6">
-            {navLinks.map((link) => (
+          <div className="hidden lg:flex items-center gap-1">
+            {primaryNavLinks.map((link) => (
               <Link
                 key={link.to}
                 to={link.to}
@@ -41,22 +41,27 @@ export default function Header() {
             ))}
             <Link
               to="/contact"
-              className="bg-blue-600 text-white hover:bg-blue-700 px-4 py-2 rounded-md text-sm font-medium"
+              className="ml-3 bg-blue-600 text-white hover:bg-blue-700 px-4 py-2 rounded-md text-sm font-medium"
             >
               30分無料相談
             </Link>
-            <Link
-              to="/slides"
-              className="text-gray-400 hover:text-gray-600 px-3 py-2 text-xs font-medium"
-            >
-              研修・資料
-            </Link>
-            <Link
-              to="/engineers"
-              className="text-gray-400 hover:text-gray-600 px-3 py-2 text-xs font-medium"
-            >
-              エンジニアの方へ
-            </Link>
+            <div className="ml-3 pl-3 flex items-center gap-1 border-l border-gray-200">
+              {secondaryNavLinks.map((link) => (
+                <Link
+                  key={link.to}
+                  to={link.to}
+                  className="text-gray-500 hover:text-gray-700 px-2 py-2 text-xs font-medium"
+                >
+                  {link.label}
+                </Link>
+              ))}
+              <Link
+                to="/engineers"
+                className="text-gray-400 hover:text-gray-600 px-2 py-2 text-xs font-medium"
+              >
+                エンジニアの方へ
+              </Link>
+            </div>
           </div>
 
           {/* ハンバーガーボタン（モバイルのみ） */}
@@ -82,7 +87,7 @@ export default function Header() {
       {mobileMenuOpen && (
         <div className="lg:hidden">
           <div className="px-2 pt-2 pb-3 space-y-1 bg-white border-t border-gray-200">
-            {navLinks.map((link) => (
+            {primaryNavLinks.map((link) => (
               <Link
                 key={link.to}
                 to={link.to}
@@ -99,20 +104,25 @@ export default function Header() {
             >
               30分無料相談
             </Link>
-            <Link
-              to="/slides"
-              onClick={closeMobileMenu}
-              className="block text-gray-400 hover:text-gray-600 px-3 py-2 text-sm font-medium"
-            >
-              研修・資料
-            </Link>
-            <Link
-              to="/engineers"
-              onClick={closeMobileMenu}
-              className="block text-gray-400 hover:text-gray-600 px-3 py-2 text-sm font-medium"
-            >
-              エンジニアの方へ
-            </Link>
+            <div className="pt-2 mt-2 border-t border-gray-100 space-y-1">
+              {secondaryNavLinks.map((link) => (
+                <Link
+                  key={link.to}
+                  to={link.to}
+                  onClick={closeMobileMenu}
+                  className="block text-gray-500 hover:text-gray-700 hover:bg-gray-50 px-3 py-2 rounded-md text-sm font-medium"
+                >
+                  {link.label}
+                </Link>
+              ))}
+              <Link
+                to="/engineers"
+                onClick={closeMobileMenu}
+                className="block text-gray-400 hover:text-gray-600 hover:bg-gray-50 px-3 py-2 rounded-md text-sm font-medium"
+              >
+                エンジニアの方へ
+              </Link>
+            </div>
           </div>
         </div>
       )}

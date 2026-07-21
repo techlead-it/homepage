@@ -1,24 +1,27 @@
+import CaseSummarySection from "../components/sections/CaseSummarySection";
 import CtaSection from "../components/sections/CtaSection";
+import DxProcessSection from "../components/sections/DxProcessSection";
 import HeroSection from "../components/sections/HeroSection";
-import NewsSection from "../components/sections/NewsSection";
-import ProcessSection from "../components/sections/ProcessSection";
-import ProjectsSection from "../components/sections/ProjectsSection";
+import PainPointSection from "../components/sections/PainPointSection";
+import PricingSection from "../components/sections/PricingSection";
 import ServicesSection from "../components/sections/ServicesSection";
 import StrengthsSection from "../components/sections/StrengthsSection";
-import TechStackSection from "../components/sections/TechStackSection";
+import { usePageTitle } from "../hooks/usePageTitle";
 
 const sections = [
   { name: "hero", Component: HeroSection },
-  { name: "news", Component: NewsSection },
+  { name: "painpoint", Component: PainPointSection },
   { name: "services", Component: ServicesSection },
-  { name: "projects", Component: ProjectsSection },
+  { name: "cases", Component: CaseSummarySection },
+  { name: "process", Component: DxProcessSection },
+  { name: "pricing", Component: PricingSection },
   { name: "strengths", Component: StrengthsSection },
-  { name: "process", Component: ProcessSection },
-  { name: "techstack", Component: TechStackSection },
   { name: "cta", Component: CtaSection },
 ];
 
 export default function Home() {
+  usePageTitle("現場に根付くDX支援");
+
   return (
     <div>
       {sections.map((section, index) => {

@@ -1,3 +1,5 @@
+import type { ComponentType, SVGProps } from "react";
+
 export interface CompanyInfo {
   name: string;
   ceo: string;
@@ -18,6 +20,7 @@ export interface Service {
   description: string;
   features: string[];
   technologies?: string[];
+  icon: ComponentType<SVGProps<SVGSVGElement>>;
 }
 
 export interface Project {
@@ -33,7 +36,7 @@ export interface Strength {
   id: string;
   title: string;
   description: string;
-  icon?: string;
+  icon: ComponentType<SVGProps<SVGSVGElement>>;
 }
 
 export interface ProcessStep {
@@ -91,4 +94,49 @@ export interface SlideCategory {
   name: string;
   description: string;
   docs: SlideDoc[];
+}
+
+export interface PainPoint {
+  title: string;
+  description: string;
+  icon: ComponentType<SVGProps<SVGSVGElement>>;
+}
+
+export interface DxProcessStep {
+  step: string;
+  title: string;
+  description: string;
+  icon: ComponentType<SVGProps<SVGSVGElement>>;
+}
+
+export interface PricingTier {
+  name: string;
+  priceRange: string;
+  description: string;
+}
+
+export interface CaseMetric {
+  label: string;
+  value: string;
+  note?: string;
+}
+
+export interface CaseImage {
+  src: string;
+  alt: string;
+}
+
+export interface CaseStudy {
+  id: string;
+  industry: string;
+  scale: string;
+  supportScope: string;
+  title: string;
+  problem: string;
+  approach: string;
+  outcome: string;
+  metrics: CaseMetric[];
+  flowBefore: string[];
+  flowAfter: string[];
+  image: CaseImage;
 }

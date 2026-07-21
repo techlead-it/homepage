@@ -1,8 +1,11 @@
 import { Link } from "react-router-dom";
 import Card from "../components/ui/Card";
 import Section from "../components/ui/Section";
+import { usePageTitle } from "../hooks/usePageTitle";
 
 export default function ContactThanks() {
+  usePageTitle("送信完了");
+
   return (
     <div>
       <Section background="gray">

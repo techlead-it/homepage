@@ -42,6 +42,12 @@ afterEach(() => {
 });
 
 describe("Contact", () => {
+  it("ページ別のdocument.titleを設定する", () => {
+    renderContact();
+
+    expect(document.title).toBe("お問い合わせ | 株式会社テックリード");
+  });
+
   it("shows validation errors when required fields are empty on submit", async () => {
     const user = userEvent.setup();
     renderContact();
@@ -53,9 +59,6 @@ describe("Contact", () => {
     });
     expect(
       screen.getByText("メールアドレスを入力してください")
-    ).toBeInTheDocument();
-    expect(
-      screen.getByText("お問い合わせ種別を選択してください")
     ).toBeInTheDocument();
     expect(
       screen.getByText("お問い合わせ内容は10文字以上で入力してください")
@@ -163,6 +166,43 @@ describe("Contact", () => {
     await waitFor(() => {
       expect(screen.getByText("送信に失敗しました")).toBeInTheDocument();
     });
+  });
+
+  it("件名の初期選択は「30分無料相談」であり、変更せず送信すると成功する", async () => {
+    const user = userEvent.setup();
+    const fetchMock = vi.fn().mockResolvedValue(
+      new Response(JSON.stringify({ success: true, messageId: "123" }), {
+        status: 200,
+      })
+    );
+    vi.stubGlobal("fetch", fetchMock);
+    renderContact();
+
+    expect(screen.getByLabelText(/お問い合わせ種別/)).toHaveDisplayValue(
+      "30分無料相談"
+    );
+
+    await user.type(screen.getByLabelText(/お名前/), validFormData.name);
+    await user.type(
+      screen.getByLabelText(/メールアドレス/),
+      validFormData.email
+    );
+    await user.type(
+      screen.getByLabelText(/お問い合わせ内容/),
+      validFormData.message
+    );
+    await user.click(screen.getByRole("button", { name: "送信する" }));
+
+    await waitFor(() => {
+      expect(screen.getByText("送信完了")).toBeInTheDocument();
+    });
+    expect(fetchMock).toHaveBeenCalledWith(
+      "/api/contact",
+      expect.objectContaining({
+        method: "POST",
+        body: expect.stringContaining('"subject":"30分無料相談"'),
+      })
+    );
   });
 
   it("disables submit button and shows loading text during submission", async () => {

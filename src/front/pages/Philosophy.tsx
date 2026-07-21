@@ -1,8 +1,11 @@
 import Card from "../components/ui/Card";
 import Section from "../components/ui/Section";
 import { philosophy } from "../data/philosophy";
+import { usePageTitle } from "../hooks/usePageTitle";
 
-export default function Introduction() {
+export default function Philosophy() {
+  usePageTitle("企業理念");
+
   return (
     <div>
       {/* ページヘッダー */}

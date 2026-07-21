@@ -11,21 +11,27 @@ export default function StrengthsSection({ background }: SectionProps) {
         <p className="text-lg text-gray-600">テックリードが選ばれる4つの理由</p>
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-        {strengths.map((strength) => (
-          <Card key={strength.id}>
-            <div className="flex items-start">
-              <div className="text-4xl mr-4">{strength.icon}</div>
-              <div>
-                <h3 className="text-xl font-bold text-gray-900 mb-3">
-                  {strength.title}
-                </h3>
-                <p className="text-gray-600 leading-relaxed">
-                  {strength.description}
-                </p>
+        {strengths.map((strength) => {
+          const Icon = strength.icon;
+          return (
+            <Card key={strength.id}>
+              <div className="flex items-start">
+                <Icon
+                  className="w-10 h-10 text-blue-600 mr-4 shrink-0"
+                  aria-hidden="true"
+                />
+                <div>
+                  <h3 className="text-xl font-bold text-gray-900 mb-3">
+                    {strength.title}
+                  </h3>
+                  <p className="text-gray-600 leading-relaxed">
+                    {strength.description}
+                  </p>
+                </div>
               </div>
-            </div>
-          </Card>
-        ))}
+            </Card>
+          );
+        })}
       </div>
     </Section>
   );

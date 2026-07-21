@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import Card from "../components/ui/Card";
 import Section from "../components/ui/Section";
 import { newsArticles } from "../data/news";
+import { usePageTitle } from "../hooks/usePageTitle";
 import type { NewsCategory } from "../types";
 
 const categoryLabels: Record<NewsCategory, string> = {
@@ -39,6 +40,8 @@ const formatDate = (dateString: string): string => {
 };
 
 export default function News() {
+  usePageTitle("お知らせ");
+
   return (
     <>
       {/* ヒーローセクション */}

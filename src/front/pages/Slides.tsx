@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import Card from "../components/ui/Card";
 import Section from "../components/ui/Section";
 import { slideCategories as defaultCategories } from "../data/slides";
+import { usePageTitle } from "../hooks/usePageTitle";
 import type { SlideCategory } from "../types";
 
 interface SlidesProps {
@@ -11,6 +12,8 @@ interface SlidesProps {
 export default function Slides({
   categories = defaultCategories,
 }: SlidesProps) {
+  usePageTitle("資料");
+
   return (
     <>
       {/* ヒーローセクション */}

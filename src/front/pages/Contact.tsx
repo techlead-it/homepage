@@ -7,6 +7,7 @@ import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import Card from "../components/ui/Card";
 import Section from "../components/ui/Section";
+import { usePageTitle } from "../hooks/usePageTitle";
 
 const fieldErrorsSchema = v.object({
   errors: v.record(v.string(), v.string()),
@@ -21,6 +22,7 @@ const contactFieldSchema = v.picklist([
 ] satisfies (keyof ContactFormData)[]);
 
 export default function Contact() {
+  usePageTitle("お問い合わせ");
   const navigate = useNavigate();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
@@ -33,6 +35,7 @@ export default function Contact() {
   } = useForm<ContactFormData>({
     resolver: valibotResolver(contactSchema),
     mode: "onBlur",
+    defaultValues: { subject: "30分無料相談" },
   });
 
   const onSubmit = useCallback(
@@ -106,7 +109,7 @@ export default function Contact() {
         <div className="max-w-3xl mx-auto">
           <div className="text-center mb-8">
             <p className="text-gray-600 leading-relaxed">
-              ご相談・お見積りは無料です。お気軽にお問い合わせください。
+              準備は不要です。現状の悩みを話すだけで大丈夫です。
               <br />
               通常、2営業日以内にご返信いたします。
             </p>
@@ -201,7 +204,7 @@ export default function Contact() {
                     errors.subject ? "border-red-500" : "border-gray-300"
                   }`}
                 >
-                  <option value="">選択してください</option>
+                  <option value="30分無料相談">30分無料相談</option>
                   <option value="サービスについて">サービスについて</option>
                   <option value="お見積り依頼">お見積り依頼</option>
                   <option value="採用について">採用について</option>

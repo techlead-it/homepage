@@ -7,13 +7,13 @@ export default function CtaSection({ background }: SectionProps) {
     <Section background={background}>
       <div className="text-center">
         <h2 className="text-3xl font-bold text-gray-900 mb-4">
-          まずはお気軽にご相談ください
+          まずは30分、無料相談から
         </h2>
         <p className="text-lg text-gray-600 mb-8">
-          無料相談・簡易見積りを承っております
+          準備は不要です。現状の悩みを話すだけで大丈夫です。
         </p>
         <Button to="/contact" size="lg">
-          お問い合わせはこちら
+          30分無料相談を申し込む
         </Button>
       </div>
     </Section>

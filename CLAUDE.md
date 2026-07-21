@@ -246,6 +246,7 @@ The SPA and Worker are built and deployed together as a single Cloudflare Worker
 
 - `.github/workflows/deploy.yaml` - `vp build` then `wrangler deploy`
 - `.github/workflows/ci.yaml` - Lint (Oxlint + reviewdog), test, typecheck, format check, build
+- `.github/workflows/pr-preview.yaml` - `vp build` then `wrangler versions upload` to publish a per-PR preview (see PR Preview Workflow below)
 - `.github/workflows/pinact-check.yaml` - GitHub Actions version pinning check
 
 #### Deployment Trigger
@@ -263,6 +264,14 @@ Runs on pull requests and pushes to `main` (paths-ignored: `**.md`, `LICENSE`):
 - `vp build` (production build validation)
 
 **Pinact Check** runs only when workflow files (`.github/workflows/**`) are modified.
+
+#### PR Preview Workflow
+
+- Triggers on `pull_request` with the same path filters as the deploy workflow (plus the preview workflow's own path)
+- Uploads a new Worker Version (`wrangler versions upload`, not `wrangler deploy` — this never shifts production traffic) tagged with `--preview-alias pr-<PR番号>`, producing a stable preview URL for that PR (`wrangler.jsonc`'s `preview_urls: true` is required for this URL to resolve)
+- Posts/updates a single PR comment with the preview URL (idempotent via an HTML marker comment, so repeated pushes edit the same comment instead of spamming new ones)
+- `concurrency: { group: pr-preview-<PR番号>, cancel-in-progress: true }` cancels a stale in-flight preview build when new commits are pushed to the same PR
+- Requires the same `CLOUDFLARE_API_TOKEN` / `CLOUDFLARE_ACCOUNT_ID` secrets as the deploy workflow. PRs from forks do not receive repository secrets, so previews only build for branches within this repository
 
 ### Manual Deployment
 

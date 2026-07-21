@@ -1,8 +1,11 @@
 import Card from "../components/ui/Card";
 import Section from "../components/ui/Section";
 import { clients, companyInfo } from "../data/company";
+import { usePageTitle } from "../hooks/usePageTitle";
 
 export default function About() {
+  usePageTitle("会社概要");
+
   return (
     <div>
       {/* ページヘッダー */}

@@ -57,7 +57,7 @@ export default function Header() {
               ))}
               <Link
                 to="/engineers"
-                className="text-gray-400 hover:text-gray-600 px-2 py-2 text-xs font-medium"
+                className="text-gray-500 hover:text-gray-600 px-2 py-2 text-xs font-medium"
               >
                 エンジニアの方へ
               </Link>
@@ -69,7 +69,7 @@ export default function Header() {
             <button
               type="button"
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="inline-flex items-center justify-center p-2 rounded-md text-gray-700 hover:text-gray-900 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-blue-500"
+              className="inline-flex items-center justify-center p-2.5 rounded-md text-gray-700 hover:text-gray-900 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-blue-500"
               aria-expanded={mobileMenuOpen}
               aria-label="メインメニュー"
             >
@@ -92,7 +92,7 @@ export default function Header() {
                 key={link.to}
                 to={link.to}
                 onClick={closeMobileMenu}
-                className="block text-gray-700 hover:text-gray-900 hover:bg-gray-50 px-3 py-2 rounded-md text-base font-medium"
+                className="block text-gray-700 hover:text-gray-900 hover:bg-gray-50 px-3 py-2.5 rounded-md text-base font-medium"
               >
                 {link.label}
               </Link>
@@ -100,7 +100,7 @@ export default function Header() {
             <Link
               to="/contact"
               onClick={closeMobileMenu}
-              className="block bg-blue-600 text-white hover:bg-blue-700 px-3 py-2 rounded-md text-base font-medium text-center"
+              className="block bg-blue-600 text-white hover:bg-blue-700 px-3 py-2.5 rounded-md text-base font-medium text-center"
             >
               30分無料相談
             </Link>
@@ -110,7 +110,7 @@ export default function Header() {
                   key={link.to}
                   to={link.to}
                   onClick={closeMobileMenu}
-                  className="block text-gray-500 hover:text-gray-700 hover:bg-gray-50 px-3 py-2 rounded-md text-sm font-medium"
+                  className="block text-gray-500 hover:text-gray-700 hover:bg-gray-50 px-3 py-3 rounded-md text-sm font-medium"
                 >
                   {link.label}
                 </Link>
@@ -118,7 +118,7 @@ export default function Header() {
               <Link
                 to="/engineers"
                 onClick={closeMobileMenu}
-                className="block text-gray-400 hover:text-gray-600 hover:bg-gray-50 px-3 py-2 rounded-md text-sm font-medium"
+                className="block text-gray-500 hover:text-gray-600 hover:bg-gray-50 px-3 py-3 rounded-md text-sm font-medium"
               >
                 エンジニアの方へ
               </Link>

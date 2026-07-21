@@ -126,6 +126,22 @@ describe("Home ページ (経営者向けトップ)", () => {
     }
   });
 
+  it("私たちの強みの各カードにアイコンを表示する", () => {
+    renderHome();
+
+    const strengthTitles = [
+      "実績に裏打ちされた品質",
+      "安定した技術で、長く使える",
+      "セキュリティを最初から",
+      "作って終わりにしない",
+    ];
+    for (const title of strengthTitles) {
+      const textWrapper = screen.getByText(title).parentElement;
+      const cardWrapper = textWrapper?.parentElement;
+      expect(cardWrapper?.querySelector("svg")).not.toBeNull();
+    }
+  });
+
   it("ギークなエンジニアの楽園などエンジニア向け採用訴求を表示しない", () => {
     renderHome();
 

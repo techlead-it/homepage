@@ -105,10 +105,16 @@ describe("Home ページ (経営者向けトップ)", () => {
     expect(screen.getByText("業界別ソリューション")).toBeInTheDocument();
     expect(screen.getByText("現場れんらく帳")).toBeInTheDocument();
     expect(screen.getByText("建設業")).toBeInTheDocument();
+    expect(screen.getByText("運行れんらく帳")).toBeInTheDocument();
+    expect(screen.getByText("運輸・物流業")).toBeInTheDocument();
+    expect(screen.getByText("受注れんらく帳")).toBeInTheDocument();
+    expect(screen.getByText("食品業")).toBeInTheDocument();
 
     const links = screen.getAllByRole("link");
     const hrefs = links.map((link) => link.getAttribute("href"));
     expect(hrefs).toContain("/solutions/construction");
+    expect(hrefs).toContain("/solutions/logistics");
+    expect(hrefs).toContain("/solutions/food");
   });
 
   it("提供サービスの各カードにアイコンを表示する", () => {

@@ -14,6 +14,8 @@ import Philosophy from "./pages/Philosophy";
 import SlideCategory from "./pages/SlideCategory";
 import Slides from "./pages/Slides";
 import Construction from "./pages/solutions/Construction";
+import Food from "./pages/solutions/Food";
+import Logistics from "./pages/solutions/Logistics";
 
 function App() {
   return (
@@ -34,6 +36,8 @@ function App() {
         <Route path="/slides" element={<Slides />} />
         <Route path="/slides/:categoryId" element={<SlideCategory />} />
         <Route path="/solutions/construction" element={<Construction />} />
+        <Route path="/solutions/logistics" element={<Logistics />} />
+        <Route path="/solutions/food" element={<Food />} />
         <Route path="/contact" element={<Contact />} />
         <Route path="/contact/thanks" element={<ContactThanks />} />
       </Routes>

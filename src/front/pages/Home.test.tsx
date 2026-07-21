@@ -99,6 +99,18 @@ describe("Home ページ (経営者向けトップ)", () => {
     expect(screen.getByText("提供サービス")).toBeInTheDocument();
   });
 
+  it("業界別ソリューションを表示し、カードが専用ページへリンクする", () => {
+    renderHome();
+
+    expect(screen.getByText("業界別ソリューション")).toBeInTheDocument();
+    expect(screen.getByText("現場れんらく帳")).toBeInTheDocument();
+    expect(screen.getByText("建設業")).toBeInTheDocument();
+
+    const links = screen.getAllByRole("link");
+    const hrefs = links.map((link) => link.getAttribute("href"));
+    expect(hrefs).toContain("/solutions/construction");
+  });
+
   it("提供サービスの各カードにアイコンを表示する", () => {
     renderHome();
 

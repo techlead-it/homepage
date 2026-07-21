@@ -140,3 +140,12 @@ export interface CaseStudy {
   flowAfter: string[];
   image: CaseImage;
 }
+
+export interface IndustrySolution {
+  id: string;
+  industry: string;
+  title: string;
+  description: string;
+  href: string;
+  image: CaseImage;
+}

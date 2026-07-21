@@ -2,6 +2,7 @@ import CaseSummarySection from "../components/sections/CaseSummarySection";
 import CtaSection from "../components/sections/CtaSection";
 import DxProcessSection from "../components/sections/DxProcessSection";
 import HeroSection from "../components/sections/HeroSection";
+import IndustrySolutionsSection from "../components/sections/IndustrySolutionsSection";
 import PricingSection from "../components/sections/PricingSection";
 import ServicesSection from "../components/sections/ServicesSection";
 import StrengthsSection from "../components/sections/StrengthsSection";
@@ -10,6 +11,7 @@ import { usePageTitle } from "../hooks/usePageTitle";
 const sections = [
   { name: "hero", Component: HeroSection },
   { name: "services", Component: ServicesSection },
+  { name: "solutions", Component: IndustrySolutionsSection },
   { name: "cases", Component: CaseSummarySection },
   { name: "process", Component: DxProcessSection },
   { name: "pricing", Component: PricingSection },

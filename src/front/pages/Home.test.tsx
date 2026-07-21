@@ -90,23 +90,16 @@ describe("Home ページ (経営者向けトップ)", () => {
     ).toBeInTheDocument();
   });
 
-  it("悩みカードのそれぞれにアイコンを表示する", () => {
+  it("悩み訴求は表示せず、見出し「提供サービス」から始まる", () => {
     renderHome();
 
-    const painPointTitles = [
-      "ツールは入れたが、現場で使われていない",
-      "業務が属人化している",
-      "データはあるが、改善に繋がっていない",
-      "試しに導入したが、そこで止まった",
-      "何から手をつければいいか分からない",
-    ];
-    for (const title of painPointTitles) {
-      const card = screen.getByText(title).parentElement;
-      expect(card?.querySelector("svg")).not.toBeNull();
-    }
+    expect(
+      screen.queryByText("こんな悩み、思い当たりませんか?")
+    ).not.toBeInTheDocument();
+    expect(screen.getByText("提供サービス")).toBeInTheDocument();
   });
 
-  it("支援できることの各カードにアイコンを表示する", () => {
+  it("提供サービスの各カードにアイコンを表示する", () => {
     renderHome();
 
     const serviceTitles = ["DX伴走・相談", "AI活用・研修", "業務システム構築"];

@@ -39,6 +39,9 @@ describe("Logistics ページ (運行れんらく帳)", () => {
     expect(
       screen.getByText(/電話でのやり取りは自動記録の対象外/)
     ).toBeInTheDocument();
+    expect(
+      screen.getByText(/1グループに参加できる公式アカウントは1つまで/)
+    ).toBeInTheDocument();
   });
 
   it("メールでの相談CTAと、フォームからの相談導線の両方を表示する", () => {

@@ -328,7 +328,7 @@ export default function Food() {
                 その2
               </p>
               <h3 className="mt-2 font-['Zen_Kaku_Gothic_New'] text-lg font-bold text-[#1E293B]">
-                電話・LINEでの注文も、ひと言吹き込むだけで自動記録
+                電話での注文も、ひと言吹き込むだけで自動記録
               </h3>
               <p className="mt-2 text-sm leading-relaxed">
                 電話を切ったあと、スマホへ商品名と数量をひと言吹き込むだけ。自動で文字になり記録に加わります。
@@ -393,7 +393,7 @@ export default function Food() {
                 取引先の注文手段を変えない
               </h3>
               <p className="mt-2 text-sm leading-relaxed">
-                取引先さんに「FAXをやめてください」とは言いません。FAX・電話・LINEでの注文を、そのまま記録に変えます。
+                取引先さんに「FAXをやめてください」とは言いません。FAX・電話での注文を、そのまま記録に変えます。
               </p>
             </div>
             <div className="rounded-lg border border-[#E2E8F0] bg-white p-6">

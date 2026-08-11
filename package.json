@@ -27,14 +27,14 @@
     "react-router-dom": "^7.18.2",
     "rehype-highlight": "^7.0.2",
     "remark-gfm": "^4.0.1",
-    "resend": "^6.18.1",
+    "resend": "^6.19.0",
     "tailwindcss": "^4.3.3",
     "valibot": "^1.4.2"
   },
   "devDependencies": {
-    "@cloudflare/vite-plugin": "^1.51.1",
+    "@cloudflare/vite-plugin": "^1.51.2",
     "@tailwindcss/vite": "^4.3.3",
-    "@testing-library/jest-dom": "^7.0.0",
+    "@testing-library/jest-dom": "^7.0.1",
     "@testing-library/react": "^16.3.2",
     "@testing-library/user-event": "^14.6.3",
     "@types/node": "^26.2.0",
@@ -44,12 +44,12 @@
     "gray-matter": "^4.0.3",
     "jsdom": "^30.0.1",
     "lefthook": "^2.1.10",
-    "takumi-js": "^2.6.1",
-    "tsx": "^4.23.11",
+    "takumi-js": "^2.7.1",
+    "tsx": "^4.23.12",
     "typescript": "^7.0.2",
     "vite": "^8.2.1",
     "vite-plus": "^0.2.8",
-    "wrangler": "^4.120.0"
+    "wrangler": "^4.120.1"
   },
   "devEngines": {
     "runtime": [

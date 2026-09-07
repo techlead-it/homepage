@@ -44,7 +44,7 @@
     "gray-matter": "^4.0.3",
     "jsdom": "^30.0.1",
     "lefthook": "^2.1.12",
-    "takumi-js": "^2.13.6",
+    "takumi-js": "^2.13.7",
     "tsx": "^4.23.13",
     "typescript": "^7.0.2",
     "vite": "^8.2.2",

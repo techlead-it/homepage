@@ -47,8 +47,8 @@
     "takumi-js": "^2.13.7",
     "tsx": "^4.23.13",
     "typescript": "^7.0.2",
-    "vite": "^8.2.2",
-    "vite-plus": "^0.3.1",
+    "vite": "catalog:",
+    "vite-plus": "catalog:",
     "wrangler": "^4.130.0"
   },
   "devEngines": {

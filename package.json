@@ -32,7 +32,7 @@
     "valibot": "^1.5.0"
   },
   "devDependencies": {
-    "@cloudflare/vite-plugin": "^1.54.8",
+    "@cloudflare/vite-plugin": "^1.54.9",
     "@tailwindcss/vite": "^4.3.3",
     "@testing-library/jest-dom": "^7.0.1",
     "@testing-library/react": "^16.3.3",
@@ -43,13 +43,13 @@
     "@vitejs/plugin-react": "^6.1.1",
     "gray-matter": "^4.0.3",
     "jsdom": "^30.0.1",
-    "lefthook": "^2.1.12",
+    "lefthook": "^2.1.14",
     "takumi-js": "^2.13.7",
     "tsx": "^4.23.13",
     "typescript": "^7.0.2",
     "vite": "catalog:",
     "vite-plus": "catalog:",
-    "wrangler": "^4.131.1"
+    "wrangler": "^4.131.2"
   },
   "devEngines": {
     "runtime": [

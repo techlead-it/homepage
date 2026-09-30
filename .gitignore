@@ -44,3 +44,4 @@ docs/.dev-impl/
 *.njsproj
 *.sln
 *.sw?
+.vitest/

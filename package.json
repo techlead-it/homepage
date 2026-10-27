@@ -13,7 +13,7 @@
     "generate:og": "tsx scripts/generate-og-images.ts"
   },
   "dependencies": {
-    "@hono/valibot-validator": "^0.6.1",
+    "@hono/valibot-validator": "^0.6.2",
     "@hookform/resolvers": "^6.0.0",
     "@tailwindcss/typography": "^0.5.20",
     "github-markdown-css": "^5.9.0",
@@ -44,12 +44,12 @@
     "gray-matter": "^4.0.3",
     "jsdom": "^30.1.3",
     "lefthook": "^2.2.2",
-    "takumi-js": "^2.18.1",
+    "takumi-js": "^2.18.2",
     "tsx": "^4.23.15",
     "typescript": "^7.0.2",
     "vite": "catalog:",
     "vite-plus": "catalog:",
-    "wrangler": "^4.152.0"
+    "wrangler": "^4.153.0"
   },
   "devEngines": {
     "runtime": [

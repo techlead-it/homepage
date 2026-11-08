@@ -14,11 +14,11 @@
   },
   "dependencies": {
     "@hono/valibot-validator": "^0.6.2",
-    "@hookform/resolvers": "^7.0.2",
+    "@hookform/resolvers": "^7.0.3",
     "@tailwindcss/typography": "^0.5.20",
     "github-markdown-css": "^5.9.0",
     "highlight.js": "^11.12.0",
-    "hono": "^4.13.16",
+    "hono": "^4.13.17",
     "react": "^19.3.1",
     "react-dom": "^19.3.1",
     "react-hook-form": "^7.91.0",
@@ -28,12 +28,12 @@
     "rehype-highlight": "^7.0.2",
     "remark-gfm": "^4.0.1",
     "resend": "^6.37.0",
-    "tailwindcss": "^4.3.4",
+    "tailwindcss": "^4.3.5",
     "valibot": "^1.5.0"
   },
   "devDependencies": {
     "@cloudflare/vite-plugin": "^1.67.0",
-    "@tailwindcss/vite": "^4.3.4",
+    "@tailwindcss/vite": "^4.3.5",
     "@testing-library/jest-dom": "^7.0.1",
     "@testing-library/react": "^16.3.3",
     "@testing-library/user-event": "^14.6.8",
@@ -42,14 +42,14 @@
     "@types/react-dom": "^19.3.0",
     "@vitejs/plugin-react": "^6.2.1",
     "gray-matter": "^4.0.3",
-    "jsdom": "^30.1.3",
+    "jsdom": "^31.0.0",
     "lefthook": "^2.2.2",
     "takumi-js": "^2.19.0",
     "tsx": "^4.23.15",
     "typescript": "^7.0.2",
     "vite": "catalog:",
     "vite-plus": "catalog:",
-    "wrangler": "^4.157.0"
+    "wrangler": "^4.158.0"
   },
   "devEngines": {
     "runtime": [

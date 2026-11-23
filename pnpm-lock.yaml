@@ -22,7 +22,7 @@ importers:
     dependencies:
       '@hono/valibot-validator':
         specifier: ^0.6.2
-        version: 0.6.2(hono@4.13.19)(valibot@1.5.0(typescript@7.0.2))
+        version: 0.6.2(hono@4.13.20)(valibot@1.5.0(typescript@7.0.2))
       '@hookform/resolvers':
         specifier: ^7.0.8
         version: 7.0.8(@standard-schema/spec@1.1.0)(react-hook-form@7.92.0(@types/react@19.3.0)(react@19.3.1))(valibot@1.5.0(typescript@7.0.2))
@@ -36,8 +36,8 @@ importers:
         specifier: ^11.12.0
         version: 11.12.0
       hono:
-        specifier: ^4.13.19
-        version: 4.13.19
+        specifier: ^4.13.20
+        version: 4.13.20
       react:
         specifier: ^19.3.1
         version: 19.3.1
@@ -1991,8 +1991,8 @@ packages:
     resolution: {integrity: sha512-nbfWpyRMcMrPMmDwJB+dhX/eiaPKtc2RB+0QZskqJ3WjRA/FDS0e9hZrx8EC/lbEv8gXy98FcDbNa/dspAaJMg==}
     engines: {node: '>=12.0.0'}
 
-  hono@4.13.19:
-    resolution: {integrity: sha512-KmXvQAXwcAHV+muzbIwoJ23niEB5nMoDVr9WcRkU8mvjUECm/1+7v4Jgp7P7a+H6MLFrh+vXrGonGrGS+RQfkA==}
+  hono@4.13.20:
+    resolution: {integrity: sha512-xo6gecEJQ+CjTtOUUbcLHE8CdRKMeF4qITe+DT+OhFnSUmZR/ZBa9XavAfiGh4HlukmlaHFdaK4dz5tkTYFNmA==}
     engines: {node: '>=16.9.0'}
 
   html-encoding-sniffer@7.0.0:
@@ -3256,9 +3256,9 @@ snapshots:
 
   '@exodus/bytes@1.16.0': {}
 
-  '@hono/valibot-validator@0.6.2(hono@4.13.19)(valibot@1.5.0(typescript@7.0.2))':
+  '@hono/valibot-validator@0.6.2(hono@4.13.20)(valibot@1.5.0(typescript@7.0.2))':
     dependencies:
-      hono: 4.13.19
+      hono: 4.13.20
       valibot: 1.5.0(typescript@7.0.2)
 
   '@hookform/resolvers@7.0.8(@standard-schema/spec@1.1.0)(react-hook-form@7.92.0(@types/react@19.3.0)(react@19.3.1))(valibot@1.5.0(typescript@7.0.2))':
@@ -4369,7 +4369,7 @@ snapshots:
 
   highlight.js@11.12.0: {}
 
-  hono@4.13.19: {}
+  hono@4.13.20: {}
 
   html-encoding-sniffer@7.0.0:
     dependencies:

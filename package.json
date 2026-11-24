@@ -18,7 +18,7 @@
     "@tailwindcss/typography": "^0.5.20",
     "github-markdown-css": "^5.9.0",
     "highlight.js": "^11.12.0",
-    "hono": "^4.13.19",
+    "hono": "^4.13.20",
     "react": "^19.3.1",
     "react-dom": "^19.3.1",
     "react-hook-form": "^7.92.0",
